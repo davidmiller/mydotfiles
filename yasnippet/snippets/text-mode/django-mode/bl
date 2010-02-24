@@ -1,0 +1,6 @@
+# contributor: David Miller <david@deadpansincerity.com>
+# name : {% ... %}
+# --
+{% block ${1:name} %}
+   50
+{% endblock %}
