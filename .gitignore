@@ -1,2 +1,9 @@
 session.*
 auto-save-list*
+tramp
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.JPG
+url/*
