@@ -1,6 +1,7 @@
 # -*- mode: snippet -*-
 # contributor: David Miller <david@deadpansincerity.com>
-# name : {{ ... }}
-# key: var
+# name : {% for %}
 # --
-{{ ${1:item} }}
+{% for ${1:item} in ${2:object} %}
+
+{% endfor %}
