@@ -28,7 +28,7 @@
 
 (tool-bar-mode nil);; Remove icons from gtk menu
 (setq ring-bell-function 'ignore);; disable bell function
-(column-number-mode);; Enable Colum numbering
+(column-number-mode 1);; Enable Colum numbering
 (blink-cursor-mode nil) ;; Stop cursor from blinking
 (defalias 'yes-or-no-p 'y-or-n-p) ;; less typing for me
 (display-time) ;; show it in the modeline
@@ -46,7 +46,7 @@
 (setq tab-width 4)
 (set-face-attribute 'default nil :height 100)
 (show-paren-mode 1) ;; Highlight parenthesis pairs
-
+(setq transient-mark-mode t) ;; Where am I now?
 (add-to-list `load-path "~/.emacs.d/")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;; Auto Completion & snippeting ;;;;;;;;;;;;;;
@@ -155,26 +155,44 @@
 (setq frame-title-format '(buffer-file-name "%f" ("%b"))) 
 
 
-;; Functions for nice buffer switching with C-tab keybindings
-(defun next-user-buffer ()
-  "Switch to the next user buffer in cyclic order.\n
-User buffers are those not starting with *."
-  (interactive)
-  (next-buffer)
-  (let ((i 0))
-    (while (and (string-match "^*" (buffer-name)) (< i 50))
-      (setq i (1+ i)) (next-buffer) )))
-(global-set-key [C-tab] 'next-user-buffer)
+;; ;; Functions for nice buffer switching with C-tab keybindings
+;; (defun next-user-buffer ()
+;;   "Switch to the next user buffer in cyclic order.\n
+;; User buffers are those not starting with *."
+;;   (interactive)
+;;   (next-buffer)
+;;   (let ((i 0))
+;;     (while (and (string-match "^*" (buffer-name)) (< i 50))
+;;       (setq i (1+ i)) (next-buffer) )))
+;; (global-set-key [C-tab] 'next-user-buffer)
 
-(defun previous-user-buffer ()
-  "Switch to the previous user buffer in cyclic order.\n
-User buffers are those not starting with *."
-  (interactive)
-  (previous-buffer)
-  (let ((i 0))
-    (while (and (string-match "^*" (buffer-name)) (< i 50))
-      (setq i (1+ i)) (previous-buffer) )))
-(global-set-key [backtab] 'previous-user-buffer)
+;; (defun previous-user-buffer ()
+;;   "Switch to the previous user buffer in cyclic order.\n
+;; User buffers are those not starting with *."
+;;   (interactive)
+;;   (previous-buffer)
+;;   (let ((i 0))
+;;     (while (and (string-match "^*" (buffer-name)) (< i 50))
+;;       (setq i (1+ i)) (previous-buffer) )))
+;; (global-set-key [backtab] 'previous-user-buffer)
+
+
+(iswitchb-mode 1)
+(add-to-list 'iswitchb-buffer-ignore "*Messages*")
+(add-to-list 'iswitchb-buffer-ignore "*Completions*")
+(add-to-list 'iswitchb-buffer-ignore "*Pymacs*")
+
+
+(defun iswitchb-local-keys ()
+  (mapc (lambda (K) 
+	      (let* ((key (car K)) (fun (cdr K)))
+            (define-key iswitchb-mode-map (edmacro-parse-keys key) fun)))
+	    '(("<right>" . iswitchb-next-match)
+	      ("<left>"  . iswitchb-prev-match)
+	      ("<up>"    . ignore             )
+	      ("<down>"  . ignore             ))))
+
+(add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
 
 ;;;;;;;;;;;;;;;;;;;    Window System    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -383,3 +401,11 @@ User buffers are those not starting with *."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Icicles ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'load-path "~/.emacs.d/icicles")
 (require 'icicles)
+(require 'icicles-iswitchb)
+(iswitchb-default-keybindings)
+(icy-mode 1)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;  Keyboard Macros  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(fset 'cp-line ;; Totally copying the current line
+   "\C-e\C-a\C-k\C-y\C-e\C-j\C-y")
