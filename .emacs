@@ -12,7 +12,7 @@
 (global-set-key "\C-c\C-r" 'x-reload-dot-emacs)
 (global-set-key "\C-c\C-e" 'x-edit-dot-emacs)
 
-;;;;;;;;;;;;;;;;;;;;;;;;; Emacs General ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;;;;;;;;;;;;;;;;;;;;;;;;; Emacs General ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Initialization
 (setq inhibit-startup-message t) ;; No more welcome for me
@@ -24,7 +24,7 @@
 			  ". \n;; Loaded with .emacs enabled")
 		  0 0)
   (newline-and-indent)  (newline-and-indent))
-(add-hook 'after-init-hook 'emacs-reloaded)  
+(add-hook 'after-init-hook 'emacs-reloaded)
 
 (tool-bar-mode nil);; Remove icons from gtk menu
 (setq ring-bell-function 'ignore);; disable bell function
@@ -49,6 +49,8 @@
 
 (add-to-list `load-path "~/.emacs.d/")
 
+;;;;;;;;;;;;;;;;;;;;;;;;; Auto Completion & snippeting ;;;;;;;;;;;;;;
+
 ;; Auto Complete
 (add-to-list `load-path "~/.emacs.d/auto-complete")
 (require 'auto-complete)
@@ -57,6 +59,53 @@
 ;(ac-set-trigger-key "C-c C-/")
 ;(setq ac-auto-start nil)
 (setq ac-auto-start 3)
+
+;;;;;;;;;;;;;;;;   Yasnippet    ;;;;;;;;;;;;;;;
+(add-to-list `load-path "~/.emacs.d/yasnippet")
+(require 'yasnippet)
+(yas/initialize)
+(yas/load-directory "~/.emacs.d/yasnippet/snippets")
+
+;;;;;;;;;;;;;;;;;;;;;;;;  Shell   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+(global-set-key "\C-c\C-t" 'ansi-term)
+
+;;;;;;;;;;;;;;;;;;;;;;  Bookmarks   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq 
+ bookmark-default-file "~/.emacs.d/bookmarks" ; Keep ~/ clean
+ bookmark-save-flag 1)                        ; autosave changes
+
+;;;;;;;;;;;;;;;;;;;;;;;;;  Files   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Put backup files (ie foo~) in one place. (The backup-directory-alist
+;; list contains regexp=>directory mappings; filenames matching a regexp are
+;; backed up in the corresponding directory. Emacs will mkdir it if necessary.)
+(defvar backup-dir (concat "/home/david/tmp/emacs_backups/"))
+(setq backup-directory-alist (list (cons "." backup-dir)))
+
+;; Let buffer names be unique in a nicer way
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'post-forward-angle-brackets)
+
+(setq wdired-allow-to-change-permissions t) ;; Allow perm changing in Dired
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;  Buffer Management ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Via http://www.stringify.com/2006/apr/24/rename/
+(defun rename-current-file-or-buffer ()
+  (interactive)
+  (if (not (buffer-file-name))
+      (call-interactively 'rename-buffer)
+    (let ((file (buffer-file-name)))
+      (with-temp-buffer
+        (set-buffer (dired-noselect file))
+        (dired-do-rename)
+        (kill-buffer nil))))
+  nil)
+(global-set-key "\C-cR" 'rename-current-file-or-buffer)
+
 
 
 (setq ibuffer-saved-filter-groups
@@ -106,49 +155,6 @@
 (setq frame-title-format '(buffer-file-name "%f" ("%b"))) 
 
 
-(defun remove-control-M ()
-  "Remove ^M at end of line in the whole buffer."
-  (interactive)
-  (save-match-data
-    (save-excursion
-      (let ((remove-count 0))
-        (goto-char (point-min))
-        (while (re-search-forward (concat (char-to-string 13) "$") (point-max) t)
-          (setq remove-count (+ remove-count 1))
-          (replace-match "" nil nil))
-        (message (format "%d ^M removed from buffer." remove-count))))))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;   Yasnippet    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-to-list `load-path "~/.emacs.d/yasnippet")
-(require 'yasnippet)
-(yas/initialize)
-(yas/load-directory "~/.emacs.d/yasnippet/snippets")
-
-;;;;;;;;;;;;;;;;;;;;;;;;  Shell   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-(global-set-key "\C-c\C-t" 'ansi-term)
-
-;;;;;;;;;;;;;;;;;;;;;;  Bookmarks   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(setq 
- bookmark-default-file "~/.emacs.d/bookmarks" ; Keep ~/ clean
- bookmark-save-flag 1)                        ; autosave changes
-
-;;;;;;;;;;;;;;;;;;;;;;;;;  Files   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Put backup files (ie foo~) in one place. (The backup-directory-alist
-;; list contains regexp=>directory mappings; filenames matching a regexp are
-;; backed up in the corresponding directory. Emacs will mkdir it if necessary.)
-(defvar backup-dir (concat "/home/david/tmp/emacs_backups/"))
-(setq backup-directory-alist (list (cons "." backup-dir)))
-
-;; Let buffer names be unique in a nicer way
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'post-forward-angle-brackets)
-
-(setq wdired-allow-to-change-permissions t) ;; Allow perm changing in Dired
-
 ;; Functions for nice buffer switching with C-tab keybindings
 (defun next-user-buffer ()
   "Switch to the next user buffer in cyclic order.\n
@@ -170,13 +176,11 @@ User buffers are those not starting with *."
       (setq i (1+ i)) (previous-buffer) )))
 (global-set-key [backtab] 'previous-user-buffer)
 
-
 ;;;;;;;;;;;;;;;;;;;    Window System    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Don't background emacs when running outside terminal
 (when window-system
   (global-unset-key "\C-x\C-z"))
-
 
 ;;;;;;;;;;;;;;;;;;;    Colors    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -184,36 +188,38 @@ User buffers are those not starting with *."
 (defun clarity()
   (interactive)
   (set-face-background 'hl-line "gray")
-  (set-background-color "white")
-  (set-foreground-color "black"))
+  (set-background-color "black")
+  (set-foreground-color "white")
+  (set-string-color "green")
+)
 
 (global-hl-line-mode t) ;; Highlights the current line
-(set-face-background 'hl-line "gray11")
+(set-face-background 'hl-line "gray")
 
-(set-background-color "black")
-(set-foreground-color "white")
+(set-background-color "white")
+(set-foreground-color "black")
 (set-border-color "white")
-(set-cursor-color "yellow")
+(set-cursor-color "dark orange")
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(font-lock-builtin-face ((t (:foreground "LightSteelBlue"))))
+ '(font-lock-builtin-face ((t (:foreground "dark violet"))))
  '(font-lock-comment-face ((((class color)) (:foreground "red"))))
- '(font-lock-constant-face ((t (:foreground "Aquamarine"))))
+ '(font-lock-constant-face ((t (:foreground "DodgerBlue4"))))
  '(font-lock-doc-face ((t (:foreground "LightSalmon"))))
- '(font-lock-function-face ((((class color)) (:foreground "deep sky blue"))))
+ '(font-lock-function-face ((((class color)) (:foreground "dark goldenrod"))))
  '(font-lock-function-name-face ((t (:foreground "Peru"))))
- '(font-lock-keyword-face ((((class color)) (:foreground "deep sky blue"))))
+ '(font-lock-keyword-face ((((class color)) (:foreground "sienna"))))
  '(font-lock-string-face ((((class color)) (:foreground "green4"))))
  '(font-lock-type-face ((((class color)) (:foreground "blue"))))
- '(font-lock-variable-face ((((class color)) (:foreground "brown"))))
- '(font-lock-variable-name-face ((t (:foreground "LightGoldenrod"))))
- '(font-lock-warning-face ((t (:bold t :foreground "Pink" :weight bold))))
+ '(font-lock-variable-face ((((class color)) (:foreground "purple4"))))
+ '(font-lock-variable-name-face ((t (:foreground "purple4"))))
+ '(font-lock-warning-face ((t (:bold t :foreground "black" :weight bold))))
  '(mumamo-background-chunk-major ((((class color) (min-colors 88) (background dark)) (:background "black"))))
  '(mumamo-background-chunk-submode1 ((((class color) (min-colors 88) (background dark)) (:background "Black"))))
- '(yas/field-highlight-face ((t (:background "RoyalBlue4")))))
+ '(yas/field-highlight-face ((t (:background "light gray")))))
 
 
 ;;;;;;;;;;;;;;;;;;;    Keybindings    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -230,21 +236,15 @@ User buffers are those not starting with *."
   (my-keys-minor-mode 0))
 (add-hook 'minibuffer-setup-hook 'my-minibuffer-setup-hook)
 
-
-
 ;;;;;;;;;;;;;;;;;;;;;    Languages    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'load-path "~/.emacs.d/major-modes")
 
-;;;;  Css
-(require 'sass-mode);; Sass
-
-;;;;  Javascript
 (require 'javascript-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
 
 ;;;;  Lisp
 
-;;; SLIME interaction
+;SLIME interaction
 (setq inferior-lisp-program "clisp")
 (add-to-list 'load-path "/usr/share/emacs22/site-lisp/slime")
 (require 'slime)
@@ -254,14 +254,8 @@ User buffers are those not starting with *."
 (add-hook 'lisp-mode-hook '(lambda ()
       (local-set-key (kbd "RET") 'newline-and-indent)))
 
-
 ;;;;  PHP
-;(load-library "php-mode")
-(load "/home/david/.emacs.d/nxhtml/autostart.el")
-(add-to-list 'auto-mode-alist '("\\.php\\'" . php-mode))
-(add-hook 'php-mode-hook '(lambda ()
- ;   (setq c-indent-level 4)
-    (setq c-basic-offset 4)))
+(load-library "php-mode")
 ;; Smarty
 (add-to-list 'auto-mode-alist '("\\.tpl\\'" . html-mode))
 
@@ -277,9 +271,7 @@ User buffers are those not starting with *."
 (require 'django-mode)
 
 
-;;;;;  Batch/Dos
-(require 'dos)
-(add-to-list 'auto-mode-alist '("\\.bat\\'" . dos-mode))
+;;;;;;;;;;;;;; Custom set stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
@@ -288,9 +280,10 @@ User buffers are those not starting with *."
   ;; If there is more than one, they won't work right.
  '(c-offsets-alist (quote ((brace-list-intro . 0) (label . 0))))
  '(mumamo-submode-indent-offset 2)
- '(org-agenda-files (quote ("~/notes/myfirst.org"))))
+ '(org-agenda-files nil))
 
-;; Jabber client
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Jabber client ;;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'load-path "~/.emacs.d/emacs-jabber-0.8.0")
 (load "jabber-autoloads")
 (setq jabber-account-list
@@ -299,19 +292,15 @@ User buffers are those not starting with *."
          (:connection-type . ssl))))
 
 
-;; ERC
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ERC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Connect to Freenode on C-c e f
 (global-set-key "\C-cef" (lambda () (interactive)
                            (erc :server "irc.freenode.net" :port "666"
                                 :nick "thatdavidmiller")))
 
-;; Git Version Control 
-(require 'git)
-(require 'git-blame)
-;(require 'magit)
 
 
-;; Twit
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; Twitter ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-to-list 'load-path "~/.emacs.d/twit")  ; Save directory
 
@@ -362,7 +351,7 @@ User buffers are those not starting with *."
 (global-set-key "\C-cTfa" 'twit-add-favorite)	      ; (f)avorite (a)dd
 (global-set-key "\C-cTfr" 'twit-remove-favorite)      ; (f)avorite (r)emove
 
-;; Web browsing stuff here innit
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; Web browsing stuff here innit ;;;;;;;;;;;;;;;;;;
 (setq
  browse-url-browser-function 'browse-url-generic
  browse-url-generic-program "firefox") 
@@ -373,9 +362,24 @@ User buffers are those not starting with *."
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 
-;; ORG mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ORG mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 
+;; Testing out remember-mode
+(org-remember-insinuate)
+(setq org-directory "~/notes/")
+(setq org-default-notes-file "~/.notes")
+(setq remember-annotation-functions '(org-remember-annotation))
+(setq remember-handler-functions '(org-remember-handler))
+(add-hook 'remember-mode-hook 'org-remember-apply-template)
+(define-key global-map "\C-cr" 'org-remember)
 
+(setq org-remember-templates
+      '(("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\nAdded: %U" 
+         "~/notes/organized.org" "Tasks")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Icicles ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-to-list 'load-path "~/.emacs.d/icicles")
+(require 'icicles)
