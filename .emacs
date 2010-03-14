@@ -271,6 +271,7 @@
 (show-paren-mode 1)
 (add-hook 'lisp-mode-hook '(lambda ()
       (local-set-key (kbd "RET") 'newline-and-indent)))
+(add-to-list 'auto-mode-alist '("\\.cl\\'" . lisp-mode))
 
 ;;;;  PHP
 (load-library "php-mode")
