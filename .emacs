@@ -181,6 +181,9 @@
 (add-to-list 'iswitchb-buffer-ignore "*Messages*")
 (add-to-list 'iswitchb-buffer-ignore "*Completions*")
 (add-to-list 'iswitchb-buffer-ignore "*Pymacs*")
+(add-to-list 'iswitchb-buffer-ignore "*fsm-debug*")
+(add-to-list 'iswitchb-buffer-ignore "*Ibuffer*")
+(add-to-list 'iswitchb-buffer-ignore "irc.freenode.net:6667")
 
 
 (defun iswitchb-local-keys ()
@@ -281,8 +284,9 @@
 ;;;;  Python
 (require 'pymacs)
 (pymacs-load "ropemacs" "rope-")
-(add-hook 'python-mode-hook
-          '(lambda () (eldoc-mode 1)) t)
+;(add-hook 'python-mode-hook
+ ;         '(lambda () (eldoc-mode 1)) t)
+(add-to-list 'auto-mode-alist '("\\.wsgi\\'" . python-mode))  ;; Yes WSGI Is still python
 ;;;  Djangoriffic
 (defun django-time()
   (interactive)
