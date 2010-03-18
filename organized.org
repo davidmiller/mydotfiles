@@ -1,0 +1,76 @@
+* Tasks
+** TODO Links list for Christina                                   :Primrose:
+
+Added: [2010-03-15 Mon 09:21]
+** DONE Upload photos to customers                               :Solariffic:
+
+Added: [2010-03-15 Mon 09:53]
+** DONE Fix Typos in model plural names                          :Solariffic:
+   Categorys should be Categories
+   big_spender to Budget
+   Address (database) maybe should be Addresses
+   Vats - change to Vat rates
+   wherever you have the work contractors
+
+Added: [2010-03-18 Thu 11:05]
+** DONE Change Address Schema                                    :Solariffic:
+   No separate House number field
+
+   Added: [2010-03-18 Thu 11:07]
+** DONE Change courses to match new information                  :Solariffic:
+   delete health and safety category
+   add site assessment and site manager category
+   change courses as per attached
+Added: [2010-03-18 Thu 11:08]
+** DONE Delete rates from contractors                            :Solariffic:
+
+Added: [2010-03-18 Thu 11:09]
+** TODO Add incremental time widget to calls                     :Solariffic:
+
+Added: [2010-03-18 Thu 11:10]
+** DONE Make WebQuote fields non-mandatory                       :Solariffic:
+
+Added: [2010-03-18 Thu 11:10]
+** TODO Research how to update database schema without losing data :Solariffic:
+
+Added: [2010-03-18 Thu 11:14]
+** TODO Make holiday bookable for the future            :Primrose:Timesheets:
+
+Added: [2010-03-18 Thu 15:02]
+* Projects
+** Solariffic                                                    :Solariffic:
+*** New Outline for workflow from Erica:                         :Solariffic:
+    From: Erica Robb <erica@primrose-london.co.uk>
+Subject: customer stuff
+To: David Miller <davidm@primrose-london.co.uk>
+Date: Wed, 17 Mar 2010 22:46:20 +0000
+
+Hi David
+ 
+1) On each customer we need a button saying "View Status Detail" or something
+like that.
+ 
+2) Then we need a new page which lists the nine stages as per the attached
+document.
+ 
+3) If you click on one of these it expands to show all the subsections shown in
+the documents.
+ 
+4) The ones which say they need a tick box have a tick box, 
+ 
+5) The ones which have YES against Upload Template to Solariffic have a link to
+the uploaded 'Template' document available for download.
+ 
+These templates should be accessed from the 'document database'.
+master file'
+ 
+6) The ones which have YES against Upload completed document to Solariffic have
+the ability to upload the completed document against the customer.
+ 
+I have finished up to Stage 7, still working on Stages 8 / 9
+[2. application/pdf; Document master list - customer installations.pdf]...
+
+
+
+
+** Timesheets                                           :Timesheets:Primrose:
