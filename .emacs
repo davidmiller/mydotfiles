@@ -114,8 +114,8 @@
                 (mode . org-mode))  
                ("Profile"    ;; personal config files
                 (filename . ".emacs\$"))
-               ("Solariffic" ;; Solariffic CRM on local machine
-                (filename . "~/solar/"))
+               ("Gnus" ;; Solariffic CRM on local machine
+                (name . "*Group*"))
                ("Programming" ;; prog stuff not already in MyProjectX
                 (or
                  (mode . python-mode)
@@ -126,12 +126,12 @@
                  (filename . ".tpl\$")
                  ;; etc
                  )) 
-               ;; ("Mail"
-               ;;   (or  ;; mail-related buffers
-               ;;    (mode . message-mode)
-               ;;    (mode . mail-mode)
-               ;;    ;; etc.; all your mail related modes
-               ;;    ))
+               ("Mail"
+                 (or  ;; mail-related buffers
+                  (mode . message-mode)
+                  (mode . mail-mode)
+                  ;; etc.; all your mail related modes
+                  ))
                ("Jabber"
                 (or
                  (mode . jabber-chat-mode)
@@ -463,7 +463,7 @@
 
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
-      smtpmail-auth-credentials '(("smtp.gmail.com" 587 "david@deadpansincerity.com" nil))
+      smtpmail-auth-credentials       (expand-file-name "~/.authinfo")
       smtpmail-default-smtp-server "smtp.gmail.com"
       smtpmail-smtp-server "smtp.gmail.com"
       smtpmail-smtp-service 587
