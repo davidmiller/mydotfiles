@@ -468,3 +468,5 @@
       smtpmail-smtp-server "smtp.gmail.com"
       smtpmail-smtp-service 587
       smtpmail-local-domain "yourcompany.com")
+;;;;;;;;;;;;;;;;;;; Google ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(load-file "~/.emacs.d/google.el")
