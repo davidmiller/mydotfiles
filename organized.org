@@ -25,7 +25,7 @@ Added: [2010-03-18 Thu 11:08]
 ** DONE Delete rates from contractors                            :Solariffic:
 
 Added: [2010-03-18 Thu 11:09]
-** TODO Add incremental time widget to calls                     :Solariffic:
+** DONE Add incremental time widget to calls                     :Solariffic:
 
 Added: [2010-03-18 Thu 11:10]
 ** DONE Make WebQuote fields non-mandatory                       :Solariffic:
@@ -36,7 +36,7 @@ Added: [2010-03-18 Thu 11:10]
 Added: [2010-03-18 Thu 11:14]
 ** TODO Make holiday bookable for the future            :Primrose:Timesheets:
 
-Added: [2010-03-18 Thu 15:02]
+   Added: [2010-03-18 Thu 15:02]
 * Projects
 ** Solariffic                                                    :Solariffic:
 *** New Outline for workflow from Erica:                         :Solariffic:
@@ -69,7 +69,6 @@ the ability to upload the completed document against the customer.
  
 I have finished up to Stage 7, still working on Stages 8 / 9
 [2. application/pdf; Document master list - customer installations.pdf]...
-
 
 
 
