@@ -56,8 +56,8 @@
 (require 'auto-complete)
 (require 'auto-complete-config)
 (global-auto-complete-mode t)
-;(ac-set-trigger-key "C-c C-/")
-;(setq ac-auto-start nil)
+                                        ;(ac-set-trigger-key "C-c C-/")
+                                        ;(setq ac-auto-start nil)
 (setq ac-auto-start 3)
 
 ;;;;;;;;;;;;;;;;   Yasnippet    ;;;;;;;;;;;;;;;
@@ -109,44 +109,46 @@
 
 
 (setq ibuffer-saved-filter-groups
-  (quote (("default"      
-            ("Org" ;; all org-related buffers
-              (mode . org-mode))  
-            ("Profile"    ;; personal config files
-             (filename . ".emacs\$"))
-            ("Programming" ;; prog stuff not already in MyProjectX
-              (or
-                (mode . python-mode)
-                (mode . perl-mode)
-                (mode . php-mode)
-                (mode . emacs-lisp-mode)
-                (mode . nxhtml-mode)
-                (filename . ".tpl\$")
-                ;; etc
-                )) 
-            ;; ("Mail"
-            ;;   (or  ;; mail-related buffers
-            ;;    (mode . message-mode)
-            ;;    (mode . mail-mode)
-            ;;    ;; etc.; all your mail related modes
-            ;;    ))
-            ("Jabber"
-             (or
-              (mode . jabber-chat-mode)
-              (mode . jabber-roster-mode)
-              ))
-            ("Twitter" ;; Twitter stuff together
-             (name . "Twit"))
-            ("Snippets"
-              (filename . "yasnippet/snippets"))            
-            ("ERC"   (mode . erc-mode))))))
- 
-;(add-to-list 'ibuffer-never-show-regexps "jpg")
-;(add-to-list 'ibuffer-never-show-regexps "jpg$")
+      (quote (("default"      
+               ("Org" ;; all org-related buffers
+                (mode . org-mode))  
+               ("Profile"    ;; personal config files
+                (filename . ".emacs\$"))
+               ("Solariffic" ;; Solariffic CRM on local machine
+                (filename . "~/solar/"))
+               ("Programming" ;; prog stuff not already in MyProjectX
+                (or
+                 (mode . python-mode)
+                 (mode . perl-mode)
+                 (mode . php-mode)
+                 (mode . emacs-lisp-mode)
+                 (mode . nxhtml-mode)
+                 (filename . ".tpl\$")
+                 ;; etc
+                 )) 
+               ;; ("Mail"
+               ;;   (or  ;; mail-related buffers
+               ;;    (mode . message-mode)
+               ;;    (mode . mail-mode)
+               ;;    ;; etc.; all your mail related modes
+               ;;    ))
+               ("Jabber"
+                (or
+                 (mode . jabber-chat-mode)
+                 (mode . jabber-roster-mode)
+                 ))
+               ("Twitter" ;; Twitter stuff together
+                (name . "Twit"))
+               ("Snippets"
+                (filename . "yasnippet/snippets"))            
+               ("ERC"   (mode . erc-mode))))))
+
+                                        ;(add-to-list 'ibuffer-never-show-regexps "jpg")
+                                        ;(add-to-list 'ibuffer-never-show-regexps "jpg$")
 
 (add-hook 'ibuffer-mode-hook
-  (lambda ()
-    (ibuffer-switch-to-saved-filter-groups "default")))
+          (lambda ()
+            (ibuffer-switch-to-saved-filter-groups "default")))
 
 
 
@@ -188,12 +190,12 @@
 
 (defun iswitchb-local-keys ()
   (mapc (lambda (K) 
-	      (let* ((key (car K)) (fun (cdr K)))
+          (let* ((key (car K)) (fun (cdr K)))
             (define-key iswitchb-mode-map (edmacro-parse-keys key) fun)))
-	    '(("<right>" . iswitchb-next-match)
-	      ("<left>"  . iswitchb-prev-match)
-	      ("<up>"    . ignore             )
-	      ("<down>"  . ignore             ))))
+        '(("<right>" . iswitchb-next-match)
+          ("<left>"  . iswitchb-prev-match)
+          ("<up>"    . ignore             )
+          ("<down>"  . ignore             ))))
 
 (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
 
@@ -212,7 +214,7 @@
   (set-background-color "black")
   (set-foreground-color "white")
   (set-string-color "green")
-)
+  )
 
 (global-hl-line-mode t) ;; Highlights the current line
 (set-face-background 'hl-line "gray")
@@ -222,10 +224,10 @@
 (set-border-color "white")
 (set-cursor-color "dark orange")
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(font-lock-builtin-face ((t (:foreground "dark violet"))))
  '(font-lock-comment-face ((((class color)) (:foreground "red"))))
  '(font-lock-constant-face ((t (:foreground "DodgerBlue4"))))
@@ -246,7 +248,7 @@
 ;;;;;;;;;;;;;;;;;;;    Keybindings    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
-;(define-key my-keys-minor-mode-map (kbd "C-c C-f") 'insert-function)
+                                        ;(define-key my-keys-minor-mode-map (kbd "C-c C-f") 'insert-function)
 
 (define-minor-mode my-keys-minor-mode
   "A minor mode for overriding keybindings"
@@ -265,7 +267,7 @@
 
 ;;;;  Lisp
 
-;SLIME interaction
+                                        ;SLIME interaction
 (setq inferior-lisp-program "clisp")
 (add-to-list 'load-path "/usr/share/emacs22/site-lisp/slime")
 (require 'slime)
@@ -273,7 +275,7 @@
 (global-font-lock-mode t)
 (show-paren-mode 1)
 (add-hook 'lisp-mode-hook '(lambda ()
-      (local-set-key (kbd "RET") 'newline-and-indent)))
+                             (local-set-key (kbd "RET") 'newline-and-indent)))
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . lisp-mode))
 
 ;;;;  PHP
@@ -284,8 +286,8 @@
 ;;;;  Python
 (require 'pymacs)
 (pymacs-load "ropemacs" "rope-")
-;(add-hook 'python-mode-hook
- ;         '(lambda () (eldoc-mode 1)) t)
+                                        ;(add-hook 'python-mode-hook
+                                        ;         '(lambda () (eldoc-mode 1)) t)
 (add-to-list 'auto-mode-alist '("\\.wsgi\\'" . python-mode))  ;; Yes WSGI Is still python
 ;;;  Djangoriffic
 (defun django-time()
@@ -297,12 +299,14 @@
 ;;;;;;;;;;;;;; Custom set stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(c-offsets-alist (quote ((brace-list-intro . 0) (label . 0))))
  '(mumamo-submode-indent-offset 2)
+ '(newsticker-retrieval-method (quote extern))
+ '(newsticker-url-list (quote (("A Softer World" "http://www.rsspect.com/rss/asw.xml" nil nil nil) ("A List Apart" "http://www.alistapart.com/feed/rss.xml" nil nil nil) ("BBC Sport" "http://newsrss.bbc.co.uk/rss/sportonline_uk_edition/football/rss.xml" nil nil nil) ("Dinosaur Comics" "http://www.rsspect.com/rss/qwantz.xml" nil nil nil) ("Dilbert" "http://feedproxy.google.com/DilbertDailyStrip" nil nil nil) ("Radar" "http://feeds.feedburner.com/oreilly/radar/atom" nil nil nil) ("Daily WTF" "http://syndication.thedailywtf.com/TheDailyWtf" nil nil nil) ("XKCD" "http://xkcd.com/atom.xml" nil nil nil) ("ORG" "http://www.openrightsgroup.org/feed/" nil nil nil) ("QC" "http://www.questionablecontent.net/QCRSS.xml" nil nil nil))))
  '(org-agenda-files nil))
 
 
@@ -413,4 +417,54 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;  Keyboard Macros  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (fset 'cp-line ;; Totally copying the current line
-   "\C-e\C-a\C-k\C-y\C-e\C-j\C-y")
+      "\C-e\C-a\C-k\C-y\C-e\C-j\C-y")
+
+                                        ;(add-to-list 'load-path "~/.emacs.d/g-client")
+                                        ;(load-library "g")
+
+
+   ;;; ----------------------------------------------------------------
+   ;;; caps-lock-mode, Miles Bader <miles /at/ gnu.org>
+
+(defvar caps-lock-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map [remap self-insert-command] 'self-insert-upcased)
+    map))
+
+(define-minor-mode caps-lock-mode
+  "When enabled, convert all self-inserting characters to uppercase."
+  :lighter " CapsLock")
+
+(defun self-insert-upcased (arg)
+  (interactive "p")
+  (setq last-command-char (upcase last-command-char))
+  (self-insert-command arg))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;   ChessMate ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(add-to-list 'load-path "~/.emacs.d/chess")
+(autoload 'chess "chess" "Play a game of chess" t)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;; GNUS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (add-to-list 'gnus-secondary-select-methods '(nnimap "gmail"
+;;                                   (nnimap-address "imap.gmail.com")
+;;                                   (nnimap-server-port 993)
+;;                                   (nnimap-stream ssl)))
+     ;; (setq send-mail-function 'smtpmail-send-it)
+
+     ;; (setq message-send-mail-function 'smtpmail-send-it)
+
+     ;; (setq smtpmail-default-smtp-server "smtp.gmail.com")
+
+
+(setq message-send-mail-function 'smtpmail-send-it
+      smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+      smtpmail-auth-credentials '(("smtp.gmail.com" 587 "david@deadpansincerity.com" nil))
+      smtpmail-default-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 587
+      smtpmail-local-domain "yourcompany.com")
