@@ -6,4 +6,6 @@ tramp
 *.png
 *.gif
 *.JPG
+*.PNG
+*.GIF
 url/*
