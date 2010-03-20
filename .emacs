@@ -12,6 +12,11 @@
 (global-set-key "\C-c\C-r" 'x-reload-dot-emacs)
 (global-set-key "\C-c\C-e" 'x-edit-dot-emacs)
 
+(defun reload-gnus()
+  (interactive)
+  (load-file "~/.gnus"))
+(global-set-key "\C-cGR" 'reload-gnus)
+
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;; Emacs General ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Initialization
@@ -450,17 +455,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;; GNUS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (add-to-list 'gnus-secondary-select-methods '(nnimap "gmail"
-;;                                   (nnimap-address "imap.gmail.com")
-;;                                   (nnimap-server-port 993)
-;;                                   (nnimap-stream ssl)))
-     ;; (setq send-mail-function 'smtpmail-send-it)
-
-     ;; (setq message-send-mail-function 'smtpmail-send-it)
-
-     ;; (setq smtpmail-default-smtp-server "smtp.gmail.com")
-
-
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
       smtpmail-auth-credentials       (expand-file-name "~/.authinfo")
@@ -468,5 +462,33 @@
       smtpmail-smtp-server "smtp.gmail.com"
       smtpmail-smtp-service 587
       smtpmail-local-domain "yourcompany.com")
+
+(setq gnus-secondary-select-methods '((nntp "quimby.gnus.org")))
+(setq gnus-subscribe-newsgroup-method 'gnus-subscribe-interactively)
+(setq gnus-save-newsrc-file nil)
+(setq gnus-always-read-dribble-file t)
+
 ;;;;;;;;;;;;;;;;;;; Google ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (load-file "~/.emacs.d/google.el")
+
+(load "faith.el")
+
+(defun lorem ()
+  "Insert a lorem ipsum."
+  (interactive)
+  (insert "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do "
+          "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad "
+          "minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+          "aliquip ex ea commodo consequat. Duis aute irure dolor in "
+          "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla "
+          "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in "
+          "culpa qui officia deserunt mollit anim id est laborum."))
+
+;;;;;;;;;;;;;;;;;;; Elim ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;(add-to-list 'load-path "~/elisp/elim")
+;(autoload 'garak "garak" nil t)
+
+
+;;;;;;;;;;;;;;; VCS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'magit)
+(global-set-key "\C-cgs" 'magit-status)     
