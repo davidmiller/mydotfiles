@@ -5,17 +5,17 @@
 Added: [2010-03-15 Mon 09:21]
 ** TODO Define permissions for Marking complaints as read        :Solariffic:
 
-Added: [2010-02-27 Sat 18:21]
+   Added: [2010-02-27 Sat 18:21]
 ** DONE Sort out url                                             :Solariffic:
 
 Added: [2010-03-01 Mon 15:38]
-** TODO Allow call scheduling on the half hour                   :Solariffic:
+** DONE Allow call scheduling on the half hour                   :Solariffic:
 
 Added: [2010-03-01 Mon 16:36]
 ** TODO Add a different styling for follow up calls              :Solariffic:
    Calls Today should be blue, calls in the past should be red
 Added: [2010-03-01 Mon 16:40]
-** TODO Add Help Text for contractors                            :Solariffic:
+** DONE Add Help Text for contractors                            :Solariffic:
 *** Email From Erica:
        a) Above Heights, Electrical etc put     
     Please tick which of the following the contractor is qualified to do. Please also tick which qualifications they hold.
@@ -34,7 +34,7 @@ Added: [2010-03-02 Tue 12:26]
     17th Edition (3 day course)
     Part P
      
-     
+    
     Combine Testing into Testing and Commissioning and then under it put 
     ·         City and Guilds 2391 (Test and Inspection)
      
@@ -43,13 +43,6 @@ Added: [2010-03-02 Tue 12:26]
     Put a new field and then write
      
     For in house contractors please confirm they have been on a health and safety at work course.
-** TODO Add approved by to contractors qualifications            :Solariffic:
-   Split models for qualifications & contractors, see if this is enough?
-
-Added: [2010-03-03 Wed 12:52]
-** TODO Make documents downloadable                              :Solariffic:
-
-Added: [2010-03-03 Wed 12:59]
 ** TODO Write Calculate quote function for quote                 :Solariffic:
    Indicative quote is a bullshit procedure based on how much the
    poor sod said that they could spend in the first place.
@@ -62,12 +55,173 @@ Added: [2010-03-03 Wed 19:00]
 ** DONE Add extras to indicative quote                           :Solariffic:
 
 Added: [2010-03-03 Wed 19:00]
-** TODO Add photo gallery to customers                           :Solariffic:
+** DONE Add photo gallery to customers                           :Solariffic:
 
 Added: [2010-03-15 Mon 16:04]
-** TODO Make holiday bookable for the future            :Primrose:Timesheets:
+** TODO Add questions to customer call                           :Solariffic:
+ Email with instructions:
+   From: Erica Robb <erica@primrose-london.co.uk>
+Subject: Fwd: Call back questions
+To: David Miller <davidm@primrose-london.co.uk>
+Date: Fri, 19 Mar 2010 12:47:11 +0000
+
+can we add these questions to the customer sheet
+ 
+so once they have filled the webform in we ring them and fill in the answers to
+these questions:
+
+---------- Forwarded message ----------
+From: Wendy Chamberlain <wendyjchamberlain@yahoo.co.uk>
+Date: 19 March 2010 11:49
+Subject: Call back questions
+To: Erica <erica@primrose-london.co.uk>
+
+
+At the moment we are trying top call back after 4 days of them receiving the
+letter, or email.
+
+Did you get the letter
+Did you get the email
+
+Is it of interest
+
+Have you had any other quote
+
+Do you mind my asking which company
+
+Have you got finance organised
+
+What is your timescale
+
+Comments
+
+Questions
+
+Action
+
+
+ Wendy
+
+
+
+
+Added: [2010-03-19 Fri 13:45]
+** DONE Make holiday bookable for the future            :Primrose:Timesheets:
 
    Added: [2010-03-18 Thu 15:02]
+** TODO Add sections for 9 stages                                :Solariffic:
+*** TODO Stage 1 Initial contact
+**** DONE WebForm rolls into database
+**** TODO Schedule calls for customers
+     This is to be both manual & also automatic based on the date
+     supplied by the webform quote if one exists.
+**** TODO Add Indicative Quote template
+**** TODO Tick box & upload for indicative quote 
+**** TODO Add tick box & question form for first contact
+***** Questions:
+      Did you get the letter
+Did you get the email
+
+Is it of interest
+
+Have you had any other quote
+
+Do you mind my asking which company
+
+Have you got finance organised
+
+What is your timescale
+
+Comments
+
+Questions
+
+Action
+
+*** TODO Stage 2 Site Visit Arranged
+    - Tick box
+    - date
+    - Time
+    - Authorised Assessor
+*** TODO Stage 3 Set up file Hard copy
+    - Just tick box! 
+*** TODO Stage 4 Site Visit
+**** TODO Add template document for download
+**** TODO Add tick box for completion
+*** TODO Stage 5 Firm Quotation
+**** TODO Tick box - "Schematic for system"
+**** TODO Approved product quotation sheet
+     - Tick box for completion
+     - Template
+     - Upload completed
+**** TODO DTI design checklist
+     - Tick box for completion
+     - Template
+     - Upload completed
+**** TODO Wind load calculation
+     - Tick box for completion
+     - Template
+     - Upload completed
+
+**** TODO Appendix M performance calculation
+     - Tick box for completion
+     - Template
+     - Upload completed
+**** TODO Firm Quotation for customer
+     - Tick box for completion
+     - Template
+     - Upload completed
+*** TODO Stage 6 Confirmation from customer
+    - tick boxes only -
+      -Signed Quotation Acceptance
+    - Email confirmation from accounts that
+      deposit has been recieved
+    - Deposit confirmation for customer
+*** TODO Stage 7 Pre-Installation
+**** TODO Purchase order for products - Tick box
+**** TODO Confirmation of stock - Tick box
+**** TODO Book date with customer
+     - Specify:
+       - Date
+       - contractors
+**** TODO Scaffolding hire
+     - Optional bool
+     - Template document
+**** TODO Simple schematic with inverter protection settings
+***** TODO bool
+***** TODO template
+***** TODO upload completed
+**** TODO Detailed schematic for DNO
+     - bool
+     - template
+     - upload form
+**** TODO Pre-Installation checklist
+     - bool
+     - template
+*** TODO Stage 8 Installation
+**** TODO templates:
+     - Statement of method
+     - On site procedures
+     - Staff instruction
+     - Ladder checklists
+     - [Scaffolding checklist]
+     - Gin Wheel inspection
+     - Harness inspection
+*** TODO Stage 9 Testing and Commissioning
+**** TODO G83/1 Installation and commissioning form
+     - bool
+     - Template
+**** TODO Electrical Installation Certificate - 3 templates
+**** TODO PV Commissioning test sheet - bool
+*** TODO Stage 10 Handover to customer
+**** TODO Cusomer handover checklist - bool & temp
+**** TODO Managing your PV system - bool
+**** TODO Feedback form !!! ASK EICA !!! - bool & temp & ???
+*** TODO Stage 11 Post Installation
+**** TODO Post installation checklist - bool * templ
+**** TODO Follow up call scheduled
+     Automatically schedule call for two weeks after installation
+*** TODO Stage 12 Archive !!! ASK ERICA !!!
 * Projects
 ** Implement Solariffic CRM                                         :Project:
 *** Write the CRM/Workflow software for Spirit Solar
@@ -104,13 +258,12 @@ the ability to upload the completed document against the customer.
 I have finished up to Stage 7, still working on Stages 8 / 9
 [2. application/pdf; Document master list - customer installations.pdf]...
 
-
     
 *** Establish models for workflow                                :Programing:
 ** Timesheets                                                       :Project:
 *** Temporary workers
 ** Beer Festival Stage                                      :Larapel:Project:
-*** Design for fascia                                                :Design:
+*** DONE Design for fascia                                           :Design:
 *** Work out clamping                                       :Planning:Design:
 *** Height for size of stage                              :Camra:Measurments:
 *** Sort Insurance                                                 :Research:
@@ -122,3 +275,4 @@ I have finished up to Stage 7, still working on Stages 8 / 9
 *** Side panels
 * Calendar
 ** 15 March - solid schema                                      :Solariffic:
+
