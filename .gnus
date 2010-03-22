@@ -24,6 +24,11 @@
 (setq randomsig-static-string "Love regards etc\n\nDavid Miller\nwww.deadpansincerity.com\n07964250347\n--\nThis message sent from Emacs\n")
 (setq gnus-thread-sort-functions 'gnus-thread-sort-by-most-recent-date)
 
+(add-to-list 'load-path "~/.emacs.d/bbdb")
+(require 'bbdb)
+(bbdb-initialize 'gnus 'message)
+(add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus) 
+
 ;;;;;;;;;;;  Not exactly sure what these are doing... ;;;;;;;;;;;;;;;
 
 
