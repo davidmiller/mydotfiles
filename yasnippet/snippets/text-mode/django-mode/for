@@ -3,5 +3,5 @@
 # name : {% for %}
 # --
 {% for ${1:item} in ${2:object} %}
-
+   $0
 {% endfor %}
