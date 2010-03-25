@@ -224,6 +224,34 @@ Action
 **** TODO Follow up call scheduled
      Automatically schedule call for two weeks after installation
 *** TODO Stage 12 Archive !!! ASK ERICA !!!
+** TODO Change course dependancies                               :Solariffic:
+From: Erica Robb <erica@primrose-london.co.uk>
+Subject: changes to employees contractors
+To: David Miller <davidm@primrose-london.co.uk>
+Date: Thu, 25 Mar 2010 15:51:18 +0000
+
+1. Change
+ 
+Manual handling, working at heights (1 day course)
+ 
+to Manual handling, working at heights and COSHH (NICEIC)
+ 
+2. Change Working at heights to Harness training
+ 
+3. Delete Inspection and Testing
+ 
+4,. For site management
+ 
+NEed everything except - Solometric, gin wheel, City and guilds 2391
+ 
+5. For electrical
+ 
+Add in Solar PV course, City and Guilds 2391 and Asbestos Awareness
+ 
+6, testing and comissioning add 17th Edition and Asbestos Awareness
+ 
+4/
+Added: [2010-03-25 Thu 16:24]
 * Projects
 ** Implement Solariffic CRM                                         :Project:
 *** Write the CRM/Workflow software for Spirit Solar
