@@ -115,9 +115,10 @@ Added: [2010-03-19 Fri 13:45]
 **** TODO Schedule calls for customers
      This is to be both manual & also automatic based on the date
      supplied by the webform quote if one exists.
-**** TODO Add Indicative Quote template
-**** TODO Tick box & upload for indicative quote 
-**** TODO Add tick box & question form for first contact
+**** DONE Add Indicative Quote template
+**** TODO Tick box for indicative quote
+**** DONE upload for indicative quote 
+**** DONE Add question form for first contact
 ***** Questions:
       Did you get the letter
 Did you get the email
@@ -138,6 +139,7 @@ Questions
 
 Action
 
+**** TODO Tick box for first contact
 *** TODO Stage 2 Site Visit Arranged
     - Tick box
     - date
