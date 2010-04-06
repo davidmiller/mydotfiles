@@ -255,7 +255,7 @@ Added: [2010-03-25 Thu 16:24]
 ** DONE Restrict access to adding/deleting templates && deleting customers :Solariffic:
 
 Added: [2010-03-31 Wed 11:27]
-** TODO remove number pages && status from customer documents    :Solariffic:
+** DONE remove number pages && status from customer documents    :Solariffic:
 
 Added: [2010-03-31 Wed 11:29]
 ** TODO Add visual feedback for successful saves to customer stages :Solariffic:
@@ -267,21 +267,21 @@ Added: [2010-03-31 Wed 11:30]
 ** TODO Add heading to stage templates                           :Solariffic:
 
 Added: [2010-03-31 Wed 11:31]
-** TODO Beautify Hide buttons for stages                         :Solariffic:
+** DONE Beautify Hide buttons for stages                         :Solariffic:
 
 Added: [2010-03-31 Wed 11:31]
-** TODO Restrict contractors list for site visit to be only people qualified :Solariffic:
+** DONE Restrict contractors list for site visit to be only people qualified :Solariffic:
    Should be qualified for Site Assessment
 Added: [2010-03-31 Wed 11:32]
-** TODO Hide History for the moment                              :Solariffic:
+** DONE Hide History for the moment                              :Solariffic:
 
 Added: [2010-03-31 Wed 11:33]
 ** TODO Build the workflow actions into the admin history        :Solariffic:
 
 Added: [2010-03-31 Wed 11:33]
-** TODO Add new items to Firm quotation                          :Solariffic:
-
-Added: [2010-03-31 Wed 11:34]
+** DONE Add new items to Firm quotation                          :Solariffic:
+   
+   Added: [2010-03-31 Wed 11:34]
 ** TODO Add Text box to Asbestos Survey                          :Solariffic:
   If an Asbestos Survey has been carried out, does it require us to used licensed
   contractors for the installation or take any action before or during the
@@ -344,6 +344,15 @@ Added: [2010-03-31 Wed 11:41]
 ** TODO Information design for competencies                      :Solariffic:
 
 Added: [2010-03-31 Wed 11:43]
+** TODO Add customer number && date added to first customer page :Solariffic:
+
+Added: [2010-03-31 Wed 13:09]
+** TODO Add Untick to stage 5 to stages                          :Solariffic:
+
+Added: [2010-03-31 Wed 13:10]
+** TODO Allow webform quote form for non-web customers           :Solariffic:
+
+Added: [2010-04-06 Tue 13:06]
 * Projects
 ** Implement Solariffic CRM                                         :Project:
 *** Write the CRM/Workflow software for Spirit Solar
