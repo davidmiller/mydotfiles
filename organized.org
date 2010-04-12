@@ -116,7 +116,7 @@ Added: [2010-03-19 Fri 13:45]
      This is to be both manual & also automatic based on the date
      supplied by the webform quote if one exists.
 **** DONE Add Indicative Quote template
-**** TODO Tick box for indicative quote
+**** DONE Tick box for indicative quote
 **** DONE upload for indicative quote 
 **** DONE Add question form for first contact
 ***** Questions:
@@ -139,18 +139,18 @@ Questions
 
 Action
 
-**** TODO Tick box for first contact
-*** TODO Stage 2 Site Visit Arranged
+**** DONE Tick box for first contact
+*** DONE Stage 2 Site Visit Arranged
     - Tick box
     - date
     - Time
     - Authorised Assessor
-*** TODO Stage 3 Set up file Hard copy
+*** DONE Stage 3 Set up file Hard copy
     - Just tick box! 
-*** TODO Stage 4 Site Visit
+*** DONE Stage 4 Site Visit
 **** TODO Add template document for download
 **** TODO Add tick box for completion
-*** TODO Stage 5 Firm Quotation
+*** DONE Stage 5 Firm Quotation
 **** TODO Tick box - "Schematic for system"
 **** TODO Approved product quotation sheet
      - Tick box for completion
@@ -173,13 +173,13 @@ Action
      - Tick box for completion
      - Template
      - Upload completed
-*** TODO Stage 6 Confirmation from customer
+*** DONE Stage 6 Confirmation from customer
     - tick boxes only -
       -Signed Quotation Acceptance
     - Email confirmation from accounts that
       deposit has been recieved
     - Deposit confirmation for customer
-*** TODO Stage 7 Pre-Installation
+*** DONE Stage 7 Pre-Installation
 **** TODO Purchase order for products - Tick box
 **** TODO Confirmation of stock - Tick box
 **** TODO Book date with customer
@@ -200,7 +200,7 @@ Action
 **** TODO Pre-Installation checklist
      - bool
      - template
-*** TODO Stage 8 Installation
+*** DONE Stage 8 Installation
 **** TODO templates:
      - Statement of method
      - On site procedures
@@ -282,7 +282,7 @@ Added: [2010-03-31 Wed 11:33]
 ** DONE Add new items to Firm quotation                          :Solariffic:
    
    Added: [2010-03-31 Wed 11:34]
-** TODO Add Text box to Asbestos Survey                          :Solariffic:
+** DONE Add Text box to Asbestos Survey                          :Solariffic:
   If an Asbestos Survey has been carried out, does it require us to used licensed
   contractors for the installation or take any action before or during the
   installation?
@@ -303,16 +303,16 @@ Added: [2010-03-31 Wed 11:35]
   Electrician
   Testing and Commissioning 
 Added: [2010-03-31 Wed 11:37]
-** TODO Make S10 Feedback form optional                          :Solariffic:
+** DONE Make S10 Feedback form optional                          :Solariffic:
 
 Added: [2010-03-31 Wed 11:38]
-** TODO Add Claiming Feed in Tariffs - Useful Information to s10 :Solariffic:
+** DONE Add Claiming Feed in Tariffs - Useful Information to s10 :Solariffic:
 
 Added: [2010-03-31 Wed 11:38]
-** TODO Hide products && suppliers                               :Solariffic:
+** DONE Hide products && suppliers                               :Solariffic:
 
 Added: [2010-03-31 Wed 11:39]
-** TODO Change headings for customers                            :Solariffic:
+** DONE Change headings for customers                            :Solariffic:
 
 m) On the first page of a customer
  
@@ -332,19 +332,19 @@ Added: [2010-03-31 Wed 11:39]
 ** TODO Schedule Follow Up calls                                 :Solariffic:
 
 Added: [2010-03-31 Wed 11:40]
-** TODO Begin storing date of customer addition                  :Solariffic:
+** DONE Begin storing date of customer addition                  :Solariffic:
   Particularly for web form additions!
 Added: [2010-03-31 Wed 11:40]
-** TODO Fix customer list search                                 :Solariffic:
+** DONE Fix customer list search                                 :Solariffic:
   It would be good to search this list by name and also postcode / status 
 Added: [2010-03-31 Wed 11:41]
-** TODO Auto update Customer status on workflow save             :Solariffic:
+** DONE Auto update Customer status on workflow save             :Solariffic:
 
 Added: [2010-03-31 Wed 11:41]
 ** TODO Information design for competencies                      :Solariffic:
 
 Added: [2010-03-31 Wed 11:43]
-** TODO Add customer number && date added to first customer page :Solariffic:
+** DONE Add customer number && date added to first customer page :Solariffic:
 
 Added: [2010-03-31 Wed 13:09]
 ** TODO Add Untick to stage 5 to stages                          :Solariffic:
