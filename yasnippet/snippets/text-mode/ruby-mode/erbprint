@@ -1,0 +1,7 @@
+# -*- coding: utf-8; mode: snippet -*-
+# name: erb print
+# group: erb
+# key: =
+# contributor: David Miller <david@deadpansinceity.com>
+# --
+<%= $0 %>
