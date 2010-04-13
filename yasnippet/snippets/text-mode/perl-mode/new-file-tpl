@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
 # contributor: David Miller <david@deadpansincerity.com>
-# name : {% ... %}
+# name : New File Template
+# key : new-file-tpl
 # --
-{% block ${1:name} %}
-   50
-{% endblock %}
+#!/usr/bin/perl
+$0
