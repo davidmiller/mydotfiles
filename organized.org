@@ -43,12 +43,7 @@ Added: [2010-03-02 Tue 12:26]
     Put a new field and then write
      
     For in house contractors please confirm they have been on a health and safety at work course.
-** TODO Write Calculate quote function for quote                 :Solariffic:
-   Indicative quote is a bullshit procedure based on how much the
-   poor sod said that they could spend in the first place.
-   We can safely ignore that for the time being. The logic will
-   still be equivalent for the final quote however.
-Added: [2010-03-03 Wed 18:58]
+
 ** DONE Add labour costs to indicative quote                     :Solariffic:
 
 Added: [2010-03-03 Wed 19:00]
@@ -109,7 +104,7 @@ Added: [2010-03-19 Fri 13:45]
 ** DONE Make holiday bookable for the future            :Primrose:Timesheets:
 
    Added: [2010-03-18 Thu 15:02]
-** TODO Add sections for 9 stages                                :Solariffic:
+** TODO Add sections for 12 stages                               :Solariffic:
 *** TODO Stage 1 Initial contact
 **** DONE WebForm rolls into database
 **** TODO Schedule calls for customers
@@ -223,7 +218,7 @@ Action
 **** TODO Post installation checklist - bool * templ
 **** TODO Follow up call scheduled
      Automatically schedule call for two weeks after installation
-*** TODO Stage 12 Archive !!! ASK ERICA !!!
+*** TODO Stage 12 Archive
 ** DONE Change course dependancies                               :Solariffic:
 From: Erica Robb <erica@primrose-london.co.uk>
 Subject: changes to employees contractors
@@ -262,10 +257,10 @@ Added: [2010-03-31 Wed 11:29]
 
 Added: [2010-03-31 Wed 11:29]
 ** TODO Refresh pages on successful customer stage save          :Solariffic:
-
+   
 Added: [2010-03-31 Wed 11:30]
 ** TODO Add heading to stage templates                           :Solariffic:
-
+   
 Added: [2010-03-31 Wed 11:31]
 ** DONE Beautify Hide buttons for stages                         :Solariffic:
 
@@ -353,6 +348,12 @@ Added: [2010-03-31 Wed 13:10]
 ** TODO Allow webform quote form for non-web customers           :Solariffic:
 
 Added: [2010-04-06 Tue 13:06]
+** TODO Add complaints log                                       :Solariffic:
+Date dump of call notes && resolved bool
+Added: [2010-04-16 Fri 11:10]
+** TODO follow up calls on main cust page                        :Solariffic:
+
+Added: [2010-04-16 Fri 11:11]
 * Projects
 ** Implement Solariffic CRM                                         :Project:
 *** Write the CRM/Workflow software for Spirit Solar
