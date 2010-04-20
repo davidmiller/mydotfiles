@@ -71,6 +71,24 @@
 (yas/initialize)
 (yas/load-directory "~/.emacs.d/yasnippet/snippets")
 
+
+;; (defun yas-templatise ()
+;;   (interactive)
+;;   (insert "new-file-tpl") ;; Adds the trigger text
+;;   (yas/expand))           ;; Trigger snippet expansion
+
+;; ;; Lets list the modes that we want to add templates for
+;; (setq yas-templatise-modes '(html-mode-hook
+;;                              python-mode-hook
+;;                              perl-mode-hook))
+
+;; (while yas-templatise-modes             ;; Loop through that list
+;;   (add-hook (car yas-templatise-modes) 'yas-templatise) ;; Add the hook
+;;   (setq yas-templatise-modes (cdr yas-templatise-modes))) ;; re-point our mode-list
+
+;(dolist add-hook ('html-mode-hook) 'yas-templatise)
+;(add-hook 'html-mode-hook 'yas-templatise)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;  Shell   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
@@ -127,7 +145,7 @@
                  (mode . perl-mode)
                  (mode . php-mode)
                  (mode . emacs-lisp-mode)
-                 (mode . ruby-mode)
+                 (mode . nxhtml-mode)
                  (filename . ".tpl\$")
                  ;; etc
                  )) 
@@ -221,33 +239,88 @@
   (set-string-color "green")
   )
 
-(global-hl-line-mode t) ;; Highlights the current line
-(set-face-background 'hl-line "gray")
 
-(set-background-color "white")
-(set-foreground-color "black")
-(set-border-color "white")
-(set-cursor-color "dark orange")
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(font-lock-builtin-face ((t (:foreground "dark violet"))))
- '(font-lock-comment-face ((((class color)) (:foreground "red"))))
- '(font-lock-constant-face ((t (:foreground "DodgerBlue4"))))
- '(font-lock-doc-face ((t (:foreground "LightSalmon"))))
- '(font-lock-function-face ((((class color)) (:foreground "dark goldenrod"))))
- '(font-lock-function-name-face ((t (:foreground "Peru"))))
- '(font-lock-keyword-face ((((class color)) (:foreground "sienna"))))
- '(font-lock-string-face ((((class color)) (:foreground "green4"))))
- '(font-lock-type-face ((((class color)) (:foreground "blue"))))
- '(font-lock-variable-face ((((class color)) (:foreground "purple4"))))
- '(font-lock-variable-name-face ((t (:foreground "purple4"))))
- '(font-lock-warning-face ((t (:bold t :foreground "black" :weight bold))))
- '(mumamo-background-chunk-major ((((class color) (min-colors 88) (background dark)) (:background "black"))))
- '(mumamo-background-chunk-submode1 ((((class color) (min-colors 88) (background dark)) (:background "Black"))))
- '(yas/field-highlight-face ((t (:background "light gray")))))
+
+(require 'color-theme)
+(defun color-theme-bluebulator ()
+  (interactive)
+  (color-theme-install
+   '(color-theme-bluebulator
+      ((background-color . "#0f0f0f")
+      (background-mode . light)
+      (border-color . "#191919")
+      (cursor-color . "#43667f")
+      (foreground-color . "#c9c9c5")
+      (mouse-color . "black"))
+     (fringe ((t (:background "#191919"))))
+     (mode-line ((t (:foreground "#a3a3a3" :background "#163e60"))))
+     (region ((t (:background "#29383d"))))
+     (font-lock-builtin-face ((t (:foreground "#ccaa61"))))
+     (font-lock-comment-face ((t (:foreground "#384347"))))
+     (font-lock-function-name-face ((t (:foreground "#197db8"))))
+     (font-lock-keyword-face ((t (:foreground "#508195"))))
+     (font-lock-string-face ((t (:foreground "#6ea07f"))))
+     (font-lock-type-face ((t (:foreground"#539355"))))
+     (font-lock-variable-name-face ((t (:foreground "#7f989f"))))
+     (minibuffer-prompt ((t (:foreground "#a2c4d8" :bold t))))
+     (font-lock-warning-face ((t (:foreground "Red" :bold t))))
+     )))
+(provide 'color-theme-bluebulator)
+(color-theme-bluebulator)
+
+
+;; (global-hl-line-mode t) ;; Highlights the current line
+;; (set-face-background 'hl-line "gray")
+
+;; ;(set-background-color "white")
+;; (set-background-color "#0f0f0f")
+;; ;(set-foreground-color "black")
+;; (set-foreground-color "#c9c9c5")
+;; ;(set-border-color "white")
+;; (set-border-color "#191919")
+;; ;(set-cursor-color "dark orange")
+;; (set-cursor-color "#43667f")
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;; ; '(font-lock-builtin-face ((t (:foreground "dark violet"))))
+;;  '(font-lock-builtin-face ((t (:foreground "#ccaa61"))))
+;; ; '(font-lock-comment-face ((((class color)) (:foreground "red"))))
+;;  '(font-lock-comment-face ((((class color)) (:foreground "#384347"))))
+;; ; '(font-lock-constant-face ((t (:foreground "DodgerBlue4"))))
+;; ; '(font-lock-doc-face ((t (:foreground "LightSalmon"))))
+;;  '(font-lock-function-face ((((class color)) (:foreground "dark goldenrod"))))
+;; ; '(font-lock-function-name-face ((t (:foreground "Peru"))))
+;;  '(font-lock-function-name-face ((t (:foreground "#197db8"))))
+;; ; '(font-lock-keyword-face ((((class color)) (:foreground "sienna"))))
+;;  '(font-lock-keyword-face ((((class color)) (:foreground "#508195"))))
+;; ; '(font-lock-string-face ((((class color)) (:foreground "green4"))))
+;;  '(font-lock-string-face ((((class color)) (:foreground "#6ea07f"))))
+;; ; '(font-lock-type-face ((((class color)) (:foreground "blue"))))
+;;  '(font-lock-type-face ((((class color)) (:foreground "#539355"))))
+;; ; '(font-lock-variable-face ((((class color)) (:foreground "purple4"))))
+;;  ;'(font-lock-variable-name-face ((t (:foreground "purple4"))))
+;;  '(font-lock-variable-name-face ((t (:foreground "#7f989f"))))
+;;  '(font-lock-warning-face ((t (:bold t :foreground "black" :weight bold))))
+;;  '(mumamo-background-chunk-major ((((class color) (min-colors 88) (background dark)) (:background "black"))))
+;;  '(mumamo-background-chunk-submode1 ((((class color) (min-colors 88) (background dark)) (:background "Black"))))
+;;  '(yas/field-highlight-face ((t (:background "light gray")))))
+
+
+
+
+;      (setq background-mode 'light)
+ ;     (setq mouse-color "black")
+     ;; (fringe ((t (:background "#191919"))))
+     ;; (mode-line ((t (:foreground "#a3a3a3" :background "#163e60"))))
+     ;; (region ((t (:background "#29383d"))))
+     ;; (minibuffer-prompt ((t (:foreground "#a2c4d8" :bold t))))
+     ;; (font-lock-warning-face ((t (:foreground "Red" :bold t))))
+
+
+
 
 
 ;;;;;;;;;;;;;;;;;;;    Keybindings    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -304,10 +377,10 @@
 ;;;;;;;;;;;;;; Custom set stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
  '(c-offsets-alist (quote ((brace-list-intro . 0) (label . 0))))
  '(mumamo-submode-indent-offset 2)
  '(newsticker-retrieval-method (quote extern))
@@ -328,7 +401,7 @@
 ;; Connect to Freenode on C-c e f
 (global-set-key "\C-cef" (lambda () (interactive)
                            (erc :server "irc.freenode.net" :port "6667"
-                                :nick "thatdavidmiller" :password "shuttleX")))
+                                :nick "thatdavidmiller")))
 
 
 
@@ -386,8 +459,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; Web browsing stuff here innit ;;;;;;;;;;;;;;;;;;
 (setq
  browse-url-browser-function 'browse-url-generic
- browse-url-generic-program "firefox") 
-(global-set-key "\C-cff" 'browse-url-firefox)
+ browse-url-generic-program "~/builds/firefox3.7/firefox") 
+(global-set-key "\C-cff" 'browse-url)
 ;;(setq browse-url-browser-function "firefox")
 
 ;; So I'll like toootally be lowercasin' kthxbai
@@ -467,6 +540,7 @@
 (setq gnus-subscribe-newsgroup-method 'gnus-subscribe-interactively)
 (setq gnus-save-newsrc-file nil)
 (setq gnus-always-read-dribble-file t)
+(add-to-list 'load-path "~/.emacs.d/gnus-stuff")
 
 ;;;;;;;;;;;;;;;;;;; Google ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (load-file "~/.emacs.d/google.el")
@@ -490,31 +564,22 @@
 
 
 ;;;;;;;;;;;;;;; VCS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;(require 'magit)
-;(global-set-key "\C-cgs" 'magit-status)     
+(require 'magit)
+(global-set-key "\C-cgs" 'magit-status)     
+
+;;;;;;;;;;;;;;;;; Saved States ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(global-set-key "\C-c\C-w" 'jump-to-register)
+(global-set-key [M-left] 'windmove-left) ; move to left windnow 
+(global-set-key [M-right] 'windmove-right) ; move to right window 
+(global-set-key [M-up] 'windmove-up) ; move to upper window 
+(global-set-key [M-down] 'windmove-down) ; move to downer window
 
 
-;; ;; Word count!
-(defun word-count (&optional filename)
-  "Returns the word count of the current buffer.  If `filename' is not nil, returns the word count of that file."
-  (interactive)
-  (save-some-buffers) ;; Make sure the current buffer is saved
-  (let ((tempfile nil))
-    (if (null filename)
-        (progn
-          (let ((buffer-file (buffer-file-name))
-                (lcase-file (downcase (buffer-file-name))))
-            (if (and (>= (length lcase-file) 4) (string= (substring lcase-file -4 nil) ".tex"))
-                ;; This is a LaTeX document, so DeTeX it!
-                (progn
-                  (setq filename (make-temp-file "wordcount"))
-                  (shell-command-to-string (concat "detex < " buffer-file " > " filename))
-                  (setq tempfile t))
-              (setq filename buffer-file)))))
-    (let ((result (car (split-string (shell-command-to-string (concat "wc -w " filename)) " "))))
-      (if tempfile
-          (delete-file filename))
-      (message (concat "Word Count: " result))
-      )))
 
-;(require 'haml-mode)
+
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(twit-title-face ((((background light)) (:background "Black" :underline "whoite" :box (:line-width 2 :color "white" :style 0))) (((background dark)) (:background "Black" :underline "white" :box (:line-width 2 :color "white" :style 0))) (t (:underline "white")))))
