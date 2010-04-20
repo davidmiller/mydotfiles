@@ -490,8 +490,8 @@
 
 
 ;;;;;;;;;;;;;;; VCS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'magit)
-(global-set-key "\C-cgs" 'magit-status)     
+;(require 'magit)
+;(global-set-key "\C-cgs" 'magit-status)     
 
 
 ;; ;; Word count!
@@ -517,4 +517,4 @@
       (message (concat "Word Count: " result))
       )))
 
-(require 'haml-mode)
+;(require 'haml-mode)
