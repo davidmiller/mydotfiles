@@ -256,7 +256,7 @@ Added: [2010-03-31 Wed 11:29]
 ** TODO Add visual feedback for successful saves to customer stages :Solariffic:
 
 Added: [2010-03-31 Wed 11:29]
-** TODO Refresh pages on successful customer stage save          :Solariffic:
+** DONE Refresh pages on successful customer stage save          :Solariffic:
    
 Added: [2010-03-31 Wed 11:30]
 ** TODO Add heading to stage templates                           :Solariffic:
@@ -283,7 +283,7 @@ Added: [2010-03-31 Wed 11:33]
   installation?
 
 Added: [2010-03-31 Wed 11:35]
-** TODO Add form for Book date with customer                     :Solariffic:
+** DONE Add form for Book date with customer                     :Solariffic:
   i) Book date with customer
 
   Similar to site visit
