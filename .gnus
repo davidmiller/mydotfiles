@@ -28,6 +28,8 @@
 (require 'bbdb)
 (bbdb-initialize 'gnus 'message)
 (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus) 
+(require 'bbdb-vcard)
+
 
 ;;;;;;;;;;;  Not exactly sure what these are doing... ;;;;;;;;;;;;;;;
 
