@@ -10,12 +10,14 @@ alias lsl='ls -lh | grep "^l"'   # list only links
 alias ll='ls -hlB --group-directories-first --hide=*.pyc'
 # list including .dotfiles
 alias lsa='ls -lAh --group-directories-first'
+alias lz="ls -lZ"                # SELinux display
+
 # Disk usage
 alias du="du -h"
 
 
 # PATH and SOURCE stuff here
-export PATH=$PATH:~/bin
+export PATH=$PATH:~/bin:~/opt/android/tools
 export RUBYOPT=rubygems 
 export PYTHONPATH=/home/david/programming/python/google_appengine/:/home/david/programming/python/google_appengine/lib/:/home/david/programming/python/genlog:
 alias reload='source ~/.bashrc'
@@ -57,6 +59,12 @@ alias rtfm='man'
 
 
 ## Bash Functions ##
+
+function ginit {
+    mkdir $1
+    cd $1
+    git init
+}
 
 # Makes directory then moves into it
 function mkcdr {

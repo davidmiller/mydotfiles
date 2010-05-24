@@ -143,6 +143,7 @@
                 (or
                  (mode . python-mode)
                  (mode . perl-mode)
+                 (mode . ruby-mode)
                  (mode . php-mode)
                  (mode . emacs-lisp-mode)
                  (mode . nxhtml-mode)
