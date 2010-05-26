@@ -487,10 +487,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Icicles ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'load-path "~/.emacs.d/icicles")
-(require 'icicles)
-(require 'icicles-iswitchb)
-(iswitchb-default-keybindings)
-(icy-mode 1)
+;(require 'icicles)
+;(require 'icicles-iswitchb)
+;(iswitchb-default-keybindings)
+;icy-mode 0)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;  Keyboard Macros  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -564,8 +564,8 @@
 
 
 ;;;;;;;;;;;;;;; VCS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'magit)
-(global-set-key "\C-cgs" 'magit-status)     
+;(require 'magit)
+;(global-set-key "\C-cgs" 'magit-status)     
 
 ;;;;;;;;;;;;;;;;; Saved States ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (global-set-key "\C-c\C-w" 'jump-to-register)
@@ -583,3 +583,8 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(twit-title-face ((((background light)) (:background "Black" :underline "whoite" :box (:line-width 2 :color "white" :style 0))) (((background dark)) (:background "Black" :underline "white" :box (:line-width 2 :color "white" :style 0))) (t (:underline "white")))))
+
+
+(require 'ido)
+(ido-mode t)
+(setq ido-enable-flex-matching t) ;; enable fuzzy matching
