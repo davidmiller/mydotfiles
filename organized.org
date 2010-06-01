@@ -3,7 +3,7 @@
 ** TODO Links list for Christina                                   :Primrose:
   Half done -there & mostly working
 Added: [2010-03-15 Mon 09:21]
-** TODO Add sections for 12 stages                               :Solariffic:
+** DONE Add sections for 12 stages                               :Solariffic:
 *** TODO Stage 1 Initial contact
 **** DONE WebForm rolls into database
 **** TODO Schedule calls for customers
@@ -121,7 +121,7 @@ Action
 ** TODO Add visual feedback for successful saves to customer stages :Solariffic:
 
 Added: [2010-03-31 Wed 11:29]
-** TODO Add heading to stage templates                           :Solariffic:
+** DONE Add heading to stage templates                           :Solariffic:
    
 Added: [2010-03-31 Wed 11:31]
 ** TODO Build the workflow actions into the admin history        :Solariffic:
@@ -136,19 +136,19 @@ Added: [2010-05-13 Thu 09:28]
 ** TODO Filter Water Features by category                          :Primrose:
 
 Added: [2010-05-13 Thu 09:29]
-** TODO Timesheets update holiday on save historical row         :Timesheets:
+** DONE Timesheets update holiday on save historical row         :Timesheets:
 
 Added: [2010-05-13 Thu 09:29]
-** TODO Make holiday admin total                                 :Timesheets:
+** DONE Make holiday admin total                                 :Timesheets:
 
 Added: [2010-05-13 Thu 09:31]
 ** DONE Make sure Jack can log in to Lowcarbonday                  :Primrose:
 
 Added: [2010-05-13 Thu 09:34]
-** TODO Invert Still interested colors                           :Solariffic:
+** DONE Invert Still interested colors                           :Solariffic:
 
 Added: [2010-05-13 Thu 11:35]
-** TODO Set Erica to be responsible for Automatic Follow up calls :Solariffic:
+** DONE Set Erica to be responsible for Automatic Follow up calls :Solariffic:
 
 Added: [2010-05-13 Thu 11:35]
 * Projects
