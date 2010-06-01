@@ -9,3 +9,5 @@ tramp
 *.PNG
 *.GIF
 url/*
+twit/*_normal
+twit/*.bmp
