@@ -3,17 +3,14 @@
 # group: Unit Testing
 # contributor: David Miller <david@deadpansinceity.com>
 # --
-class ${1:Name}TestCase(TestCase):
+class ${1:Name}TestCase(${2:TestCase}):
     def setUp(self):
-        self.${2:property} = $3
-        $4
+        pass
 
-    def Test${5:Something}(self):
-        $6                
+    def test${3:Something}(self):
+        """ """
+        $0pass
         
     def tearDown(self):
-        'Depopulate created model instances from test database.'
-        for model in MODELS:
-            for obj in model.objects.all():
-                obj.delete()
+        pass
 
