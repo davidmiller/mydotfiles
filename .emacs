@@ -69,7 +69,7 @@
 (add-to-list `load-path "~/.emacs.d/yasnippet")
 (require 'yasnippet)
 (yas/initialize)
-(yas/load-directory "~/.emacs.d/yasnippet/snippets")
+(yas/load-directory "~/.emacs.d/yasnippet/snippets/text-mode")
 
 
 ;; (defun yas-templatise ()
@@ -343,6 +343,9 @@
 
 (require 'javascript-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
+(add-hook 'javascript--mode-hook '(lambda ()
+                             ('yas/minor-mode)))
+             
 
 ;;;;  Lisp
 
@@ -358,7 +361,8 @@
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . lisp-mode))
 
 ;;;;  PHP
-(load-library "php-mode")
+;(load-library "php-mode")
+(load "/home/david/.emacs.d/nxhtml/autostart.el")
 ;; Smarty
 (add-to-list 'auto-mode-alist '("\\.tpl\\'" . html-mode))
 
@@ -583,9 +587,14 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
+ '(mumamo-background-chunk-major ((((class color) (min-colors 88) (background dark)) (:background "#1f1f1f"))))
+ '(mumamo-background-chunk-submode1 ((((class color) (min-colors 88) (background dark)) (:background "#0f0f0f"))))
  '(twit-title-face ((((background light)) (:background "Black" :underline "whoite" :box (:line-width 2 :color "white" :style 0))) (((background dark)) (:background "Black" :underline "white" :box (:line-width 2 :color "white" :style 0))) (t (:underline "white")))))
 
-
+;;  Yeah, IDO is actually better than Icicles - I think... although it fucks /sudo:: 
+;;  if you tab at the wrong point
 (require 'ido)
 (ido-mode t)
 (setq ido-enable-flex-matching t) ;; enable fuzzy matching
+
+
