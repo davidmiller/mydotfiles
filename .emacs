@@ -257,7 +257,7 @@
      (mode-line ((t (:foreground "#a3a3a3" :background "#163e60"))))
      (region ((t (:background "#29383d"))))
      (font-lock-builtin-face ((t (:foreground "#ccaa61"))))
-     (font-lock-comment-face ((t (:foreground "#384347"))))
+     (font-lock-comment-face ((t (:foreground "brown"))))
      (font-lock-function-name-face ((t (:foreground "#197db8"))))
      (font-lock-keyword-face ((t (:foreground "#508195"))))
      (font-lock-string-face ((t (:foreground "#6ea07f"))))
