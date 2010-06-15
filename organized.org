@@ -151,6 +151,30 @@ Added: [2010-05-13 Thu 11:35]
 ** DONE Set Erica to be responsible for Automatic Follow up calls :Solariffic:
 
 Added: [2010-05-13 Thu 11:35]
+** DONE exclude bad categories                                     :Primrose:
+Anything not a sub of wf 
+wf Special offers
+Brands - but only when not made explicitly present by lhcol click
+
+Added: [2010-06-14 lun. 16:25]
+** DONE Scroll div overflow for catefgory lists                    :Primrose:
+
+Added: [2010-06-14 lun. 16:26]
+** TODO Either interface or scrape prod desc for heights of waterfeatures :Primrose:
+
+Added: [2010-06-14 lun. 16:27]
+** TODO Make price be special price                                :Primrose:
+
+Added: [2010-06-15 mar. 16:20]
+** TODO Gap between title && boxes                                 :Primrose:
+
+Added: [2010-06-15 mar. 16:22]
+** TODO Order by view all sort order                               :Primrose:
+
+Added: [2010-06-15 mar. 16:29]
+** TODO Allow no shape etc                                         :Primrose:
+
+Added: [2010-06-15 mar. 16:34]
 * Projects
 ** Implement Solariffic CRM                                         :Project:
 *** Write the CRM/Workflow software for Spirit Solar
@@ -191,17 +215,11 @@ I have finished up to Stage 7, still working on Stages 8 / 9
 *** Establish models for workflow                                :Programing:
 ** Timesheets                                                       :Project:
 *** Temporary workers
-** Beer Festival Stage                                      :Larapel:Project:
-*** DONE Design for fascia                                           :Design:
-*** Work out clamping                                       :Planning:Design:
-*** Height for size of stage                              :Camra:Measurments:
-*** Sort Insurance                                                 :Research:
-*** Advertise Arnold Laver
-** Larapel Stall                                            :Larapel:Project:
-*** Decide on stock                                                :Planning:
-*** Larapel Tree
-*** Curved Corner
-*** Side panels
+** One Page Checkout                                                :Project:
+** Products order ranking                                           :Project:
+** New products pricing && change as stock changes                  :Project:
+** Unique products price changes                                    :Project:
+** Clearance products                                               :Project:
 * Calendar
 ** 15 March - solid schema                                      :Solariffic:
 * Archive
