@@ -1,4 +1,3 @@
-
 # listing aliases
 alias lx='ls -lXB'               # sort by extension
 alias lk='ls -lSr'               # sort by size
@@ -11,6 +10,9 @@ alias ll='ls -hlB --group-directories-first --hide=*.pyc'
 # list including .dotfiles
 alias lsa='ls -lAh --group-directories-first'
 alias lz="ls -lZ"                # SELinux display
+
+## directory aliases
+alias mkdir='mkdir -p'  #Make intermediaries
 
 # Disk usage
 alias du="du -h"
@@ -25,8 +27,6 @@ if [ $? -ne 0 ] ; then
         alias ack="ack-grep"
     fi
 fi
-
-
 
 # PATH and SOURCE stuff here
 export PATH=$PATH:~/bin:~/opt/android/tools
@@ -47,8 +47,6 @@ alias webserver='ssh primrose.co.uk'
 alias databaseserver='ssh 78.136.27.15'
 alias happenup='ssh happenup@happenup.com'
 alias massive='ssh massive'
-alias cdmassive='DIR=`pwd` && ssh -t massive "cd $DIR; bash"'
-alias pmassive='ssh -p 56 massive'
 
 # moving aliases
 alias ..='cd ..'
@@ -62,20 +60,22 @@ alias cdruby='cd ~/programming/ruby'
 alias cdhaskell='cd ~/programming/haskell'
 alias cdjs='cd ~/programming/javascript'
 
-
 # apt aliases
 alias ainstall='sudo apt-get install'
 
 # Misc 
 alias rtfm='man'
 
-
 ## Bash Functions ##
-
 function ginit {
     mkdir $1
     cd $1
     git init
+}
+
+# Killlist
+function killps {
+    ps aux | grep $1 | grep -v grep | awk {'print $2'} | xargs kill -9 2> /dev/null
 }
 
 # Makes directory then moves into it
@@ -106,7 +106,6 @@ extract () {
   fi
 }
 
-
 #### Boilerplate stuff added by various os defaults ####
 
 # If not running interactively, don't do anything
@@ -135,19 +134,19 @@ if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# set a fancy prompt (non-color, unless we know we "want" color)
-# case "$TERM" in
-#     xterm-color) color_prompt=yes;;
-# esac
+#set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color) color_prompt=yes;;
+esac
 
-# If this is an xterm set the title to user@host:dir
-# case "$TERM" in
-# xterm*|rxvt*)
-#     PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-#     ;;
-# *)
-#     ;;
-# esac
+#If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    ;;
+*)
+    ;;
+esac
 
 # Alias definitions.
 
@@ -155,18 +154,18 @@ fi
 #    . ~/.bash_aliases
 #fi
 
-# enable color support of ls and also add handy aliases
-# if [ -x /usr/bin/dircolors ]; then
-#     eval "`dircolors -b`"
-#     alias ls='ls --color=auto'
-#     alias grep='grep --color=auto'
-#     alias fgrep='fgrep --color=auto'
-#     alias egrep='egrep --color=auto'
-# fi
+#enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    eval "`dircolors -b`"
+    alias ls='ls --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
-# if [ -f /etc/bash_completion ]; then
-#     . /etc/bash_completion
-# fi
+if [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+fi
