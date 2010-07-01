@@ -48,6 +48,12 @@ alias databaseserver='ssh 78.136.27.15'
 alias happenup='ssh happenup@happenup.com'
 alias massive='ssh massive'
 
+# local box aliases
+if [ -f ~/.bash_aliases ]; then
+   . ~/.bash_aliases
+fi
+
+
 # moving aliases
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -147,12 +153,6 @@ xterm*|rxvt*)
 *)
     ;;
 esac
-
-# Alias definitions.
-
-#if [ -f ~/.bash_aliases ]; then
-#    . ~/.bash_aliases
-#fi
 
 #enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
