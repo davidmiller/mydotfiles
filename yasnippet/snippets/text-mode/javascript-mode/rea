@@ -4,6 +4,6 @@
 # group: jquery
 # contributor: David Miller <david@deadpansincerity.com>
 # --
-ready( function(){
+$(document).ready( function(){
     $0
 });

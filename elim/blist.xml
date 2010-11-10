@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<purple version='1.0'>
+	<blist>
+		<group name='Buddies'>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>barney.carroll@gmail.com</name>
+					<alias>Barney Carroll</alias>
+					<setting name='last_seen' type='int'>1289296661</setting>
+					<setting name='icon_checksum' type='string'>6c46ce3722c1a43a5b7e04d4d25c9ab56e59e5da</setting>
+					<setting name='buddy_icon' type='string'>6c46ce3722c1a43a5b7e04d4d25c9ab56e59e5da.jpg</setting>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>paul@primrose-london.co.uk</name>
+					<alias>Paul H</alias>
+					<setting name='last_seen' type='int'>1289296661</setting>
+					<setting name='icon_checksum' type='string'>3cd26f1dec1703cb4429fa110670735573f79fb3</setting>
+					<setting name='buddy_icon' type='string'>3cd26f1dec1703cb4429fa110670735573f79fb3.png</setting>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>heleng@primrose-london.co.uk</name>
+					<alias>Helen Golding</alias>
+					<setting name='last_seen' type='int'>1289296661</setting>
+					<setting name='icon_checksum' type='string'>a5e857c42bdad847fde309a17af0de5af6b03de1</setting>
+					<setting name='buddy_icon' type='string'>a5e857c42bdad847fde309a17af0de5af6b03de1.jpg</setting>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>timr@primrose-london.co.uk</name>
+					<alias>Tim Rayers</alias>
+					<setting name='last_seen' type='int'>1289296661</setting>
+					<setting name='icon_checksum' type='string'>1a7206724bba747b16177a7ba629b1425da5626f</setting>
+					<setting name='buddy_icon' type='string'>1a7206724bba747b16177a7ba629b1425da5626f.jpg</setting>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>nmadzharov@gmail.com</name>
+					<alias>Nikolay Madzharov</alias>
+					<setting name='last_seen' type='int'>1289296661</setting>
+					<setting name='icon_checksum' type='string'>f1097cc08f5dcd0d8d392306ba069cb74c799212</setting>
+					<setting name='buddy_icon' type='string'>f1097cc08f5dcd0d8d392306ba069cb74c799212.jpg</setting>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>jakubb@primrose-london.co.uk</name>
+					<alias>Jakub Balas</alias>
+					<setting name='last_seen' type='int'>1289296661</setting>
+					<setting name='icon_checksum' type='string'>351535492abdcb1ef058f597352df4e4b6f58353</setting>
+					<setting name='buddy_icon' type='string'>351535492abdcb1ef058f597352df4e4b6f58353.jpg</setting>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>beng@spiritsolar.co.uk</name>
+					<alias>Ben Gosling</alias>
+					<setting name='last_seen' type='int'>1289296661</setting>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>annah@primrose-london.co.uk</name>
+					<alias>Anna Hepworth</alias>
+					<setting name='last_seen' type='int'>1289247129</setting>
+					<setting name='icon_checksum' type='string'>2cba6d7011a6cdee128c004f01075b9e1a1fcd81</setting>
+					<setting name='buddy_icon' type='string'>2cba6d7011a6cdee128c004f01075b9e1a1fcd81.jpg</setting>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>audec@primrose-london.co.uk</name>
+					<alias>Aude Collemare</alias>
+					<setting name='last_seen' type='int'>1289296661</setting>
+					<setting name='icon_checksum' type='string'>a8e6a7e4ad07befd9559b23ce1066bc8711f0b0e</setting>
+					<setting name='buddy_icon' type='string'>a8e6a7e4ad07befd9559b23ce1066bc8711f0b0e.jpg</setting>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>dom@primrose-london.co.uk</name>
+					<alias>Dominique Durner</alias>
+					<setting name='last_seen' type='int'>1289243228</setting>
+					<setting name='icon_checksum' type='string'>5ade6052d64a7dab01c0c7ed9416b3d48e372bc4</setting>
+					<setting name='buddy_icon' type='string'>5ade6052d64a7dab01c0c7ed9416b3d48e372bc4.jpg</setting>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>jcleveland@primrose-london.co.uk</name>
+					<alias>James Cleveland</alias>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>mikey@primrose-london.co.uk</name>
+					<alias>Mikey Russell</alias>
+					<setting name='last_seen' type='int'>1289242703</setting>
+					<setting name='icon_checksum' type='string'>19e27bc271f859e78c754196bf5fed1f459b9c30</setting>
+					<setting name='buddy_icon' type='string'>19e27bc271f859e78c754196bf5fed1f459b9c30.jpg</setting>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>vinod@primrose-london.co.uk</name>
+					<alias>Vinod Pachu</alias>
+					<setting name='last_seen' type='int'>1289296661</setting>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>marianasastre@gmail.com</name>
+					<alias>Mariana Sastre</alias>
+					<setting name='last_seen' type='int'>1289257091</setting>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>3roq191s4iwof@id.talk.google.com</name>
+					<alias>Dominique Durner</alias>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>mischellek@primrose-london.co.uk</name>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>mishellek@primrose-london.co.uk</name>
+					<alias>Mishelle Kit</alias>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>virginiag@primrose-london.co.uk</name>
+					<alias>Virginia Gutierrez</alias>
+					<setting name='last_seen' type='int'>1289296661</setting>
+					<setting name='icon_checksum' type='string'>c66be05b67d9cc2e41c1e6e8c3370fadf3ec0f5a</setting>
+					<setting name='buddy_icon' type='string'>c66be05b67d9cc2e41c1e6e8c3370fadf3ec0f5a.jpg</setting>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>primrosemikey@googlemail.com</name>
+					<alias>Mikey Russell</alias>
+				</buddy>
+			</contact>
+			<contact>
+				<buddy account='david@deadpansincerity.com' proto='prpl-jabber'>
+					<name>barney</name>
+					<alias>barney</alias>
+				</buddy>
+			</contact>
+		</group>
+	</blist>
+	<privacy>
+		<account proto='prpl-jabber' name='david@deadpansincerity.com' mode='1'/>
+	</privacy>
+</purple>

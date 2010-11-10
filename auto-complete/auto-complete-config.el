@@ -20,7 +20,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
@@ -30,8 +30,10 @@
   (require 'cl))
 
 (require 'auto-complete)
+;; (require 'auto-complete-yasnippet) ;optional
+;; (require 'auto-complete-semantic)  ;optional
+;; (require 'auto-complete-gtags)     ;optional
 
-
 
 ;; Emacs Lisp sources
 
@@ -59,7 +61,7 @@
   (add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-features-setup)
   t)
 
-
+
 
 ;; C++ sources
 
@@ -68,12 +70,12 @@
  ("and" "bool" "compl" "do" "export" "goto" "namespace" "or_eq" "return"
   "struct" "try" "using" "xor" "and_eq" "break" "const" "double" "extern"
   "if" "new" "private" "short" "switch" "typedef" "virtual" "xor_eq" "asm"
-  "case" "const_cast" "dynamic_cast" "false" "inline" "not" "protected" 
-  "signed" "template" "typeid" "void" "auto" "catch" "continue" "else" 
+  "case" "const_cast" "dynamic_cast" "false" "inline" "not" "protected"
+  "signed" "template" "typeid" "void" "auto" "catch" "continue" "else"
   "float" "int" "not_eq" "public" "sizeof" "this" "typename" "volatile"
   "bitand" "char" "default" "enum" "for" "long" "operator" "register"
   "static" "throw" "union" "wchar_t" "bitor" "class" "delete" "explicit"
-  "friend" "mutable" "or" "reinterpret_cast" "static_cast" "true" 
+  "friend" "mutable" "or" "reinterpret_cast" "static_cast" "true"
   "unsigned" "while"))
 
 (defun ac-c++-keywords-setup ()
@@ -83,7 +85,7 @@
   (add-hook 'c++-mode-hook 'ac-c++-keywords-setup)
   t)
 
-
+
 
 ;; CSS sources
 
@@ -231,7 +233,7 @@
   "x-low" "x-slow" "x-small" "x-soft" "xx" "xx-large" "xx-small" "y"
   "yellow" "yellowgreen" "z" "z-index" "zero"))
 
-
+
 
 ;; Gtags sources
 
@@ -268,7 +270,7 @@
 (defun ac-gtags-initialize ()
   t)
 
-
+
 
 ;; Python sources
 
@@ -308,7 +310,7 @@
                   (rope-completions))))))
     (candidates . ac-ropemacs-completions-cache)))
 
-
+
 
 ;; Ruby sources
 
@@ -333,7 +335,7 @@
   (and (require 'rcodetools nil t)
        (prog1 t (add-hook 'ruby-mode-hook 'ac-rcodetools-setup))))
 
-
+
 
 ;; Semantic sources
 
@@ -354,36 +356,18 @@
 (defun ac-semantic-initialize ()
   (require 'semantic-ia))
 
-
-
-;; Yasnippet sources
-
-(defun ac-yasnippet-candidate-1 (table)
-  (let ((hashtab (yas/snippet-table-hash table))
-        (parent (if (fboundp 'yas/snippet-table-parent)
-                    (yas/snippet-table-parent table)))
-        candidates)
-    (maphash (lambda (key value)
-               (push key candidates))
-             hashtab)
-    (setq candidates (all-completions ac-prefix (nreverse candidates)))
-    (if parent
-        (setq candidates
-              (append candidates (ac-yasnippet-candidate-1 parent))))
-    candidates))
 
 (defun ac-yasnippet-candidate ()
-  (if (fboundp 'yas/get-snippet-tables)
-      ;; >0.6.0
-      (apply 'append (mapcar 'ac-yasnippet-candidate-1 (yas/get-snippet-tables major-mode)))
-    (let ((table
-           (if (fboundp 'yas/snippet-table)
-               ;; <0.6.0
-               (yas/snippet-table major-mode)
-             ;; 0.6.0
-             (yas/current-snippet-table))))
-      (if table
-          (ac-yasnippet-candidate-1 table)))))
+  (let ((table (yas/get-snippet-tables major-mode)))
+    (if table
+      (let (candidates (list))
+            (mapcar (lambda (mode)
+              (maphash (lambda (key value)
+                (push key candidates))
+              (yas/snippet-table-hash mode)))
+            table)
+        (all-completions ac-prefix candidates)))))
+
 
 (defun ac-yasnippet-initialize ()
   (and (require 'yasnippet nil t)
@@ -400,11 +384,12 @@
 (defvar ac-source-yasnippet
   '((candidates . ac-yasnippet-candidate)
     (action . yas/expand)
+    (limit . 3)
     (candidate-face . ac-yasnippet-candidate-face)
     (selection-face . ac-yasnippet-selection-face))
   "Source for Yasnippet.")
 
-
+
 
 ;; Eclim sources
 
