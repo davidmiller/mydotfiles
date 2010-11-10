@@ -58,11 +58,19 @@
 
 ;; Auto Complete
 (add-to-list `load-path "~/.emacs.d/auto-complete")
-(require 'auto-complete)
+;(require 'auto-complete)
 (require 'auto-complete-config)
-(setq-default ac-sources '(ac-source-words-in-same-mode-buffers))
-(add-hook 'emacs-lisp-mode-hook (lambda () (add-to-list 'ac-sources 'ac-source-symbols)))
-(add-hook 'auto-complete-mode-hook (lambda () (add-to-list 'ac-sources 'ac-source-filename)))
+(setq-default ac-sources '(ac-source-words-in-same-mode-buffers
+                           ac-source-yasnippet
+                           ac-source-filename
+                           ac-source-files-in-current-dir))
+
+(add-hook 'emacs-lisp-mode-hook
+          (lambda () (add-to-list 'ac-sources 'ac-source-symbols)))
+;; (add-hook 'auto-complete-mode-hook
+;;           (lambda () (add-to-list 'ac-sources 'ac-source-filename)))
+(add-hook 'python-mode-hook
+          (lambda () (add-to-list 'ac-sources 'ac-source-ropemacs)))
 (global-auto-complete-mode t)
 (ac-css-keywords-initialize)
                                         ;(ac-set-trigger-key "C-c C-/")
@@ -152,7 +160,7 @@
                  (mode . ruby-mode)
                  (mode . php-mode)
                  (mode . emacs-lisp-mode)
-                 (mode . nxhtml-mode)
+;                 (mode . nxhtml-mode)
                  (filename . ".tpl\$")
                  ;; etc
                  ))
@@ -327,30 +335,25 @@
      ;; (font-lock-warning-face ((t (:foreground "Red" :bold t))))
 
 
-
-
-
-;;;;;;;;;;;;;;;;;;;    Keybindings    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
-                                        ;(define-key my-keys-minor-mode-map (kbd "C-c C-f") 'insert-function)
-
-(define-minor-mode my-keys-minor-mode
-  "A minor mode for overriding keybindings"
-  t " my-keys" 'my-keys-minor-mode-map)
-(my-keys-minor-mode 1)
-
-(defun my-minibuffer-setup-hook ()
-  (my-keys-minor-mode 0))
-(add-hook 'minibuffer-setup-hook 'my-minibuffer-setup-hook)
-
 ;;;;;;;;;;;;;;;;;;;;;    Languages    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'load-path "~/.emacs.d/major-modes")
 
-(require 'javascript-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
-(add-hook 'javascript--mode-hook '(lambda ()
-                             ('yas/minor-mode)))
+(autoload 'javascript-mode "javascript" nil t)
+;;
+
+;; (require 'jas)
+;; (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
+;; ;(autoload 'espresso-mode "espresso" nil t)
+
+
+;; (add-to-list 'auto-mode-alist '("\\.js\\'" . espresso-mode))
+;; (autoload 'espresso "espresso-mode" nil t)
+
+;; (autoload #'espresso-mode "espresso" "Start espresso-mode" t)
+;; (add-to-list 'auto-mode-alist '("\\.js$" . espresso-mode))
+;; (add-to-list 'auto-mode-alist '("\\.json$" . espresso-mode))
+
 
 
 ;;;;  Lisp
@@ -368,7 +371,7 @@
 
 ;;;;  PHP
 ;(load-library "php-mode")
-(load "/home/david/.emacs.d/nxhtml/autostart.el")
+;(load "/home/david/.emacs.d/nxhtml/autostart.el")
 ;; Smarty
 (add-to-list 'auto-mode-alist '("\\.tpl\\'" . html-mode))
 
@@ -638,5 +641,7 @@
 (require 'dvc-autoloads)
 (global-set-key "\C-c\h\p" 'xhg-push)
 (global-set-key "\C-c\g\p" 'xgit-push)
+(global-set-key "\C-c\h\P" 'xhg-pull)
+(global-set-key "\C-c\g\P" 'xgit-pull)
 (setq dvc-tips-enabled nil)
 (define-key ac-completing-map "\ESC/" 'ac-stop)
