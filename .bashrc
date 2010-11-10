@@ -21,23 +21,26 @@ alias du="du -h"
 which ack > /dev/null
 if [ $? -ne 0 ] ; then
     which ack-grep > /dev/null
-    if [ $? -ne 0 ] ; then        
+    if [ $? -ne 0 ] ; then
         echo "Where the ack has ack gone?"
     else
         alias ack="ack-grep"
     fi
 fi
 
+alias h="history | grep"
+
 # PATH and SOURCE stuff here
 export PATH=$PATH:~/bin:~/opt/android/tools
-export RUBYOPT=rubygems 
+export RUBYOPT=rubygems
 export PYTHONPATH=/home/david/programming/python/google_appengine/:/home/david/programming/python/google_appengine/lib/:/home/david/programming/python/genlog:
+export PYTHONSTARTUP=~/.pythonstartup
 alias reload='source ~/.bashrc'
 
 # Default editor
 export EDITOR="emacs -nw -q"
 
-# emacs modes 
+# emacs modes
 alias gemacs="emacs-snapshot-gtk"
 alias nemacs="emacs -nw"
 alias emacs="emacs-snapshot-gtk"
@@ -69,7 +72,7 @@ alias cdjs='cd ~/programming/javascript'
 # apt aliases
 alias ainstall='sudo apt-get install'
 
-# Misc 
+# Misc
 alias rtfm='man'
 
 ## Bash Functions ##

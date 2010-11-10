@@ -2,7 +2,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;    .emacs    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Reload this file 
+;; Reload this file
 (defun x-reload-dot-emacs()
   (interactive)
   (load-file "~/.emacs"))
@@ -22,12 +22,12 @@
 ;;; Initialization
 (setq inhibit-startup-message t) ;; No more welcome for me
 ;; Make stuff wander about
-(defconst animate-n-steps 10) 
+(defconst animate-n-steps 10)
 (defun emacs-reloaded ()
   (animate-string (concat ";; Initialization successful, welcome to "
-			  (substring (emacs-version) 0 16)
-			  ". \n;; Loaded with .emacs enabled")
-		  0 0)
+                          (substring (emacs-version) 0 16)
+                          ". \n;; Loaded with .emacs enabled")
+                  0 0)
   (newline-and-indent)  (newline-and-indent))
 (add-hook 'after-init-hook 'emacs-reloaded)
 
@@ -49,7 +49,7 @@
 ;;
 ;; Tabs are right out.
 (setq tab-width 4)
-(set-face-attribute 'default nil :height 100)
+(set-face-attribute 'default nil :height 105)
 (show-paren-mode 1) ;; Highlight parenthesis pairs
 (setq transient-mark-mode t) ;; Where am I now?
 (add-to-list `load-path "~/.emacs.d/")
@@ -60,10 +60,14 @@
 (add-to-list `load-path "~/.emacs.d/auto-complete")
 (require 'auto-complete)
 (require 'auto-complete-config)
+(setq-default ac-sources '(ac-source-words-in-same-mode-buffers))
+(add-hook 'emacs-lisp-mode-hook (lambda () (add-to-list 'ac-sources 'ac-source-symbols)))
+(add-hook 'auto-complete-mode-hook (lambda () (add-to-list 'ac-sources 'ac-source-filename)))
 (global-auto-complete-mode t)
+(ac-css-keywords-initialize)
                                         ;(ac-set-trigger-key "C-c C-/")
                                         ;(setq ac-auto-start nil)
-(setq ac-auto-start 3)
+(setq ac-auto-start 2)
 
 ;;;;;;;;;;;;;;;;   Yasnippet    ;;;;;;;;;;;;;;;
 (add-to-list `load-path "~/.emacs.d/yasnippet")
@@ -95,7 +99,7 @@
 (global-set-key "\C-c\C-t" 'ansi-term)
 
 ;;;;;;;;;;;;;;;;;;;;;;  Bookmarks   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(setq 
+(setq
  bookmark-default-file "~/.emacs.d/bookmarks" ; Keep ~/ clean
  bookmark-save-flag 1)                        ; autosave changes
 
@@ -132,12 +136,14 @@
 
 
 (setq ibuffer-saved-filter-groups
-      (quote (("default"      
+      (quote (("default"
                ("Org" ;; all org-related buffers
-                (mode . org-mode))  
+                (mode . org-mode))
                ("Profile"    ;; personal config files
                 (filename . ".emacs\$"))
-               ("Gnus" ;; Solariffic CRM on local machine
+               ("Solariffic" ;; Solariffic CRM on local machine
+                (filename . "work/solar"))
+               ("Gnus"
                 (name . "*Group*"))
                ("Programming" ;; prog stuff not already in MyProjectX
                 (or
@@ -149,7 +155,7 @@
                  (mode . nxhtml-mode)
                  (filename . ".tpl\$")
                  ;; etc
-                 )) 
+                 ))
                ("Mail"
                  (or  ;; mail-related buffers
                   (mode . message-mode)
@@ -164,7 +170,7 @@
                ("Twitter" ;; Twitter stuff together
                 (name . "Twit"))
                ("Snippets"
-                (filename . "yasnippet/snippets"))            
+                (filename . "yasnippet/snippets"))
                ("ERC"   (mode . erc-mode))))))
 
                                         ;(add-to-list 'ibuffer-never-show-regexps "jpg")
@@ -178,7 +184,7 @@
 
 (global-set-key "\C-x\C-b" 'ibuffer) ;; Buffer management
 ;; File or  buffer name in title
-(setq frame-title-format '(buffer-file-name "%f" ("%b"))) 
+(setq frame-title-format '(buffer-file-name "%f" ("%b")))
 
 
 ;; ;; Functions for nice buffer switching with C-tab keybindings
@@ -213,7 +219,7 @@
 
 
 (defun iswitchb-local-keys ()
-  (mapc (lambda (K) 
+  (mapc (lambda (K)
           (let* ((key (car K)) (fun (cdr K)))
             (define-key iswitchb-mode-map (edmacro-parse-keys key) fun)))
         '(("<right>" . iswitchb-next-match)
@@ -345,7 +351,7 @@
 (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
 (add-hook 'javascript--mode-hook '(lambda ()
                              ('yas/minor-mode)))
-             
+
 
 ;;;;  Lisp
 
@@ -378,6 +384,12 @@
   (add-to-list 'auto-mode-alist '("\\.html\\'" . django-mode)))
 (require 'django-mode)
 
+(setq auto-mode-alist (cons '("\\.py$" . python-mode) auto-mode-alist))
+(setq interpreter-mode-alist (cons '("python" . python-mode)
+                                   interpreter-mode-alist))
+(autoload 'python-mode "python-mode" "Python editing mode." t)
+
+
 
 ;;;;;;;;;;;;;; Custom set stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -386,11 +398,14 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
+ '(ac-dwim t)
  '(c-offsets-alist (quote ((brace-list-intro . 0) (label . 0))))
  '(mumamo-submode-indent-offset 2)
  '(newsticker-retrieval-method (quote extern))
  '(newsticker-url-list (quote (("A Softer World" "http://www.rsspect.com/rss/asw.xml" nil nil nil) ("A List Apart" "http://www.alistapart.com/feed/rss.xml" nil nil nil) ("BBC Sport" "http://newsrss.bbc.co.uk/rss/sportonline_uk_edition/football/rss.xml" nil nil nil) ("Dinosaur Comics" "http://www.rsspect.com/rss/qwantz.xml" nil nil nil) ("Dilbert" "http://feedproxy.google.com/DilbertDailyStrip" nil nil nil) ("Radar" "http://feeds.feedburner.com/oreilly/radar/atom" nil nil nil) ("Daily WTF" "http://syndication.thedailywtf.com/TheDailyWtf" nil nil nil) ("XKCD" "http://xkcd.com/atom.xml" nil nil nil) ("ORG" "http://www.openrightsgroup.org/feed/" nil nil nil) ("QC" "http://www.questionablecontent.net/QCRSS.xml" nil nil nil))))
- '(org-agenda-files nil))
+ '(org-agenda-files nil)
+ '(python-python-command "python")
+ '(rails-ws:default-server-type "webrick"))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Jabber client ;;;;;;;;;;;;;;;;;;;;;;;
@@ -406,7 +421,7 @@
 ;; Connect to Freenode on C-c e f
 (global-set-key "\C-cef" (lambda () (interactive)
                            (erc :server "irc.freenode.net" :port "6667"
-                                :nick "thatdavidmiller")))
+                                :nick "davidmiller")))
 
 
 
@@ -416,31 +431,31 @@
 
 ;; Define M-x commands
 
-(autoload 'twit-show-recent-tweets	"twit" "" t) ; most recent direct tweets (!)
-(autoload 'twit-show-at-tweets		"twit" "" t) ; directed to you
-(autoload 'twit-show-friends 		"twit" "" t) ; your friends
-(autoload 'twit-show-followers 		"twit" "" t) ; your followers
+(autoload 'twit-show-recent-tweets      "twit" "" t) ; most recent direct tweets (!)
+(autoload 'twit-show-at-tweets          "twit" "" t) ; directed to you
+(autoload 'twit-show-friends            "twit" "" t) ; your friends
+(autoload 'twit-show-followers          "twit" "" t) ; your followers
 
-(autoload 'twit-follow-recent-tweets	"twit" "" t) ; at idle, check at background
+(autoload 'twit-follow-recent-tweets    "twit" "" t) ; at idle, check at background
 
-(autoload 'twit-post			"twit" "" t)
-(autoload 'twit-post-region		"twit" "" t)
-(autoload 'twit-post-buffer		"twit" "" t)
-(autoload 'twit-direct			"twit" "" t) ; tweet to person
+(autoload 'twit-post                    "twit" "" t)
+(autoload 'twit-post-region             "twit" "" t)
+(autoload 'twit-post-buffer             "twit" "" t)
+(autoload 'twit-direct                  "twit" "" t) ; tweet to person
 
-(autoload 'twit-add-favorite		"twit" "" t) ; Add to favourite: (*) star
-(autoload 'twit-remove-favorite 	"twit" "" t)
+(autoload 'twit-add-favorite            "twit" "" t) ; Add to favourite: (*) star
+(autoload 'twit-remove-favorite         "twit" "" t)
 
-(autoload 'twit-add-friend  		"twit" "" t) ; follow a friend
-(autoload 'twit-remove-friend 		"twit" "" t) ; emove a frienda
+(autoload 'twit-add-friend              "twit" "" t) ; follow a friend
+(autoload 'twit-remove-friend           "twit" "" t) ; emove a frienda
 
 ;; Customize twit-multi-accounts in order to use these: ((user . pass) ...)
-(autoload 'twit-switch-account 		"twit" "" t)
-(autoload 'twit-direct-with-account  	"twit" "" t)
-(autoload 'twit-post-with-account 	"twit" "" t)
+(autoload 'twit-switch-account          "twit" "" t)
+(autoload 'twit-direct-with-account     "twit" "" t)
+(autoload 'twit-post-with-account       "twit" "" t)
 
 (autoload 'twit-show-direct-tweets-with-account "twit" "" t)
-(autoload 'twit-show-at-tweets-with-account 	"twit" "" t)
+(autoload 'twit-show-at-tweets-with-account     "twit" "" t)
 
 (setq twit-user "thatdavidmiller")
 (setq twit-show-user-images t)
@@ -454,17 +469,17 @@
 (global-set-key "\C-cTsf" 'twit-show-at-tweets)       ; (s)how (f)riends
 (global-set-key "\C-cTsl" 'twit-show-at-tweets)       ; (s)how fo(l)lowers
 
-(global-set-key "\C-cTpp" 'twit-post)		      ; (p)ost
-(global-set-key "\C-cTpr" 'twit-post-region)	      ; (p)post (r)egion
-(global-set-key "\C-cTpb" 'twit-post-buffer)	      ; (p)post (b)uffer
-(global-set-key "\C-cTpr" 'twit-direct)		      ; (p)post (d)irect
-(global-set-key "\C-cTfa" 'twit-add-favorite)	      ; (f)avorite (a)dd
+(global-set-key "\C-cTpp" 'twit-post)                 ; (p)ost
+(global-set-key "\C-cTpr" 'twit-post-region)          ; (p)post (r)egion
+(global-set-key "\C-cTpb" 'twit-post-buffer)          ; (p)post (b)uffer
+(global-set-key "\C-cTpr" 'twit-direct)               ; (p)post (d)irect
+(global-set-key "\C-cTfa" 'twit-add-favorite)         ; (f)avorite (a)dd
 (global-set-key "\C-cTfr" 'twit-remove-favorite)      ; (f)avorite (r)emove
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; Web browsing stuff here innit ;;;;;;;;;;;;;;;;;;
 (setq
  browse-url-browser-function 'browse-url-generic
- browse-url-generic-program "~/builds/firefox3.7/firefox") 
+ browse-url-generic-program "firefox")
 (global-set-key "\C-cff" 'browse-url)
 ;;(setq browse-url-browser-function "firefox")
 
@@ -487,7 +502,7 @@
 (define-key global-map "\C-cr" 'org-remember)
 
 (setq org-remember-templates
-      '(("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\nAdded: %U" 
+      '(("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\nAdded: %U"
          "~/notes/organized.org" "Tasks")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Icicles ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -546,6 +561,9 @@
 (setq gnus-save-newsrc-file nil)
 (setq gnus-always-read-dribble-file t)
 (add-to-list 'load-path "~/.emacs.d/gnus-stuff")
+(setq starttls-use-gnutls t
+        starttls-gnutls-program "gnutls-cli"
+        starttls-extra-arguments nil)
 
 ;;;;;;;;;;;;;;;;;;; Google ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (load-file "~/.emacs.d/google.el")
@@ -570,13 +588,13 @@
 
 ;;;;;;;;;;;;;;; VCS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;(require 'magit)
-;(global-set-key "\C-cgs" 'magit-status)     
+;(global-set-key "\C-cgs" 'magit-status)
 
 ;;;;;;;;;;;;;;;;; Saved States ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (global-set-key "\C-c\C-w" 'jump-to-register)
-(global-set-key [M-left] 'windmove-left) ; move to left windnow 
-(global-set-key [M-right] 'windmove-right) ; move to right window 
-(global-set-key [M-up] 'windmove-up) ; move to upper window 
+(global-set-key [M-left] 'windmove-left) ; move to left windnow
+(global-set-key [M-right] 'windmove-right) ; move to right window
+(global-set-key [M-up] 'windmove-up) ; move to upper window
 (global-set-key [M-down] 'windmove-down) ; move to downer window
 
 
@@ -587,14 +605,38 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
+ '(diff-file-header ((t (:background "grey60" :foreground "dark red" :weight bold))))
+ '(diff-hunk-header ((t (:inherit diff-header :background "black" :foreground "firebrick"))))
  '(mumamo-background-chunk-major ((((class color) (min-colors 88) (background dark)) (:background "#1f1f1f"))))
  '(mumamo-background-chunk-submode1 ((((class color) (min-colors 88) (background dark)) (:background "#0f0f0f"))))
  '(twit-title-face ((((background light)) (:background "Black" :underline "whoite" :box (:line-width 2 :color "white" :style 0))) (((background dark)) (:background "Black" :underline "white" :box (:line-width 2 :color "white" :style 0))) (t (:underline "white")))))
 
-;;  Yeah, IDO is actually better than Icicles - I think... although it fucks /sudo:: 
+;;  Yeah, IDO is actually better than Icicles - I think... although it fucks /sudo::
 ;;  if you tab at the wrong point
 (require 'ido)
 (ido-mode t)
 (setq ido-enable-flex-matching t) ;; enable fuzzy matching
 
+(add-to-list 'load-path "~/.emacs.d/emacs-rails/")
+(require 'rails)
 
+
+;; Via SteveYegge
+
+(global-set-key "\C-w" 'backward-kill-word)
+(global-set-key "\C-x\C-k" 'kill-region)
+(global-set-key "\C-c\C-k" 'kill-region)
+
+
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'menu-bar-mode) (menu-bar-mode 1))
+
+;; Mysql
+;(autoload 'mysql )
+(add-to-list 'load-path "/home/david/.emacs.d/dvc/")
+(require 'dvc-autoloads)
+(global-set-key "\C-c\h\p" 'xhg-push)
+(global-set-key "\C-c\g\p" 'xgit-push)
+(setq dvc-tips-enabled nil)
+(define-key ac-completing-map "\ESC/" 'ac-stop)
