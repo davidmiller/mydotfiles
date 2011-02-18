@@ -1,9 +1,7 @@
 # -*- coding: utf-8; mode: snippet -*-
-# name: jQuery each()
-# key: eac
+# name: jQuery next()
+# key: ne
 # group: jquery
 # contributor: David Miller <david@deadpansincerity.com>
 # --
-$.each(${1:an-array}, function(i){
-    $0
-});
+next(${1:'#selector'}).$0

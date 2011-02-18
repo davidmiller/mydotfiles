@@ -1,4 +1,5 @@
 #name : require "..."
 #group : general
 # --
-require "$0"
+require "$1"
+$0

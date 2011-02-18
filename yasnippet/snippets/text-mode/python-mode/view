@@ -1,11 +1,13 @@
+# mode: snippet
 # contributor: David Miller <david@deadpansincerity.com>
-# name : view...to_response
-# group: django      
+# name : view...render_to
+# group: django
 # --
-def ${1:my_view}( request ):
+@user_passes_test(${1:test}, login_url=${2:"/"})
+@render_to('${3:template}')
+def sources(request):
     """
-    ${2:what does this view do}
+    $4
     """
-    $0
-    return render_to_response( "${3:template.html}",
-                               {} )
+    $5
+    return {}

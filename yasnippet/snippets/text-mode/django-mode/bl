@@ -3,5 +3,5 @@
 # name : {% ... %}
 # --
 {% block ${1:name} %}
-   50
+   $0
 {% endblock %}
