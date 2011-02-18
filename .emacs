@@ -181,41 +181,15 @@
                 (filename . "yasnippet/snippets"))
                ("ERC"   (mode . erc-mode))))))
 
-                                        ;(add-to-list 'ibuffer-never-show-regexps "jpg")
-                                        ;(add-to-list 'ibuffer-never-show-regexps "jpg$")
-
 (add-hook 'ibuffer-mode-hook
           (lambda ()
             (ibuffer-switch-to-saved-filter-groups "default")))
 
 
-
 (global-set-key "\C-x\C-b" 'ibuffer) ;; Buffer management
+(global-set-key "\C-c\C-b" 'bufferz) ;; Buffer management
 ;; File or  buffer name in title
 (setq frame-title-format '(buffer-file-name "%f" ("%b")))
-
-
-;; ;; Functions for nice buffer switching with C-tab keybindings
-;; (defun next-user-buffer ()
-;;   "Switch to the next user buffer in cyclic order.\n
-;; User buffers are those not starting with *."
-;;   (interactive)
-;;   (next-buffer)
-;;   (let ((i 0))
-;;     (while (and (string-match "^*" (buffer-name)) (< i 50))
-;;       (setq i (1+ i)) (next-buffer) )))
-;; (global-set-key [C-tab] 'next-user-buffer)
-
-;; (defun previous-user-buffer ()
-;;   "Switch to the previous user buffer in cyclic order.\n
-;; User buffers are those not starting with *."
-;;   (interactive)
-;;   (previous-buffer)
-;;   (let ((i 0))
-;;     (while (and (string-match "^*" (buffer-name)) (< i 50))
-;;       (setq i (1+ i)) (previous-buffer) )))
-;; (global-set-key [backtab] 'previous-user-buffer)
-
 
 (iswitchb-mode 1)
 (add-to-list 'iswitchb-buffer-ignore "*Messages*")
@@ -370,7 +344,7 @@
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . lisp-mode))
 
 ;;;;  PHP
-;(load-library "php-mode")
+(load-library "php-mode")
 ;(load "/home/david/.emacs.d/nxhtml/autostart.el")
 ;; Smarty
 (add-to-list 'auto-mode-alist '("\\.tpl\\'" . html-mode))
@@ -392,6 +366,10 @@
                                    interpreter-mode-alist))
 (autoload 'python-mode "python-mode" "Python editing mode." t)
 
+;;;; Ruby
+(add-to-list 'load-path "~/.emacs.d/major-modes/feature-mode")
+(require 'feature-mode)
+(add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
 
 
 ;;;;;;;;;;;;;; Custom set stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -519,10 +497,8 @@
 
 (fset 'cp-line ;; Totally copying the current line
       "\C-e\C-a\C-k\C-y\C-e\C-j\C-y")
-
-                                        ;(add-to-list 'load-path "~/.emacs.d/g-client")
-                                        ;(load-library "g")
-
+(fset 'bufferz ;; Totally copying the current line
+      "\C-x\C-b\C-x1")
 
    ;;; ----------------------------------------------------------------
    ;;; caps-lock-mode, Miles Bader <miles /at/ gnu.org>
@@ -540,14 +516,6 @@
   (interactive "p")
   (setq last-command-char (upcase last-command-char))
   (self-insert-command arg))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;   ChessMate ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-(add-to-list 'load-path "~/.emacs.d/chess")
-(autoload 'chess "chess" "Play a game of chess" t)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;; GNUS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -612,6 +580,8 @@
  '(diff-hunk-header ((t (:inherit diff-header :background "black" :foreground "firebrick"))))
  '(mumamo-background-chunk-major ((((class color) (min-colors 88) (background dark)) (:background "#1f1f1f"))))
  '(mumamo-background-chunk-submode1 ((((class color) (min-colors 88) (background dark)) (:background "#0f0f0f"))))
+ '(rst-level-1-face ((t (:background "grey85" :foreground "black"))) t)
+ '(rst-level-2-face ((t (:background "grey22" :foreground "white"))) t)
  '(twit-title-face ((((background light)) (:background "Black" :underline "whoite" :box (:line-width 2 :color "white" :style 0))) (((background dark)) (:background "Black" :underline "white" :box (:line-width 2 :color "white" :style 0))) (t (:underline "white")))))
 
 ;;  Yeah, IDO is actually better than Icicles - I think... although it fucks /sudo::
@@ -635,8 +605,7 @@
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'menu-bar-mode) (menu-bar-mode 1))
 
-;; Mysql
-;(autoload 'mysql )
+;; Version Control
 (add-to-list 'load-path "/home/david/.emacs.d/dvc/")
 (require 'dvc-autoloads)
 (global-set-key "\C-c\h\p" 'xhg-push)
@@ -645,3 +614,43 @@
 (global-set-key "\C-c\g\P" 'xgit-pull)
 (setq dvc-tips-enabled nil)
 (define-key ac-completing-map "\ESC/" 'ac-stop)
+
+;Can we please have clipboard paste?
+(define-key global-map "\C-c\C-y" 'clipboard-yank)
+
+
+;; Remote sudo with Tramp
+
+(add-to-list 'tramp-default-proxies-alist
+             '(nil "\\`root\\'" "/ssh:%h:"))
+(add-to-list 'tramp-default-proxies-alist
+             '((regexp-quote (system-name)) nil nil))
+
+
+(require 'midnight)
+(setq clean-buffer-list-delay-general 1)
+
+(defun greppoint()
+  "find . | grep `thing-at-point"
+  (interactive)
+  (rgrep (thing-at-point 'word)))
+
+(defun my-help ()
+  "Get help from Python based on the symbol nearest point."
+  (interactive)
+  (let* ((sym (py-symbol-near-point))
+         (base (substring sym 0 (or (search "." sym :from-end t) 0)))
+         cmd)
+;    (if (not (equal base ""))
+ ;       (setq cmd (concat "import " base "\n")))
+    ;; (setq cmd (concat "import pydoc\n"
+    ;;                   cmd
+    ;;                   "try: pydoc.help('" sym "')\n"
+    ;;                   "except: print 'No help available on:', \"" sym "\""))
+    (setq cmd 
+"print 'hai'")
+    (message cmd)
+    (py-execute-string cmd)
+    (set-buffer "*Python Output*")
+    ;; BAW: Should we really be leaving the output buffer in help-mode?
+    (help-mode)))
