@@ -172,3 +172,12 @@ fi
 if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
+
+# Django completions
+source ~/work/solariffic/solar/extras/django_bash_completion
+source ~/work/solariffic/solar/extras/fab_completion.bash
+
+
+# Let's have chrome nightly in PATH
+
+PATH=$PATH:~/builds/chrome-linux
