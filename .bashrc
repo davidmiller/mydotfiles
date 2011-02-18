@@ -31,7 +31,7 @@ fi
 alias h="history | grep"
 
 # PATH and SOURCE stuff here
-export PATH=$PATH:~/bin:~/opt/android/tools
+export PATH=$PATH:~/bin:~/opt/android/tools:~/builds/chrome-linux
 export RUBYOPT=rubygems
 export PYTHONPATH=/home/david/programming/python/google_appengine/:/home/david/programming/python/google_appengine/lib/:/home/david/programming/python/genlog:
 export PYTHONSTARTUP=~/.pythonstartup
