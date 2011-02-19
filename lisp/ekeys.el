@@ -7,7 +7,7 @@
 (global-set-key "\C-c\g\p" 'xgit-push)
 (global-set-key "\C-c\h\P" 'xhg-pull)
 (global-set-key "\C-c\g\P" 'xgit-pull)
-(setq dvc-tips-enabled n
+(setq dvc-tips-enabled nil)
 (define-key global-map "\C-c\C-y" 'clipboard-yank); clipboard paste
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\C-k" 'kill-region)
