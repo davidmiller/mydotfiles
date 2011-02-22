@@ -1,3 +1,23 @@
+# David's .bashrc
+
+# Reload this file due to frequent edits
+alias reload='source ~/.bashrc'
+
+#### PATH ####
+export PATH=$PATH:~/bin:~/opt/android/tools:~/builds/chrome-linux
+export PATH=$PATH:~/builds/chrome-linux
+export RUBYOPT=rubygems
+export PYTHONPATH=/home/david/programming/python/google_appengine/:/home/david/programming/python/google_appengine/lib/:/home/david/programming/python/genlog:
+export PYTHONSTARTUP=~/.pythonstartup
+export INFOPATH=/home/david/emacs/info
+
+#### Defaults ####
+# Default editor
+export EDITOR="emacs -nw -q"
+
+
+#### Aliases ####
+
 # listing aliases
 alias lx='ls -lXB'               # sort by extension
 alias lk='ls -lSr'               # sort by size
@@ -13,49 +33,22 @@ alias lz="ls -lZ"                # SELinux display
 
 ## directory aliases
 alias mkdir='mkdir -p'  #Make intermediaries
-
 # Disk usage
 alias du="du -h"
-
-# Goodbye Grep
-which ack > /dev/null
-if [ $? -ne 0 ] ; then
-    which ack-grep > /dev/null
-    if [ $? -ne 0 ] ; then
-        echo "Where the ack has ack gone?"
-    else
-        alias ack="ack-grep"
-    fi
-fi
-
+# Grepping
 alias h="history | grep"
-
-# PATH and SOURCE stuff here
-export PATH=$PATH:~/bin:~/opt/android/tools:~/builds/chrome-linux
-export RUBYOPT=rubygems
-export PYTHONPATH=/home/david/programming/python/google_appengine/:/home/david/programming/python/google_appengine/lib/:/home/david/programming/python/genlog:
-export PYTHONSTARTUP=~/.pythonstartup
-alias reload='source ~/.bashrc'
-
-# Default editor
-export EDITOR="emacs -nw -q"
+#enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    eval "`dircolors -b`"
+    alias ls='ls --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
 
 # emacs modes
 alias gemacs="emacs-snapshot-gtk"
 alias nemacs="emacs -nw"
-alias emacs="emacs-snapshot-gtk"
-
-# ssh shortcuts
-alias webserver='ssh primrose.co.uk'
-alias databaseserver='ssh 78.136.27.15'
-alias happenup='ssh happenup@happenup.com'
-alias massive='ssh massive'
-
-# local box aliases
-if [ -f ~/.bash_aliases ]; then
-   . ~/.bash_aliases
-fi
-
 
 # moving aliases
 alias ..='cd ..'
@@ -75,7 +68,12 @@ alias ainstall='sudo apt-get install'
 # Misc
 alias rtfm='man'
 
-## Bash Functions ##
+# local aliases
+if [ -f ~/.bash_aliases ]; then
+   . ~/.bash_aliases
+fi
+
+#### Bash Functions ####
 function ginit {
     mkdir $1
     cd $1
@@ -115,10 +113,6 @@ extract () {
   fi
 }
 
-#### Boilerplate stuff added by various os defaults ####
-
-# If not running interactively, don't do anything
-[ -z "$PS1" ] && return
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # don't overwrite GNU Midnight Commander's setting of `ignorespace'.
@@ -126,29 +120,11 @@ export HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
 # ... or force ignoredups and ignorespace
 export HISTCONTROL=ignoreboth
 
-# append to the history file, don't overwrite it
-#shopt -s histappend
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-#shopt -s checkwinsize
-
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
-
-#set a fancy prompt (non-color, unless we know we "want" color)
+#### Colours ^ Prompt ####
 case "$TERM" in
     xterm-color) color_prompt=yes;;
 esac
-
-#If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
     PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
@@ -157,27 +133,70 @@ xterm*|rxvt*)
     ;;
 esac
 
-#enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    eval "`dircolors -b`"
-    alias ls='ls --color=auto'
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
+### Completion ###
 if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
 
-# Django completions
-source ~/work/solariffic/solar/extras/django_bash_completion
-source ~/work/solariffic/solar/extras/fab_completion.bash
+_django_completion()
+{
+    COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]}" \
+                   COMP_CWORD=$COMP_CWORD \
+                       DJANGO_AUTO_COMPLETE=1 $1 ) )
+}
+complete -F _django_completion -o default django-admin.py manage.py django-admin django
+
+_python_django_completion()
+{
+    if [[ ${COMP_CWORD} -ge 2 ]]; then
+        PYTHON_EXE=$( basename -- ${COMP_WORDS[0]} )
+        echo $PYTHON_EXE | egrep "python([2-9]\.[0-9])?" >/dev/null 2>&1
+        if [[ $? == 0 ]]; then
+            PYTHON_SCRIPT=$( basename -- ${COMP_WORDS[1]} )
+            echo $PYTHON_SCRIPT | egrep "manage\.py|django-admin(\.py)?" >/dev/null 2>&1
+            if [[ $? == 0 ]]; then
+                COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]:1}" \
+                               COMP_CWORD=$(( COMP_CWORD-1 )) \
+                               DJANGO_AUTO_COMPLETE=1 ${COMP_WORDS[*]} ) )
+            fi
+        fi
+    fi
+}
+
+# Support for multiple interpreters.
+unset pythons
+if command -v whereis &>/dev/null; then
+    python_interpreters=$(whereis python | cut -d " " -f 2-)
+    for python in $python_interpreters; do
+        pythons="${pythons} $(basename -- $python)"
+    done
+    pythons=$(echo $pythons | tr " " "\n" | sort -u | tr "\n" " ")
+else
+    pythons=python
+fi
+
+complete -F _python_django_completion -o default $pythons
+
+_fab_completion() {
+    COMPREPLY=()
+
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+
+    tasks=$(fab --list|awk '{print $1}'|grep -v Available)
+    COMPREPLY=( $(compgen -W "${tasks}" -- ${cur}) )
+}
+
+complete -F _fab_completion fab
 
 
-# Let's have chrome nightly in PATH
-
-PATH=$PATH:~/builds/chrome-linux
+# Goodbye Grep
+which ack > /dev/null
+if [ $? -ne 0 ] ; then
+    which ack-grep > /dev/null
+    if [ $? -ne 0 ] ; then
+        echo "Where the ack has ack gone?"
+    else
+        alias ack="ack-grep"
+    fi
+fi
