@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# contributor: David Miller <david@deadpansincerity.com>
-# name : {% if %}
-# --
-{% if ${1:condition} %}
-
-{% endif %}

@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# contributor: David Miller <david@deadpansincerity.com>
-# name : {% ... %}
-# --
-{% block ${1:name} %}
-   $0
-{% endblock %}

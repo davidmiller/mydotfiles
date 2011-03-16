@@ -4,16 +4,13 @@
 (require 'pymacs)
 (pymacs-load "ropemacs" "rope-")
 (add-to-list 'auto-mode-alist '("\\.wsgi\\'" . python-mode))  ;; Yes WSGI Is still python
-;;;  Djangoriffic
-(defun django-time()
-  (interactive)
-  (add-to-list 'auto-mode-alist '("\\.html\\'" . django-mode)))
-(require 'django-mode)
 
 (setq auto-mode-alist (cons '("\\.py$" . python-mode) auto-mode-alist))
 (setq interpreter-mode-alist (cons '("python" . python-mode)
                                    interpreter-mode-alist))
 (autoload 'python-mode "python-mode" "Python editing mode." t)
+(load-library "django")
+
 
 
 ;; Javascript
@@ -37,7 +34,6 @@
 (require 'feature-mode)
 (add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
 (require 'rails)
-
 
 ;;;;  PHP
 (load-library "php-mode")
