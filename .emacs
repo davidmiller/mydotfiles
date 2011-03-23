@@ -74,7 +74,7 @@
 ;;(setq browse-url-browser-function "firefox")
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ORG mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ORG mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
@@ -112,23 +112,6 @@
         starttls-gnutls-program "gnutls-cli"
         starttls-extra-arguments nil)
 
-
-;;  Navigating buffers
-(require 'ido)
-(ido-mode t)
-(setq ido-enable-flex-matching t) ;; enable fuzzy matching
-
-
-
-;; Version Control
-(add-to-list 'load-path "/home/david/emacs/dvc/")
-(require 'dvc-autoloads)
-(global-set-key "\C-c\h\p" 'xhg-push)
-(global-set-key "\C-c\g\p" 'xgit-push)
-(global-set-key "\C-c\h\P" 'xhg-pull)
-(global-set-key "\C-c\g\P" 'xgit-pull)
-(setq dvc-tips-enabled nil)
-(define-key ac-completing-map "\ESC/" 'ac-stop)
 
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
