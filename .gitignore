@@ -1,0 +1,13 @@
+session.*
+auto-save-list*
+tramp
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.JPG
+*.PNG
+*.GIF
+url/*
+twit/*_normal
+twit/*.bmp
