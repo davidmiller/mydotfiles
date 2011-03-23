@@ -85,7 +85,7 @@
 (defun django-get-func()
   "Get the function currently at point - depends on python-mode"
   (save-excursion
-    (if (py-go-up-tree-to-keyword "\\(def\\)")
+    (if (search-backward-regexp "\\(def\\)")
         (if (looking-at "[ \t]*[a-z]+[\s]\\([a-z_]+\\)\\>")
             (buffer-substring (match-beginning 1) (match-end 1))
           nil))))
@@ -93,7 +93,7 @@
 (defun django-get-class()
   "Get the class at point - depends on python-mode"
   (save-excursion
-    (if (py-go-up-tree-to-keyword "\\(class\\)")
+    (if (search-backward-regexp "\\(class\\)")
         (if (looking-at "[ \t]*[a-z]+[\s]\\([a-zA-Z]+\\)\\>")
             (buffer-substring (match-beginning 1) (match-end 1))
           nil))))
@@ -211,10 +211,22 @@
 (defun django-buildout()
   "Run buildout again on the current project"
   (interactive)
-  (let ((buildout (django-buildout-cmd)))
-    (if buildout
-        (django-dir-excursion
-         (django-project-root) "buildout" buildout nil))))
+  (let ((buildout (django-buildout-cmd))
+        (cfg (concat
+              (expand-file-name "../"
+                                (file-name-directory (django-buildout-cmd)))
+              "buildout.cfg")))
+    (if (not (file-exists-p cfg))
+        (progn
+          (message "couldn't find buildout.cfg")
+          (setq cfg nil)))
+    (if (and buildout cfg)
+        (progn
+          (message "Starting buildout... This may take some time")
+          (django-comint-pop
+           "buildout" buildout
+           (list "-c" cfg))))))
+
 
 (defun django-buildout-bin()
   "Run a script from the buildout bin/ dir"
@@ -327,7 +339,7 @@
                              (read-from-minibuffer (concat command ": "))))))
 
 ;; Server
-(defun runserver()
+(defun django-runserver()
   "Start the dev server"
   (interactive)
   (let ((proc (get-buffer-process "*djangoserver*"))
@@ -601,3 +613,8 @@
           (lambda ()
             (if (django-project-root)
                   (django-tpl-mode))))
+
+(add-hook 'dired-mode-hook
+          (lambda ()
+            (if (django-project-root)
+                (django-mode))))

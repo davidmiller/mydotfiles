@@ -11,8 +11,6 @@
 (autoload 'python-mode "python-mode" "Python editing mode." t)
 (load-library "django")
 
-
-
 ;; Javascript
 (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
 (autoload 'javascript-mode "javascript" nil t)
@@ -27,6 +25,7 @@
 (show-paren-mode 1)
 (add-hook 'lisp-mode-hook '(lambda ()
                              (local-set-key (kbd "RET") 'newline-and-indent)))
+(add-hook 'emacs-lisp-mode '(lambda () (pretty-lambdas)))
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . lisp-mode))
 
 
