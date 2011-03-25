@@ -9,7 +9,7 @@
 (nnimap-stream ssl)))
 
 
-(add-to-list `load-path "~/.emacs.d/gnus-stuff")
+;(add-to-list `load-path "~/emacs/gnus-stuff")
 (require 'randomsig)
 (define-key message-mode-map (kbd "C-c s") 'randomsig-replace-sig)
 (define-key message-mode-map (kbd "C-c S") 'randomsig-select-sig)
@@ -24,11 +24,11 @@
 (setq randomsig-static-string "Love regards etc\n\nDavid Miller\nwww.deadpansincerity.com\n07964250347\n--\nThis message sent from Emacs\n")
 (setq gnus-thread-sort-functions 'gnus-thread-sort-by-most-recent-date)
 
-(add-to-list 'load-path "~/.emacs.d/bbdb")
+(add-to-list 'load-path "~/emacs/bbdb")
 (require 'bbdb)
 (bbdb-initialize 'gnus 'message)
-(add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus) 
-(require 'bbdb-vcard)
+(add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
+;(require 'bbdb-vcard)
 
 
 ;;;;;;;;;;;  Not exactly sure what these are doing... ;;;;;;;;;;;;;;;
