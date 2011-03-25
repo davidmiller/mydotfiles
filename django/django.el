@@ -307,11 +307,35 @@
   (message (concat "Written to " target))))
 
 ;; GoTo
+(defun django-template-decorator()
+  "Hai"
+  (save-excursion
+   (progn
+    (search-backward-regexp "^def")
+    (previous-line)
+    (if (looking-at "^@.*['\"]\\([a-z/_.]+html\\).*$")
+        (buffer-substring (match-beginning 1) (match-end 1))
+      "lookfail"))))
+
+(defun django-tpl-msg()
+  (interactive)
+  (message (django-template-decorator)))
+
 (defun django-goto-template()
   "Jump-to-template-at-point"
   (interactive)
-  (message (replace-regexp-in-string
-            "^.*['\"]\\(:?.*.html\\)" "bye" (thing-at-point 'line))))
+  (let ((filename nil)
+        (template
+         (if (looking-at "^.*['\"]\\([a-z/_.]+html\\).*$")
+             (buffer-substring (match-beginning 1) (match-end 1))
+           (django-template-decorator))))
+    (if template
+        (setq filename
+              (expand-file-name
+               template (django-get-setting "TEMPLATE_DIRS"))))
+    (if (and filename (file-exists-p filename))
+        (find-file filename)
+      (message (format "Template %s not found" filename)))))
 
 ;; Manage
 (defun django-list-commands()
@@ -400,6 +424,10 @@
                  (django-manage-cmd) "syncdb")
   (django-pop "*djangomigrations*"))
 
+(defun django-south-get-migrations()
+  "Get a list of migration numbers for the current app"
+)
+
 (defun django-south-convert()
   "Convert an existing app to south"
   (interactive)
@@ -425,6 +453,14 @@
   (let ((app (read-from-minibuffer "Convert: " (django-get-app))))
     (django-command-if-exists "djangomigrations"
                               "migrate" app)))
+(defun django-south-fake ()
+  "Fake a migration for a model"
+  (interactive)
+  (let ((app (read-from-minibuffer "Convert: " (django-get-app)))
+        (migration (read-from-minibuffer "migration: "
+                                         (django-south-get-migrations))))
+    (django-command-if-exists "djangomigrations"
+                              "migrate" (list app migrations))))
 
 ;; TAGS
 (defun django-tags()
@@ -505,9 +541,11 @@
 (django-key "\C-c\C-db" 'django-browser)
 (django-key "\C-c\C-dd" 'django-db-shell)
 (django-key "\C-c\C-df" 'django-fabric)
+(django-key "\C-c\C-dgt" 'django-goto-template)
 (django-key "\C-c\C-dr" 'django-runserver)
 (django-key "\C-c\C-dm" 'django-manage)
 (django-key "\C-c\C-ds" 'django-shell)
+(django-key "\C-c\C-d!" 'django-shell)
 (django-key "\C-c\C-dt" 'django-test)
 (django-key "\C-c\C-d\C-r" 'django-reload-mode)
 
@@ -532,6 +570,8 @@
       '("Run fabric function" . django-fabric))
     (define-key menu-map [deploy]
       '("Run fabric 'deploy' function" . django-fabric-deploy))
+    (define-key menu-map [goto]
+      '("Goto template for view or at point" . django-goto-template))
     (define-key menu-map [manage]
       '("Run a management command" . django-manage))
     (define-key menu-map [runserver]

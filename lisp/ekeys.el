@@ -3,6 +3,7 @@
 ;;
 
 (global-set-key "\C-x\C-b" 'ibuffer) ;; Buffer management
+;; Version Control
 (global-set-key "\C-c\h\p" 'xhg-push)
 (global-set-key "\C-c\g\p" 'xgit-push)
 (global-set-key "\C-c\h\P" 'xhg-pull)
@@ -19,3 +20,6 @@
 (global-set-key [M-up] 'windmove-up) ; move to upper window
 (global-set-key [M-down] 'windmove-down) ; move to downer window
 (global-set-key "\M-#" 'find-tag-other-window)
+
+;; Python
+(global-set-key "\M-p" 'pyflakes-show-help)

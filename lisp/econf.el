@@ -56,7 +56,7 @@
                            ac-source-yasnippet
                            ac-source-filename
                            ac-source-files-in-current-dir))
-
+(define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
 (add-hook 'emacs-lisp-mode-hook
           (lambda () (add-to-list 'ac-sources 'ac-source-symbols)))
 (add-hook 'python-mode-hook
@@ -70,6 +70,8 @@
 (require 'yasnippet)
 (yas/initialize)
 (yas/load-directory "~/emacs/yasnippet/snippets/text-mode")
+
+(require 'autopair)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;  Buffer Management ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -113,13 +115,10 @@
 
 (setq frame-title-format '(buffer-file-name "%f" ("%b")))
 
-(iswitchb-mode 1)
-(add-to-list 'iswitchb-buffer-ignore "*Messages*")
-(add-to-list 'iswitchb-buffer-ignore "*Completions*")
-(add-to-list 'iswitchb-buffer-ignore "*Pymacs*")
-(add-to-list 'iswitchb-buffer-ignore "*fsm-debug*")
-(add-to-list 'iswitchb-buffer-ignore "*Ibuffer*")
-(add-to-list 'iswitchb-buffer-ignore "irc.freenode.net:6667")
+(require 'ido)
+(ido-mode t)
+(setq ido-enable-flex-matching t) ;; enable fuzzy matching
+
 
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -132,3 +131,8 @@
 ;; Shell
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+;; Version Control
+(add-to-list 'load-path "/home/david/emacs/dvc/")
+(require 'dvc-autoloads)
+(setq dvc-tips-enabled nil)
