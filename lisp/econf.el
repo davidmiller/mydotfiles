@@ -33,7 +33,8 @@
 (set-face-attribute 'default nil :height 105)
 (show-paren-mode 1) ;; Highlight parenthesis pairs
 (setq transient-mark-mode t) ;; Where am I now?
-
+(delete-selection-mode t)
+(setq indicate-empty-lines t)
 ;;;;;;;;;;;;;;;;;;;;;;;;;  Files   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Put backup files (ie foo~) in one place. (The backup-directory-alist
@@ -41,7 +42,6 @@
 ;; backed up in the corresponding directory. Emacs will mkdir it if necessary.)
 (defvar backup-dir (concat "/home/david/tmp/emacs_backups/"))
 (setq backup-directory-alist (list (cons "." backup-dir)))
-
 ;; Let buffer names be unique in a nicer way
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
@@ -51,6 +51,7 @@
 
 
 ;; Editing
+(load-library "light-symbol")
 (require 'auto-complete-config)
 (setq-default ac-sources '(ac-source-words-in-same-mode-buffers
                            ac-source-yasnippet
@@ -71,9 +72,10 @@
 (yas/initialize)
 (yas/load-directory "~/emacs/yasnippet/snippets/text-mode")
 
-(require 'autopair)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;  Buffer Management ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq split-window-preferred-function 'split-window-sensibly)
+(setq split-width-threshold 20)
 
 (setq ibuffer-saved-filter-groups
       (quote (("default"
@@ -136,3 +138,35 @@
 (add-to-list 'load-path "/home/david/emacs/dvc/")
 (require 'dvc-autoloads)
 (setq dvc-tips-enabled nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Jabber client ;;;;;;;;;;;;;;;;;;;;;;;
+(add-to-list 'load-path "~/emacs/emacs-jabber-0.8.0")
+(load "jabber-autoloads")
+(setq jabber-account-list
+      '(("david@deadpansincerity.com"
+         (:network-server . "talk.google.com")
+         (:connection-type . ssl))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ERC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Connect to Freenode on C-c e f
+;(global-set-key "\C-cef" ;; (lambda () (interactive)
+                         ;;   (erc :server "irc.freenode.net" :port "6667"
+                         ;;        :nick "davidmiller")))
+(add-hook 'erc-mode-hook (lambda () (longlines-mode t)))
+(setq erc-hide-list '("JOIN" "PART" "QUIT"))
+(defmacro erc-connect (command server port nick)
+  "Create interactive command `command', for connecting to an IRC server. The
+      command uses interactive mode if passed an argument."
+  (fset command
+        `(lambda (arg)
+           (interactive "p")
+           (if (not (= 1 arg))
+               (call-interactively 'erc)
+             (erc :server ,server :port ,port :nick ,nick)))))
+(autoload 'erc "erc" "" t)
+(erc-connect erc-freenode "irc.freenode.net" 6667 "davidmiller")
+(global-set-key "\C-cef" 'erc-freenode)
+(setq erc-autojoin-channels-alist
+      '(("freenode.net" "#emacs" "#django-mode" "#buildbot" "#celery")))
+ (erc-spelling-mode 1)

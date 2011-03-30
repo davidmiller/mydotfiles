@@ -155,7 +155,8 @@
                                  (set (make-local-variable
                                        'eldoc-documentation-function)
                                       'rope-eldoc-function)
-                                 (turn-on-eldoc-mode))))
+                                 (turn-on-eldoc-mode)
+                                 (light-symbol-mode t))))
 
 
 ;; Javascript
@@ -172,7 +173,10 @@
 (show-paren-mode 1)
 (add-hook 'lisp-mode-hook '(lambda ()
                              (local-set-key (kbd "RET") 'newline-and-indent)))
-(add-hook 'emacs-lisp-mode '(lambda () (pretty-lambdas)))
+(add-hook 'emacs-lisp-mode '(lambda ()
+                              (pretty-lambdas)
+                              (autopair-mode t)
+                              (light-symbol-mode t)))
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . lisp-mode))
 
 
