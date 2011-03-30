@@ -1,3 +1,9 @@
+;;  Citations
+;;
+;;     "Show me your ~/.emacs and I will tell you who you are."
+;;                                                         [Bogdan Maryniuk]
+;;
+
 (require 'cl)
 
 ;; I keep all my emacs-related stuff under ~/emacs
@@ -38,22 +44,6 @@
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 
 (setq wdired-allow-to-change-permissions t) ;; Allow perm changing in Dired
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Jabber client ;;;;;;;;;;;;;;;;;;;;;;;
-(add-to-list 'load-path "~/emacs/emacs-jabber-0.8.0")
-(load "jabber-autoloads")
-(setq jabber-account-list
-      '(("david@deadpansincerity.com"
-         (:network-server . "talk.google.com")
-         (:connection-type . ssl))))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ERC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Connect to Freenode on C-c e f
-(global-set-key "\C-cef" (lambda () (interactive)
-                           (erc :server "irc.freenode.net" :port "6667"
-                                :nick "davidmiller")))
 
 
 
