@@ -23,3 +23,8 @@
 
 ;; Python
 (global-set-key "\M-p" 'pyflakes-show-help)
+
+;; Completions - let's get one set of keybindings regardless of context
+(global-set-key (kbd "<backtab>") 'auto-complete)
+(global-set-key (kbd "\C-;") 'yas/next-field)
+(global-set-key (kbd "\C'") 'yas/expand)

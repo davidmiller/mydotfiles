@@ -52,12 +52,12 @@
 
 ;; Editing
 (load-library "light-symbol")
+(require 'autopair)
 (require 'auto-complete-config)
 (setq-default ac-sources '(ac-source-words-in-same-mode-buffers
                            ac-source-yasnippet
                            ac-source-filename
                            ac-source-files-in-current-dir))
-(define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
 (add-hook 'emacs-lisp-mode-hook
           (lambda () (add-to-list 'ac-sources 'ac-source-symbols)))
 (add-hook 'python-mode-hook
@@ -75,7 +75,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;  Buffer Management ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq split-window-preferred-function 'split-window-sensibly)
-(setq split-width-threshold 20)
+;(setq split-width-threshold 50)
 
 (setq ibuffer-saved-filter-groups
       (quote (("default"
@@ -170,3 +170,23 @@
 (setq erc-autojoin-channels-alist
       '(("freenode.net" "#emacs" "#django-mode" "#buildbot" "#celery")))
  (erc-spelling-mode 1)
+
+;; Programming - IDE stuff
+
+(load-file "~/emacs/cedet/common/cedet.el")
+;; Use CEDET projects
+(global-ede-mode t)
+(semantic-load-enable-excessive-code-helpers)
+(require 'semantic-ia)
+(remove-hook 'python-mode-hook 'wisent-python-default-setup)
+
+;; Modeline customisations
+(require 'diminish)
+(eval-after-load "light-symbol" '(diminish 'light-symbol-mode))
+(eval-after-load "flymake" '(diminish 'flymake-mode "F"))
+(eval-after-load "eldoc" '(diminish 'eldoc-mode "E"))
+(eval-after-load "yasnippet" '(diminish 'yas/minor-mode "Y"))
+(eval-after-load "autopair" '(diminish 'autopair-mode))
+
+;; Dictionary
+(load "dictionary-init")

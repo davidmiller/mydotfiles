@@ -151,7 +151,7 @@
 (add-hook 'python-mode-hook '(lambda ()
                                (progn
                                  (flymake-mode t)
-                                 (autopair-mode)
+                                 (autopair-mode t)
                                  (set (make-local-variable
                                        'eldoc-documentation-function)
                                       'rope-eldoc-function)
