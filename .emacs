@@ -7,31 +7,19 @@
 (require 'cl)
 
 ;; I keep all my emacs-related stuff under ~/emacs
-(defvar emacs-root "/home/david/")
+(defvar emacs-root (expand-file-name "~/emacs"))
+(add-to-list 'load-path emacs-root)
 
-;; add all the elisp directories under ~/emacs to my load path
-(labels ((add-path (p)
-     (add-to-list 'load-path
-            (concat emacs-root p))))
- (add-path "emacs/lisp")
- (add-path "emacs/auto-complete")
- (add-path "emacs/cedet")
- (add-path "emacs/dvc")
- (add-path "emacs/django")
- (add-path "emacs/dictionary")
- (add-path "emacs/emacs-rails")
- (add-path "emacs/gnus-stuff")
- (add-path "emacs/major-modes")
- (add-path "emacs/minor-modes")
- (add-path "emacs/slime")
- (add-path "emacs/themes")
- (add-path "emacs/yasnippet")
- )
-(load-library "econf")
-(load-library "ekeys")
-(load-library "ecolours")
-(load-library "efuncs")
-(load-library "elangs")
+(defun add-emacs-root ()
+  "Add the directories under emacs-root to load-path"
+  (dolist (emacsdir?
+           (directory-files emacs-root t "^[^\\.]"))
+    (when (file-directory-p emacsdir?)
+      (add-to-list 'load-path emacsdir?))))
+
+(add-emacs-root)
+(dolist (config (list "econf" "ekeys" "ecolours" "efuncs" "elangs"))
+  (load-library config))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;  Files   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
