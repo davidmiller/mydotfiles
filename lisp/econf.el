@@ -30,11 +30,13 @@
 ;;
 ;; Tabs are right out.
 (setq tab-width 4)
+
 (set-face-attribute 'default nil :height 105)
 (show-paren-mode 1) ;; Highlight parenthesis pairs
-(setq transient-mark-mode t) ;; Where am I now?
-(delete-selection-mode t)
+(setq transient-mark-mode t) ;; Highlight region whenever the mark is active
+(delete-selection-mode t) ;; Delete contents of region when we start typing
 (setq indicate-empty-lines t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;  Files   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Put backup files (ie foo~) in one place. (The backup-directory-alist
@@ -147,13 +149,11 @@
       '(("david@deadpansincerity.com"
          (:network-server . "talk.google.com")
          (:connection-type . ssl))))
+(set  jabber-alert-presence-message-function
+      (lambda (who oldstatus newstatus statustext) nil))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ERC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Connect to Freenode on C-c e f
-;(global-set-key "\C-cef" ;; (lambda () (interactive)
-                         ;;   (erc :server "irc.freenode.net" :port "6667"
-                         ;;        :nick "davidmiller")))
 (add-hook 'erc-mode-hook (lambda () (longlines-mode t)))
 (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 (defmacro erc-connect (command server port nick)
@@ -169,7 +169,7 @@
 (erc-connect erc-freenode "irc.freenode.net" 6667 "davidmiller")
 (global-set-key "\C-cef" 'erc-freenode)
 (setq erc-autojoin-channels-alist
-      '(("freenode.net" "#emacs" "#django-mode" "#buildbot" "#celery")))
+      '(("freenode.net" "#emacs" "#django-mode" "#celery")))
  (erc-spelling-mode 1)
 
 ;; Programming - IDE stuff
@@ -191,3 +191,35 @@
 
 ;; Dictionary
 (load "dictionary-init")
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; Web browsing stuff here innit ;;;;;;;;;;;;;;;;;;
+(setq
+ browse-url-browser-function 'browse-url-generic
+ browse-url-generic-program "firefox")
+(global-set-key "\C-cff" 'browse-url)
+;;(setq browse-url-browser-function "firefox")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ORG mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+
+;; Testing out remember-mode
+(org-remember-insinuate)
+(setq org-directory "~/notes/")
+(setq org-default-notes-file "~/.notes")
+(setq remember-annotation-functions '(org-remember-annotation))
+(setq remember-handler-functions '(org-remember-handler))
+(add-hook 'remember-mode-hook 'org-remember-apply-template)
+(define-key global-map "\C-cr" 'org-remember)
+
+(setq org-remember-templates
+      '(("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\nAdded: %U"
+         "~/notes/organized.org" "Tasks")))
+
+;; Wiki editing
+(require 'yaoddmuse)

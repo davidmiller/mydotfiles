@@ -33,3 +33,7 @@
             (0 (progn (compose-region (match-beginning 1) (match-end 1)
                                       ,(make-char 'greek-iso8859-7 107))
                       nil))))))
+
+(custom-set-faces
+ '(rst-level-1-face ((t (:background "black" :foreground "brown3" :weight bold))) t)
+ '(rst-level-2-face ((t (:background "black" :foreground "white" :weight bold))) t))
