@@ -42,6 +42,7 @@
 ;; backed up in the corresponding directory. Emacs will mkdir it if necessary.)
 (defvar backup-dir (concat "/home/david/tmp/emacs_backups/"))
 (setq backup-directory-alist (list (cons "." backup-dir)))
+(setq temporary-file-directory "/tmp/")
 ;; Let buffer names be unique in a nicer way
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
