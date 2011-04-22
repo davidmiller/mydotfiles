@@ -1,0 +1,6 @@
+# -*- mode: snippet; coding: utf-8 -*-
+# name: lambd
+# contributor: David Miller <david@deadpansincerity.com>
+# --
+(lambda ()
+  $0)
