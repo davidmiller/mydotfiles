@@ -8,10 +8,10 @@
 
 ;; All my emacs customisations and packages are under ~/emacs
 (defvar emacs-root (expand-file-name "~/emacs"))
-(add-to-list 'load-path emacs-root)
 
 (defun add-emacs-root ()
   "Add the directories under emacs-root to load-path"
+  (add-to-list 'load-path emacs-root)
   (dolist (emacsdir?
            (directory-files emacs-root t "^[^\\.]"))
     (when (file-directory-p emacsdir?)
