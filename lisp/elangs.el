@@ -1,3 +1,4 @@
+
 ;; Languages
 
 ;;;;  Python
@@ -9,9 +10,10 @@
 (setq interpreter-mode-alist (cons '("python" . python-mode)
                                    interpreter-mode-alist))
 (autoload 'python-mode "python-mode" "Python editing mode." t)
-(load-library "django")
+(load-library "pony")
 
 (require 'flymake)
+;; Pyflakes for highlighting syntax errors
 (defun flymake-pyflakes-init ()
   (let* ((temp-file (flymake-init-create-temp-buffer-copy
                      'flymake-create-temp-inplace))
@@ -148,16 +150,22 @@
 
 
 
-(add-hook 'python-mode-hook '(lambda ()
-                               (progn
-                                 (flymake-mode t)
-                                 (autopair-mode t)
-                                 (set (make-local-variable
-                                       'eldoc-documentation-function)
-                                      'rope-eldoc-function)
-                                 (turn-on-eldoc-mode)
-                                 (light-symbol-mode t))))
-
+(add-hook 'python-mode-hook
+          '(lambda ()
+             ;; Flymake loads itself in the temp buffers used by
+             ;; `py-execute-region` because it calls (python-mode) in
+             ;; the temp buffer. Let's stop this, because
+             ;; a) it's silly
+             ;; b) It prevents execution.
+             ;; [So we check for not being in a temp buffer]
+             (unless (eq buffer-file-name nil)
+               (progn
+                 (flymake-mode t)
+                 (set (make-local-variable
+                       'eldoc-documentation-function)
+                      'rope-eldoc-function)
+                 (turn-on-eldoc-mode)
+                 (light-symbol-mode t)))))
 
 ;; Javascript
 (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
@@ -166,9 +174,9 @@
 ;;;;  Lisp
 
                                         ;SLIME interaction
-(setq inferior-lisp-program "clisp")
+(setq inferior-lisp-program "/usr/bin/sbcl")
 (require 'slime)
-(slime-setup)
+(slime-setup '(slime-fancy))
 (global-font-lock-mode t)
 (show-paren-mode 1)
 (add-hook 'lisp-mode-hook '(lambda ()
@@ -188,3 +196,12 @@
 ;;;;  PHP
 (load-library "php-mode")
 (add-to-list 'auto-mode-alist '("\\.tpl\\'" . html-mode))
+
+;; Erlang
+(load-library "erlang")
+(add-to-list 'auto-mode-alist '("\\.erl\\'" . erlang-mode))
+(defun my-erlang-hook ()
+  "TEsting purps only"
+  (message "called")
+  (auto-complete-mode t))
+(add-hook 'erlang-mode-hook 'my-erlang-hook)

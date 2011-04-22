@@ -56,17 +56,26 @@
 ;; Editing
 (load-library "light-symbol")
 (require 'autopair)
+
 (require 'auto-complete-config)
-(setq-default ac-sources '(ac-source-words-in-same-mode-buffers
-                           ac-source-yasnippet
-                           ac-source-filename
-                           ac-source-files-in-current-dir))
+
+;; (setq-default ac-sources '(ac-source-words-in-same-mode-buffers
+;;                            ac-source-yasnippet
+;;                            ac-source-filename
+;;                            ac-source-files-in-current-dir))
+(add-to-list 'ac-dictionary-directories "~/emacs/auto-complete/dict")
+
+(ac-config-default)
+(add-to-list 'ac-modes 'erlang-mode)
+(add-to-list 'ac-modes 'erlang-shell-mode)
+(add-to-list 'ac-modes 'javascript)
+(setq-default ac-sources (add-to-list 'ac-sources 'ac-source-yasnippet))
 (add-hook 'emacs-lisp-mode-hook
           (lambda () (add-to-list 'ac-sources 'ac-source-symbols)))
-(add-hook 'python-mode-hook
-          (lambda () (add-to-list 'ac-sources 'ac-source-ropemacs)))
+;; (add-hook 'python-mode-hook
+;;           (lambda () (add-to-list 'ac-sources 'ac-source-ropemacs)))
 (global-auto-complete-mode t)
-(ac-css-keywords-initialize)
+                                        ;(ac-css-keywords-initialize)
                                         ;(ac-set-trigger-key "C-c C-/")
                                         ;(setq ac-auto-start nil)
 (setq ac-auto-start 2)
@@ -149,9 +158,6 @@
       '(("david@deadpansincerity.com"
          (:network-server . "talk.google.com")
          (:connection-type . ssl))))
-(set  jabber-alert-presence-message-function
-      (lambda (who oldstatus newstatus statustext) nil))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ERC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-hook 'erc-mode-hook (lambda () (longlines-mode t)))
@@ -174,12 +180,12 @@
 
 ;; Programming - IDE stuff
 
-(load-file "~/emacs/cedet/common/cedet.el")
-;; Use CEDET projects
-(global-ede-mode t)
-(semantic-load-enable-excessive-code-helpers)
-(require 'semantic-ia)
-(remove-hook 'python-mode-hook 'wisent-python-default-setup)
+;; (load-file "~/emacs/cedet/common/cedet.el")
+;; ;; Use CEDET projects
+;; (global-ede-mode t)
+;; (semantic-load-enable-excessive-code-helpers)
+;; (require 'semantic-ia)
+;; (remove-hook 'python-mode-hook 'wisent-python-default-setup)
 
 ;; Modeline customisations
 (require 'diminish)
@@ -223,3 +229,8 @@
 
 ;; Wiki editing
 (require 'yaoddmuse)
+;; w3m
+(require 'w3m-load)
+(require 'w3m-e21)
+(provide 'w3m-e23)
+(setq w3m-default-display-inline-images t)
