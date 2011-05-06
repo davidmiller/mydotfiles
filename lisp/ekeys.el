@@ -7,6 +7,10 @@
 (global-set-key "\C-c\h\P" 'xhg-pull)
 (global-set-key "\C-c\g\P" 'xgit-pull)
 (setq dvc-tips-enabled nil)
+
+;; TODO - map xhg-log-toggle-diff-for-changeset inside
+;; dvc-revlist. Probably a good idea to do xgit as well :)
+
 (define-key global-map "\C-c\C-y" 'clipboard-yank); clipboard paste
 (define-key global-map "\C-ccx" 'clipboard-kill-region); clipboard paste
 (global-set-key "\C-w" 'backward-kill-word)
