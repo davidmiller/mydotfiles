@@ -174,7 +174,7 @@
 
 
 ;; Nose integration with python-mode
-
+(require 'test-case-mode)
 (setq-default
  mode-line-format
  (mapcan (lambda (x)
@@ -266,9 +266,6 @@
     ('font-lock-keywords test-case-nose-font-lock-keywords)))
 
 (add-to-list 'test-case-backends 'test-case-nose-backend t)
-
-;; PDB track
-(require 'pdbtrack)
 
 ;; Javascript
 (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
