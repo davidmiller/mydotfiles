@@ -16,6 +16,7 @@
 (setq ring-bell-function 'ignore);; disable bell function
 (column-number-mode 1);; Enable Colum numbering
 (blink-cursor-mode nil) ;; Stop cursor from blinking
+(bar-cursor-mode t)
 (defalias 'yes-or-no-p 'y-or-n-p) ;; less typing for me
 (display-time) ;; show it in the modeline
 (setq-default indent-tabs-mode nil) ;; Spaces instead of tabs
@@ -180,6 +181,7 @@
 
 ;; Programming - IDE stuff
 
+(require 'smart-operator)
 ;; (load-file "~/emacs/cedet/common/cedet.el")
 ;; ;; Use CEDET projects
 ;; (global-ede-mode t)
@@ -194,7 +196,7 @@
 (eval-after-load "eldoc" '(diminish 'eldoc-mode "E"))
 (eval-after-load "yasnippet" '(diminish 'yas/minor-mode "Y"))
 (eval-after-load "autopair" '(diminish 'autopair-mode))
-
+(eval-after-load "smart-operator" '(diminish 'smart-operator-mode))
 ;; Dictionary
 (load "dictionary-init")
 
@@ -234,3 +236,12 @@
 (require 'w3m-e21)
 (provide 'w3m-e23)
 (setq w3m-default-display-inline-images t)
+
+;; Unittests
+(require 'fringe-helper)
+(autoload 'test-case-mode "test-case-mode" nil t)
+(autoload 'enable-test-case-mode-if-test "test-case-mode")
+(autoload 'test-case-find-all-tests "test-case-mode" nil t)
+(autoload 'test-case-compilation-finish-run-all "test-case-mode")
+(add-hook 'find-file-hook 'enable-test-case-mode-if-test)
+
