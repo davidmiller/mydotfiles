@@ -6,6 +6,8 @@
 (global-set-key "\C-c\g\p" 'xgit-push)
 (global-set-key "\C-c\h\P" 'xhg-pull)
 (global-set-key "\C-c\g\P" 'xgit-pull)
+(global-set-key "\C-chl" 'xhg-log)
+(global-set-key "\C-chd" 'xhg-log-toggle-diff-for-changeset)
 (setq dvc-tips-enabled nil)
 
 ;; TODO - map xhg-log-toggle-diff-for-changeset inside

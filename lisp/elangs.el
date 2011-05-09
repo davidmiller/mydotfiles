@@ -206,10 +206,10 @@
 (defcustom test-case-nose-executable "nosetests"
   "*The nosetests executable."
   :group 'test-case :type 'file)
-(defcustom test-case-nose-arguments "-d"
+(defcustom test-case-nose-arguments "-d --with-coverage"
   "*The nosetests arguments."
   :group 'test-case :type 'string)
-(defcustom test-cwd "."
+(defcustom test-cwd "../"
   "*The directory from which to run nosetests. Should be set per-buffer."
   :group 'test-case :type 'file :safe 'stringp)
 (defcustom test nil

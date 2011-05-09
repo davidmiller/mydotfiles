@@ -15,8 +15,9 @@
 (tool-bar-mode nil);; Remove icons from gtk menu
 (setq ring-bell-function 'ignore);; disable bell function
 (column-number-mode 1);; Enable Colum numbering
-(blink-cursor-mode nil) ;; Stop cursor from blinking
-(bar-cursor-mode t)
+;;(blink-cursor-mode nil) ;; Stop cursor from blinkin
+(require 'bar-cursor)
+(bar-cursor-mode t) ;; Put the cursor on a diet
 (defalias 'yes-or-no-p 'y-or-n-p) ;; less typing for me
 (display-time) ;; show it in the modeline
 (setq-default indent-tabs-mode nil) ;; Spaces instead of tabs
