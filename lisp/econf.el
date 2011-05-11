@@ -81,7 +81,7 @@
                                         ;(ac-set-trigger-key "C-c C-/")
                                         ;(setq ac-auto-start nil)
 (setq ac-auto-start 2)
-
+(setq ac-ignore-case nil)
 (require 'yasnippet)
 (yas/initialize)
 (yas/load-directory "~/emacs/yasnippet/snippets/text-mode")
@@ -245,4 +245,7 @@
 (autoload 'test-case-find-all-tests "test-case-mode" nil t)
 (autoload 'test-case-compilation-finish-run-all "test-case-mode")
 (add-hook 'find-file-hook 'enable-test-case-mode-if-test)
+
+;; Session Management
+(desktop-save-mode t)
 
