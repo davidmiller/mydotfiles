@@ -7,8 +7,8 @@
 
 ;;;;  Python
 
-(require 'pymacs)
-(pymacs-load "ropemacs" "rope-")
+;; (require 'pymacs)
+;; (pymacs-load "ropemacs" "rope-")
 (add-to-list 'auto-mode-alist '("\\.wsgi\\'" . python-mode))
 (setq ropemacs-enable-autoimport t)
 (setq auto-mode-alist (cons '("\\.py$" . python-mode) auto-mode-alist))
@@ -169,7 +169,7 @@
                  (set (make-local-variable
                        'eldoc-documentation-function)
                       'rope-eldoc-function)
-                 (turn-on-eldoc-mode)
+;                 (turn-on-eldoc-mode)
                  (light-symbol-mode t)))))
 
 
