@@ -72,7 +72,25 @@
           "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in "
           "culpa qui officia deserunt mollit anim id est laborum."))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;  Keyboard Macros  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Frequently we want to copy the current line onto the next one
+(defun duplicate-line()
+  (interactive)
+  (move-beginning-of-line 1)
+  (kill-line)
+  (yank)
+  (open-line 1)
+  (next-line 1)
+  (yank)
+)
+(global-set-key "\C-c\C-p" 'duplicate-line)
 
-(fset 'cp-line ;; Totally copying the current line
-      "\C-e\C-a\C-k\C-y\C-e\C-j\C-y")
+(defun regexp-revert (regexp)
+  "Revert all buffers whose path matches regexp"
+  (interactive "sPath Regexp: ")
+  (dolist (buffer (buffer-list))
+    (if (string-match-p regexp (or (buffer-file-name buffer) ""))
+        (progn
+          (set-buffer buffer)
+          (revert-buffer nil t)
+          (message "Reverting %s" (buffer-file-name buffer))))))
+
