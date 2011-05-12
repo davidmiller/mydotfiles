@@ -94,3 +94,7 @@
           (revert-buffer nil t)
           (message "Reverting %s" (buffer-file-name buffer))))))
 
+(defun ipython ()
+  (interactive)
+  (ansi-term "ipython" "iPython")
+  (switch-to-buffer "*iPython*"))

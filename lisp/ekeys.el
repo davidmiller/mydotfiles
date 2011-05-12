@@ -1,6 +1,7 @@
 ;; Keybindings
 
 (global-set-key "\C-x\C-b" 'ibuffer) ;; Buffer management
+(global-set-key "\C-c\#" 'ido-find-file-other-window)
 ;; Version Control
 (global-set-key "\C-c\h\p" 'xhg-push)
 (global-set-key "\C-c\g\p" 'xgit-push)
