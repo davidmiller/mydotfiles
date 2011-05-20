@@ -4,13 +4,13 @@
 alias reload='source ~/.bashrc'
 
 #### PATH ####
-export PATH=$PATH:~/bin:~/opt/android/tools:~/builds/chrome-linux
+export PATH=$PATH:~/bin:~/opt/android/tools:~/builds/chrome-linux:~/local/node/bin
 export PATH=$PATH:~/builds/chrome-linux
 export RUBYOPT=rubygems
 export PYTHONPATH=/home/david/programming/python/google_appengine/:/home/david/programming/python/google_appengine/lib/:/home/david/programming/python/genlog:../:../../:
 export PYTHONSTARTUP=~/.pythonstartup
 export INFOPATH=/home/david/emacs/info
-export ONZOHOME=~/src/backend/
+export ONZOHOME=~/src/onzo/backend/
 
 #### Defaults ####
 # Default editor
