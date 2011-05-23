@@ -1,10 +1,12 @@
-;; Generic emacs configuration directives
+;; Initialization successful, welcome to GNU Emacs 23.3.2.
+;; Loaded with .emacs enabled
 
 ;;; Initialization
 (setq inhibit-startup-message t) ;; No more welcome for me
 ;; Make stuff wander about
 (defconst animate-n-steps 10)
 (defun emacs-reloaded ()
+  (switch-to-buffer "*scratch*")
   (animate-string (concat ";; Initialization successful, welcome to "
                           (substring (emacs-version) 0 16)
                           ". \n;; Loaded with .emacs enabled")
@@ -249,3 +251,11 @@
 ;; Session Management
 (desktop-save-mode t)
 
+;; Blogging
+(require 'weblogger)
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(weblogger-config-alist (quote (("deadpansincerity" "http://blog.deadpansincerity.com/xmlrpc.php" "admin" "" "1")))))

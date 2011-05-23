@@ -1,6 +1,10 @@
 
 ;; Languages
 
+;; Generic Flymake enhancement - show warnings in the minibuffer when
+;; point is over a line with an error
+(require 'flymake-cursor)
+
 ;; CSS
 (require 'rainbow-mode)
 (add-hook 'css-mode-hook 'rainbow-mode)
@@ -270,6 +274,10 @@
 ;; Javascript
 (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
 (autoload 'javascript-mode "javascript" nil t)
+(require 'flymake-jslint)
+(setq lintnode-jslint-excludes (list 'nomen 'undef))
+(add-hook 'js-mode-hook
+          (lambda () (lintnode-hook)))
 
 ;;;;  Lisp
 
