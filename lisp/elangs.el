@@ -275,7 +275,7 @@
 (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
 (autoload 'javascript-mode "javascript" nil t)
 (require 'flymake-jslint)
-(setq lintnode-jslint-excludes (list 'nomen 'undef))
+(setq lintnode-jslint-excludes (list 'nomen 'undef 'plusplus 'onevar 'white))
 (add-hook 'js-mode-hook
           (lambda () (lintnode-hook)))
 
