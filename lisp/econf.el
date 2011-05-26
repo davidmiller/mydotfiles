@@ -259,3 +259,19 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(weblogger-config-alist (quote (("deadpansincerity" "http://blog.deadpansincerity.com/xmlrpc.php" "admin" "" "1")))))
+
+;; Function names in the header line
+(require 'which-func)
+(which-func-mode 1)
+ (eval-after-load "which-func"
+      '(add-to-list 'which-func-modes 'js-mode))
+(delete (assoc 'which-func-mode mode-line-format) mode-line-format)
+(setq which-func-header-line-format
+              '(which-func-mode
+                ("" which-func-format
+                 )))
+(defadvice which-func-ff-hook (after header-line activate)
+  (when which-func-mode
+    (delete (assoc 'which-func-mode mode-line-format) mode-line-format)
+    (setq header-line-format which-func-header-line-format)))
+
