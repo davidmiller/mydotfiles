@@ -98,3 +98,13 @@
   (interactive)
   (ansi-term "ipython" "iPython")
   (switch-to-buffer "*iPython*"))
+
+(defun run-hooks-for (hooks)
+  "Run the hooks stored in `hooks`"
+  (interactive "SHook: ")
+  (run-hooks hooks))
+
+(defun ff-hooks ()
+  "Run find-file-hooks"
+  (interactive)
+  (run-hooks-for 'find-file-hooks))
