@@ -1,27 +1,40 @@
+;;
+;; elangs.el
+;;
+;; Commentary:
+;;
+;; This file contains programming-related configurations related to particular
+;; programming languages as well as defining particular grouped functional settings
+;; that can be invoked either as hook functions for Programming modes, or
+;; as-required interactively
+;;
 
-;; Languages
-
+;; Module level requires
+(require 'flymake)
 ;; Generic Flymake enhancement - show warnings in the minibuffer when
 ;; point is over a line with an error
 (require 'flymake-cursor)
 
 ;; CSS
 (require 'rainbow-mode)
-(add-hook 'css-mode-hook 'rainbow-mode)
+(add-hook 'css-mode-hook (lambda
+                           (set-mode-style colourful-style)))
 
 ;;;;  Python
 
+;; Taking pymacs out for now, mostly because it's flaky as hell.
+;; Would be really great to get a better documentation function working though.
 ;; (require 'pymacs)
 ;; (pymacs-load "ropemacs" "rope-")
+;; (setq ropemacs-enable-autoimport t)
+
+(require 'pony-mode)
+(autoload 'python-mode "python-mode" "Python editing mode." t)
 (add-to-list 'auto-mode-alist '("\\.wsgi\\'" . python-mode))
-(setq ropemacs-enable-autoimport t)
 (setq auto-mode-alist (cons '("\\.py$" . python-mode) auto-mode-alist))
 (setq interpreter-mode-alist (cons '("python" . python-mode)
                                    interpreter-mode-alist))
-(autoload 'python-mode "python-mode" "Python editing mode." t)
-(load-library "pony")
 
-(require 'flymake)
 ;; Pyflakes for highlighting syntax errors
 (defun flymake-pyflakes-init ()
   (let* ((temp-file (flymake-init-create-temp-buffer-copy
@@ -37,10 +50,9 @@
     (let ((help (get-char-property (point) 'help-echo)))
       (if help (message "%s" help)))))
 
-
-
 (add-to-list 'flymake-allowed-file-name-masks
              '("\\.py\\'" flymake-pyflakes-init))
+
 
 (defun rope-eldoc-function ()
   (interactive)
@@ -170,11 +182,11 @@
              (unless (eq buffer-file-name nil)
                (progn
                  (flymake-mode t)
-                 (set (make-local-variable
-                       'eldoc-documentation-function)
-                      'rope-eldoc-function)
+                 ;; (set (make-local-variable
+                 ;;       'eldoc-documentation-function)
+                 ;;      'rope-eldoc-function)
 ;                 (turn-on-eldoc-mode)
-                 (light-symbol-mode t)))))
+                 (set-mode-style ide-style)))))
 
 
 ;; Nose integration with python-mode
@@ -272,12 +284,13 @@
 (add-to-list 'test-case-backends 'test-case-nose-backend t)
 
 ;; Javascript
-(add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
-(autoload 'javascript-mode "javascript" nil t)
+
 (require 'flymake-jslint)
 (setq lintnode-jslint-excludes (list 'nomen 'undef 'plusplus 'onevar 'white))
 (add-hook 'js-mode-hook
-          (lambda () (lintnode-hook)))
+          (lambda ()
+            (lintnode-hook)
+            (set-mode-style ide-style)))
 
 ;; Integrating jasmine with test-case mode
 (defcustom test-case-jasmine-executable "jasmine-node"
@@ -309,7 +322,7 @@
   "Javascript Jasmine backend for `test-case-mode`"
   (case command
     ('name "Jasmine")
-    ('supported (or (derived-mode-p 'js-mode)
+    ('supported (or (derived-mode-p 'js2-mode)
                     (string-match "spec.js" (buffer-file-name))))
 
     ('command (concat "cd " test-case-jasmine-cwd "; "
@@ -320,8 +333,6 @@
 
 (add-to-list 'test-case-backends 'test-case-jasmine-backend)
 
-(eval-after-load 'js-mode
-  '(add-hook 'js-mode-hook 'enable-test-case-mode-if-test))
 
 
 ;;;;  Lisp
@@ -331,13 +342,13 @@
 (require 'slime)
 (slime-setup '(slime-fancy))
 (global-font-lock-mode t)
-(show-paren-mode 1)
+
 (add-hook 'lisp-mode-hook '(lambda ()
-                             (local-set-key (kbd "RET") 'newline-and-indent)))
+                             (set-mode-style ide-style)))
+
 (add-hook 'emacs-lisp-mode '(lambda ()
-                              (pretty-lambdas)
-                              (autopair-mode t)
-                              (light-symbol-mode t)))
+                              (set-mode-style ide-style)
+                              (smart-operator-mode nil)))
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . lisp-mode))
 
 
@@ -353,8 +364,29 @@
 ;; Erlang
 (load-library "erlang")
 (add-to-list 'auto-mode-alist '("\\.erl\\'" . erlang-mode))
-(defun my-erlang-hook ()
-  "TEsting purps only"
-  (message "called")
-  (auto-complete-mode t))
-(add-hook 'erlang-mode-hook 'my-erlang-hook)
+(add-to-list 'erlang-mode-hook '(lambda ()
+                                  (set-mode-style ide-style)))
+;; c++
+
+; Indentation style I want to use in c++ mode
+(c-add-style "my-style"
+         '("stroustrup"
+           (indent-tabs-mode . nil)        ; use spaces rather than tabs
+           (c-basic-offset . 4)            ; indent by four spaces
+           (c-offsets-alist . ((inline-open . 0)  ; custom indentation rules
+                   (brace-list-open . 0)
+                   (statement-case-open . +)))))
+
+(defun c-compile ()
+  "Run make -k without a prompt please"
+  (interactive)
+  (compile "make -k" t))
+
+(defun my-c++-mode-hook ()
+  (c-set-style "my-style")        ; use my-style defined above
+  (auto-fill-mode)
+  (c-toggle-auto-hungry-state 1)
+  (set-mode-style ide-style)
+  (local-set-key "\C-c\C-c" 'c-compile))
+
+(add-hook 'c++-mode-hook 'my-c++-mode-hook)

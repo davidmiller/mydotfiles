@@ -32,6 +32,14 @@
 (global-set-key "\M-p" 'pyflakes-show-help)
 
 ;; Completions - let's get one set of keybindings regardless of context
-(global-set-key (kbd "<backtab>") 'auto-complete)
 (global-set-key [\C-\;] 'yas/next-field)
 (global-set-key [\C\'] 'yas/expand)
+
+;; Show-hide
+(global-set-key (kbd "<backtab>") 'hs-hide-level)
+(global-set-key (kbd "<S-right>") 'hs-show-block)
+(global-set-key (kbd "<S-down>") 'hs-show-all)
+(global-set-key (kbd "<S-left>") 'hs-hide-block)
+(global-set-key (kbd "<S-up>") 'hs-hide-all)
+
+(global-set-key "\C-cR" 'rename-current-file-or-buffer)

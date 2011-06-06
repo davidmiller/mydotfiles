@@ -72,8 +72,7 @@
 (ac-config-default)
 (add-to-list 'ac-modes 'erlang-mode)
 (add-to-list 'ac-modes 'erlang-shell-mode)
-(add-to-list 'ac-modes 'javascript)
-(setq-default ac-sources (add-to-list 'ac-sources 'ac-source-yasnippet))
+(setq-default ac-sources (add-to-list 'ac-sources 'ac-dictionary 'ac-source-yasnippet))
 (add-hook 'emacs-lisp-mode-hook
           (lambda () (add-to-list 'ac-sources 'ac-source-symbols)))
 ;; (add-hook 'python-mode-hook
@@ -194,12 +193,15 @@
 
 ;; Modeline customisations
 (require 'diminish)
+(require 'rainbow-mode)
 (eval-after-load "light-symbol" '(diminish 'light-symbol-mode))
 (eval-after-load "flymake" '(diminish 'flymake-mode "F"))
 (eval-after-load "eldoc" '(diminish 'eldoc-mode "E"))
 (eval-after-load "yasnippet" '(diminish 'yas/minor-mode "Y"))
 (eval-after-load "autopair" '(diminish 'autopair-mode))
 (eval-after-load "smart-operator" '(diminish 'smart-operator-mode))
+(eval-after-load "whitespace" '(diminish 'global-whitespace-mode))
+(eval-after-load "whitespace" '(diminish 'rainbow-mode))
 ;; Dictionary
 (load "dictionary-init")
 
@@ -211,6 +213,7 @@
  browse-url-browser-function 'browse-url-generic
  browse-url-generic-program "firefox")
 (global-set-key "\C-cff" 'browse-url)
+(load-library "browse-apropos")
 ;;(setq browse-url-browser-function "firefox")
 
 
@@ -264,7 +267,12 @@
 (require 'which-func)
 (which-func-mode 1)
  (eval-after-load "which-func"
-      '(add-to-list 'which-func-modes 'js-mode))
+      '(progn
+         (add-to-list 'which-func-modes 'c++-mode)
+         (add-to-list 'which-func-modes 'js-mode)
+         (add-to-list 'which-func-modes 'lisp-mode)
+         (add-to-list 'which-func-modes 'emacs-lisp-mode)
+         (add-to-list 'which-func-modes 'python-mode)))
 (delete (assoc 'which-func-mode mode-line-format) mode-line-format)
 (setq which-func-header-line-format
               '(which-func-mode
@@ -274,4 +282,4 @@
   (when which-func-mode
     (delete (assoc 'which-func-mode mode-line-format) mode-line-format)
     (setq header-line-format which-func-header-line-format)))
-
+(add-hook 'find-file-hooks 'which-func-ff-hook)

@@ -26,7 +26,6 @@
         (dired-do-rename)
         (kill-buffer nil))))
   nil)
-(global-set-key "\C-cR" 'rename-current-file-or-buffer)
 
 
 ;; move (shift) a line of text up or down like you would do in Eclipse
@@ -108,3 +107,14 @@
   "Run find-file-hooks"
   (interactive)
   (run-hooks-for 'find-file-hooks))
+
+(defun make-ret-indenting ()
+  "Locally rebind RET to the function `newline-and-indent` - this is useful for setting in
+mode hook styles that are likely to be invoked across multiple major-modes."
+  (local-set-key (kbd "RET") 'newline-and-indent))
+
+;; (defun close-and-bookmark()
+;;   "Close a PDF, bookmarking the page You've currently read until"
+;;   (interactive)
+;;   (let ((page (doc-view-current-page)))))
+
