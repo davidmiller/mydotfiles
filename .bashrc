@@ -1,5 +1,8 @@
 # David's .bashrc
 
+# Where am I ?
+UNAME = uname
+
 # Reload this file due to frequent edits
 alias reload='source ~/.bashrc'
 
@@ -11,26 +14,31 @@ export PYTHONPATH=/home/david/programming/python/google_appengine/:/home/david/p
 export PYTHONSTARTUP=~/.pythonstartup
 export INFOPATH=/home/david/emacs/info
 export ONZOHOME=~/src/onzo/backend/
+export LD_LIBRARY_PATH=`pwd`
 
 #### Defaults ####
 # Default editor
 export EDITOR="emacs -nw -q"
 
 
-#### Aliases ####
-
+#### Aiases ####
 # listing aliases
-alias lx='ls -lXB'               # sort by extension
-alias lk='ls -lSr'               # sort by size
-alias lm='ls -alh |more'         # pipe through 'more'
-alias lsd='ls -lh | grep "^d"'   # list only directories
-alias lsl='ls -lh | grep "^l"'   # list only links
-# list long, human readable, ignore implied~,
-# ignore compiled python files
-alias ll='ls -hlB --group-directories-first --hide=*.pyc'
-# list including .dotfiles
-alias lsa='ls -lAh --group-directories-first'
-alias lz="ls -lZ"                # SELinux display
+if [ $UNAME='Darwin' ];
+then
+    alias ll='ls -l | grep -v -E ".pyc$|~$"'
+else
+    alias lx='ls -lXB'               # sort by extension
+    alias lk='ls -lSr'               # sort by size
+    alias lm='ls -alh |more'         # pipe through 'more'
+    alias lsd='ls -lh | grep "^d"'   # list only directories
+    alias lsl='ls -lh | grep "^l"'   # list only links
+    # list long, human readable, ignore implied~,
+    # ignore compiled python files
+    alias ll='ls -hlB --group-directories-first --hide=*.pyc'
+    # list including .dotfiles
+    alias lsa='ls -lAh --group-directories-first'
+    alias lz="ls -lZ"                # SELinux display
+fi
 
 ## directory aliases
 alias mkdir='mkdir -p'  #Make intermediaries
@@ -201,3 +209,8 @@ if [ $? -ne 0 ] ; then
         alias ack="ack-grep"
     fi
 fi
+
+# keybindings
+bind '"\C-f\C-g": "find . | grep "';
+bind '"\C-f\C-x": "find . | xargs grep "'
+bind '"\C-p\C-a": "ps aux | grep "'
