@@ -1,7 +1,7 @@
 # David's .bashrc
 
 # Where am I ?
-UNAME = uname
+UNAME=uname
 
 # Reload this file due to frequent edits
 alias reload='source ~/.bashrc'
