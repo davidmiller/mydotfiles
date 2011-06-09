@@ -122,6 +122,18 @@ extract () {
   fi
 }
 
+# A frequent source of complaint from cat
+# is that I've just asked it to cat a directory.
+# If I have, just DWIM and do it happily.
+function catorls () {
+    if [ -d $1 ];
+    then
+        ls -l $1
+    else
+        cat $1
+    fi
+}
+alias cat="catorls"
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # don't overwrite GNU Midnight Commander's setting of `ignorespace'.
