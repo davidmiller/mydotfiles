@@ -21,7 +21,7 @@
     (imenu-add-menubar-index)
     (hs-minor-mode t)
     (which-func-mode t)
-    (smart-operator-mode t)
+    (smart-operator-mode-on)
     (light-symbol-mode t))
   "A programming-mode style that will enable groups of IDE-like features.")
 
@@ -37,4 +37,6 @@
 
 (defun set-mode-style (style)
   "Set the mode-style to `style`"
+  (set (make-local-variable 'mode-style) (symbol-name style))
   (funcall style))
+

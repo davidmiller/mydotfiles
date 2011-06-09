@@ -4,13 +4,15 @@
 ;; Commentary:
 ;;
 ;; This file contains programming-related configurations related to particular
-;; programming languages as well as defining particular grouped functional settings
+;; programming languages as well as defining particular grouped functional
+;; settings
 ;; that can be invoked either as hook functions for Programming modes, or
 ;; as-required interactively
 ;;
 
 ;; Module level requires
 (require 'flymake)
+(load-library "emodes")
 ;; Generic Flymake enhancement - show warnings in the minibuffer when
 ;; point is over a line with an error
 (require 'flymake-cursor)
@@ -346,9 +348,9 @@
 (add-hook 'lisp-mode-hook '(lambda ()
                              (set-mode-style ide-style)))
 
-(add-hook 'emacs-lisp-mode '(lambda ()
-                              (set-mode-style ide-style)
-                              (smart-operator-mode nil)))
+(add-hook 'emacs-lisp-mode-hook '(lambda ()
+                                   (set-mode-style ide-style)
+                                   (smart-operator-mode nil)))
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . lisp-mode))
 
 

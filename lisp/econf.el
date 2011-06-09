@@ -75,6 +75,9 @@
 (setq-default ac-sources (add-to-list 'ac-sources 'ac-dictionary 'ac-source-yasnippet))
 (add-hook 'emacs-lisp-mode-hook
           (lambda () (add-to-list 'ac-sources 'ac-source-symbols)))
+(add-hook 'auto-complete-mode-hook
+          (lambda ()
+            ()))
 ;; (add-hook 'python-mode-hook
 ;;           (lambda () (add-to-list 'ac-sources 'ac-source-ropemacs)))
 (global-auto-complete-mode t)
@@ -98,8 +101,9 @@
                 (mode . org-mode))
                ("Profile"    ;; personal config files
                 (filename . ".emacs\$"))
-               ("Solariffic" ;; Solariffic CRM on local machine
-                (filename . "work/solar"))
+               ("Onzo" ;; Work related sectioning
+                (or (filename . "onzo") ;; Local Machine
+                    (filename . "scp:devs@devmac"))) ;; TRAMPing to the dev Mac
                ("Gnus"
                 (name . "*Group*"))
                ("Programming" ;; prog stuff not already in MyProjectX
@@ -221,6 +225,8 @@
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
+(add-hook 'org-mode-hook '(lambda ()
+                            (set-mode-style textual-style)))
 
 ;; Testing out remember-mode
 (org-remember-insinuate)

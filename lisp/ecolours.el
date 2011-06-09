@@ -31,9 +31,14 @@
      (minibuffer-prompt ((t (:foreground "#a2c4d8" :bold t))))
      (font-lock-warning-face ((t (:foreground "Red" :bold t))))
      (whitespace-space ((t (:background "#0f0f0f"))))
+     (whitespace-line ((t (:background "gray10"))))
      (whitespace-newline ((t (:foreground "#454545"))))
+     (whitespace-indentation ((t (:background "#8b7848"))))
+     (whitespace-space-after-tab ((t (:background "#8b7848"))))
+     (whitespace-empty ((t (:background "#8b7848"))))
      (which-func ((t (:foreground "#a2c4d8"))))
      )))
+
 (provide 'color-theme-bluebulator)
 (color-theme-bluebulator)
 
@@ -60,6 +65,7 @@
    (newline-mark 10 [8617 10]) ; newlne, ¶
    (tab-mark 9 [9655 9] [92 9]) ; tab, ▷
 ))
+(setq whitespace-line-column 180)
 (global-whitespace-mode t)
 
 (defun pretty-lambdas ()
