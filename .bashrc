@@ -39,7 +39,7 @@ else
     alias lsa='ls -lAh --group-directories-first'
     alias lz="ls -lZ"                # SELinux display
 fi
-
+alias ll='ls -l'
 ## directory aliases
 alias mkdir='mkdir -p'  #Make intermediaries
 # Disk usage
