@@ -346,11 +346,13 @@
 (global-font-lock-mode t)
 
 (add-hook 'lisp-mode-hook '(lambda ()
-                             (set-mode-style ide-style)))
+                             (set-mode-style ide-style)
+                             (eldoc-mode t)))
 
 (add-hook 'emacs-lisp-mode-hook '(lambda ()
                                    (set-mode-style ide-style)
-                                   (smart-operator-mode nil)))
+                                   (smart-operator-mode nil)
+                                   (eldoc-mode t)))
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . lisp-mode))
 
 

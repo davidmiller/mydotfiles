@@ -230,8 +230,8 @@
 
 ;; Testing out remember-mode
 (org-remember-insinuate)
-(setq org-directory "~/notes/")
-(setq org-default-notes-file "~/.notes")
+(setq org-directory "~/src/onzo/scratch/")
+(setq org-default-notes-file "~/src/onzo/scratch/notes.org")
 (setq remember-annotation-functions '(org-remember-annotation))
 (setq remember-handler-functions '(org-remember-handler))
 (add-hook 'remember-mode-hook 'org-remember-apply-template)
@@ -248,6 +248,7 @@
 (require 'w3m-e21)
 (provide 'w3m-e23)
 (setq w3m-default-display-inline-images t)
+(setq w3m-use-cookies t)
 
 ;; Unittests
 (require 'fringe-helper)
@@ -289,3 +290,5 @@
     (delete (assoc 'which-func-mode mode-line-format) mode-line-format)
     (setq header-line-format which-func-header-line-format)))
 (add-hook 'find-file-hooks 'which-func-ff-hook)
+
+(require 'onzo)
