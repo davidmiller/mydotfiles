@@ -100,7 +100,9 @@ Args are expected to be: `name` `command` `args` `dont-pop`
 where name and command are strings, args a list, and dont-pop optional.
 "
   `(progn
-     (defun ,(build-symbol) ,@args))
+     (defun ,(intern (concat "onzo-" ,name "-start")) ()
+       (interactive)
+       (onzo-comint-pop ,name))))
 
 ;;
 ;; Onzorifficity
