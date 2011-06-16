@@ -93,6 +93,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;  Buffer Management ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq split-window-preferred-function 'split-window-sensibly)
+(winner 1)
 ;(setq split-width-threshold 50)
 
 (setq ibuffer-saved-filter-groups
@@ -215,7 +216,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; Web browsing stuff here innit ;;;;;;;;;;;;;;;;;;
 (setq
  browse-url-browser-function 'browse-url-generic
- browse-url-generic-program "firefox")
+ browse-url-generic-program "chrome")
 (global-set-key "\C-cff" 'browse-url)
 (load-library "browse-apropos")
 ;;(setq browse-url-browser-function "firefox")
@@ -292,3 +293,10 @@
 (add-hook 'find-file-hooks 'which-func-ff-hook)
 
 (require 'onzo)
+
+(autoload 'ack-same "full-ack" nil t)
+(autoload 'ack "full-ack" nil t)
+(autoload 'ack-find-same-file "full-ack" nil t)
+(autoload 'ack-find-file "full-ack" nil t)
+(setq ack-executable (exqecutable-find "ack-grep"))
+

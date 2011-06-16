@@ -25,6 +25,16 @@ When looking for things like the backend, these values will be taken in the sequ
 they appear in the list.
 ")
 
+(defvar onzo-tracker-ticket-url "http:/trac.onzo.com:8000/ticket/"
+  "Stores the url fragment to which ticket numbers will be appended when jumping to
+tickets from Emacs.")
+
+(defvar onzo-sseweb-port 8080
+  "The port on which you would like to run the sse-web service")
+
+(defvar onzo-sseweb-host "0.0.0.0"
+  "The host on which you would like to run the sse-web service")
+
 ;;
 ;; Utilities
 ;;
@@ -84,8 +94,16 @@ Onzo-mode are available to popped buffers (e.g.) sub-processes"
   (let ((proc (get-buffer-process (concat "*" name "*"))))
     (if proc (kill-process proc))))
 
+(defmacro onzo-defservice (name command args)
+  "Expand to be an interactive onzo service e.g. sse/backend/whitelabel
+Args are expected to be: `name` `command` `args` `dont-pop` 
+where name and command are strings, args a list, and dont-pop optional.
+"
+  `(progn
+     (defun ,(build-symbol) ,@args))
+
 ;;
-;; Projects
+;; Onzorifficity
 ;;
 ;; Commentary:
 ;;
@@ -113,8 +131,15 @@ Onzo-mode are available to popped buffers (e.g.) sub-processes"
 ;; Functions related to the Onzo dev infrastructure - e.g. trac etc
 ;;
 
-(defun onzo-trac-ticket ()
-  "")
+;;;###autoload
+(defun onzo-ticket (num)
+  "Jump to ticket number `num` on Onzo's bug tracker"
+  (interactive "sTicket Number: ")
+  (browse-url (concat onzo-tracker-ticket-url num)))
+
+;; TODO
+;; Jump to trac locations - SEK/ZBD/SW releases - probably
+;; interactive defun with string mapping of choices
 
 ;;
 ;; Backend
@@ -138,7 +163,7 @@ the location of your local backend repo."
 (defun onzo-backend-start (&optional dont-pop)
   "Run the Onzo Backend service in a buffer *onzo-backend*"
   (interactive)
-  (onzo-comint-pop "onzo-backend" (concat (onzo-backend-scripts) "/backend_server") nil dont-pop))
+  (onzo-service "onzo-backend" (concat (onzo-backend-scripts) "/backend_server") nil dont-pop))
 
 ;;;###autoload
 (defun onzo-backend-stop ()
@@ -176,18 +201,81 @@ Used as an after-save hook."
 ;;;###autoload
 (defun onzo-backend-onzo-dot-conf ()
   "Return the path to the relevant onzo.conf for the backend."
-  (if (onzo-backend-source-p)
-      (onzo-file-exists (expand-file-name (concat (first onzo-src-root) "/backend/onzo.conf")))))
+  (onzo-file-exists (expand-file-name (concat (first onzo-src-root) "/backend/onzo.conf"))))
+
+;;;###autoload
+(defun onzo-.conf ()
+  "Locate and open backedn/onzo.conf"
+  (interactive)
+  (find-file (onzo-backend-onzo-dot-conf)))
 
 ;;;###autoload
 (defun onzo-backend-running-p ()
   "Predicate determining whether the backend is running"
   (onzo-xp (get-buffer-process "*onzo-backend*")))
 
+;; TODO
 ;;;###autoload
 (defun onzo-backend-db-shell ()
   "Run the Onzo Backend database Shell"
   )
+
+;; TODO
+;;;###autoload
+(defun onzo-console ()
+  "Run the onzo console for this backend")
+
+;;
+;; SSE
+;;
+;; Commentary:
+;;
+;; Support handling of the SSE web layer - understand code paths and
+;; basic management commands.
+;;
+;; Deep django integration is better done elsewhere (e.g. pony-mode)
+;; but the minimum to run the whole sse service with one M-x command
+;; is worthwhile to have a package that doesn't require external dependencies.
+;;
+;; Configuration:
+;;
+;; `onzo-sseweb-port` Port to run onzo-sse on (defaults to 8000)
+;; `onzo-sseweb-host` Host to run onzo-sse from (defaults to 0.0.0.0)
+;;
+
+;; TODO
+;;;###autoload
+(defun onzo-sse-root ()
+  "Get the root of our local sseweb instance")
+
+;;;###autoload
+(defun onzo-sse-start ()
+  "Start the server for the onzo sse service"
+  (interactive)
+  (onzo-service "onzo-sse" (concat (onzo-sse-root) "/onzo_pss/manage.py")
+                ("runserver"
+                 (concat"http://" onzo-sseweb-host ":" onzo-sseweb-port)
+                    dont-pop)))
+
+;;
+;; Hollism
+;;
+;; Commentary:
+;;
+;; Provide support for single-command starting/reloading, and switching between
+;; active projects -e.g. M-x onzo-whitelabel should understand the relevant
+;; components, and run them.
+;;
+;; TODO: Add support for arbitrary user projects or project customizations - e.g.
+;; adding arbitrary lists of shell commands to be execurted as one 'project'
+;;
+
+(defun onzo-sse ()
+  "Run the onzo sse service - e.g. the backend and sse-web"
+  (interactive)
+  (onzo-backend-restart))
+
+
 
 ;;
 ;; Firmware
@@ -236,7 +324,8 @@ Used as an after-save hook."
 (defvar onzo-minor-mode-map
   (let ((map (make-keymap)))
     map))
-(onzo-key "\C-c\C-pb" 'onzo-browser)
+(onzo-key "\C-c\C-ot" 'onzo-ticket)
+(onzo-key "\C-c\C-o." 'onzo-.conf)
 
 ;; Menu
 ;;
@@ -251,7 +340,7 @@ Used as an after-save hook."
   onzo-menu onzo-minor-mode-map "Onzo Mode Menu"
   '("Onzo"
     ;; Interactive
-    ["Launch Onzo shell" onzo-shell]
+    ["Jump to ticket" onzo-ticket]
     ))
 
 (defvar onzo-minor-mode-hook nil)
