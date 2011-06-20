@@ -286,9 +286,9 @@
 (add-to-list 'test-case-backends 'test-case-nose-backend t)
 
 ;; Javascript
-
+test-case-mode
 (require 'flymake-jslint)
-(setq lintnode-jslint-excludes (list 'nomen 'undef 'plusplus 'onevar 'white))
+(setq lintnode-excludes (list 'nomen 'undef 'plusplus 'onevar 'white))
 (add-hook 'js-mode-hook
           (lambda ()
             (lintnode-hook)
@@ -355,11 +355,12 @@
                                    (eldoc-mode t)))
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . lisp-mode))
 
-
 ;;;; Ruby
 (require 'feature-mode)
 (add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
 (require 'rails)
+(add-hook 'ruby-mode-hook '(lambda ()
+                             (set-mode-style ide-style)))
 
 ;;;;  PHP
 (load-library "php-mode")
@@ -394,3 +395,7 @@
   (local-set-key "\C-c\C-c" 'c-compile))
 
 (add-hook 'c++-mode-hook 'my-c++-mode-hook)
+
+;; Perl
+(add-hook 'perl-mode-hook '(lambda ()
+                             (set-mode-style ide-style)))

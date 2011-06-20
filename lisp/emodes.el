@@ -12,6 +12,8 @@
 ;; Code:
 (require 'smart-operator)
 
+;(defmacro )
+
 (setq ide-style
   '(lambda ()
      (make-ret-indenting)
@@ -23,7 +25,6 @@
      (which-func-mode t)
      (smart-operator-mode-on)
      (light-symbol-mode t)))
-(funcall ide-style)
 
 (defvar colourful-style
   '(lambda ()
@@ -40,3 +41,4 @@
   (set (make-local-variable 'mode-style) (symbol-name 'style))
   (funcall style))
 
+(provide 'emodes)

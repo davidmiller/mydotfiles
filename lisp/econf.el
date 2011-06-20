@@ -86,6 +86,7 @@
                                         ;(setq ac-auto-start nil)
 (setq ac-auto-start 2)
 (setq ac-ignore-case nil)
+(setq ac-quick-help-delay 1)
 (require 'yasnippet)
 (yas/initialize)
 (yas/load-directory "~/emacs/yasnippet/snippets/text-mode")
@@ -93,7 +94,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;  Buffer Management ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq split-window-preferred-function 'split-window-sensibly)
-(winner 1)
+(winner-mode 1)
 ;(setq split-width-threshold 50)
 
 (setq ibuffer-saved-filter-groups
@@ -298,5 +299,5 @@
 (autoload 'ack "full-ack" nil t)
 (autoload 'ack-find-same-file "full-ack" nil t)
 (autoload 'ack-find-file "full-ack" nil t)
-(setq ack-executable (exqecutable-find "ack-grep"))
+(setq ack-executable (executable-find "ack-grep"))
 
