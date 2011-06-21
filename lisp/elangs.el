@@ -399,3 +399,9 @@ test-case-mode
 ;; Perl
 (add-hook 'perl-mode-hook '(lambda ()
                              (set-mode-style ide-style)))
+
+;;; Thrift
+(require 'thrift-mode)
+(add-to-list 'auto-mode-alist '("\\.thrift\\'" . thrift-mode))
+(add-hook 'thrift-mode-hook '(lambda ()
+                               (set-mode-style ide-style)))

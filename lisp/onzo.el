@@ -94,62 +94,63 @@ Onzo-mode are available to popped buffers (e.g.) sub-processes"
   (let ((proc (get-buffer-process (concat "*" name "*"))))
     (if proc (kill-process proc))))
 
-(defmacro build-symbol (&rest l)
-   (let ((p (find-if (lambda (x) (and (consp x) (eq (car x) ':package)))
-                     l)))
-      (cond (p
-             (setq l (remove p l))))
-      (let ((pkg (cond ((eq (cadr p) 'nil)
-                        nil)
-                       (t `(find-package ',(cadr p))))))
-         (cond (p
-                (cond (pkg
-                       `(values (intern ,(symstuff l) ,pkg)))
-                      (t
-                       `(make-symbol ,(symstuff l)))))
-               (t
-                `(values (intern ,(symstuff l))))))))
+;; (defmacro build-symbol (&rest l)
+;;    (let ((p (find-if (lambda (x) (and (consp x) (eq (car x) ':package)))
+;;                      l)))
+;;       (cond (p
+;;              (setq l (remove p l))))
+;;       (let ((pkg (cond ((eq (cadr p) 'nil)
+;;                         nil)
+;;                        (t `(find-package ',(cadr p))))))
+;;          (cond (p
+;;                 (cond (pkg
+;;                        `(values (intern ,(symstuff l) ,pkg)))
+;;                       (t
+;;                        `(make-symbol ,(symstuff l)))))
+;;                (t
+;;                 `(values (intern ,(symstuff l))))))))
 
 
-(defun symstuff (l)
-   `(concatenate 'string
-      ,@(for (x :in l)
-           (cond ((stringp x)
-                  `',x)
-                 ((atom x)
-                  `',(format "%S" x))
-                 ((eq (car x) ':<)
-                  `(format "%S" ,(cadr x)))
-                 ((eq (car x) ':++)
-                  `(format "%S" (incf ,(cadr x))))
-                 (t
-                  `(format "%s" ,x))))))
+;; (defun symstuff (l)
+;;    `(concatenate 'string
+;;       ,@(for (x :in l)
+;;            (cond ((stringp x)
+;;                   `',x)
+;;                  ((atom x)
+;;                   `',(format "%S" x))
+;;                  ((eq (car x) ':<)
+;;                   `(format "%S" ,(cadr x)))
+;;                  ((eq (car x) ':++)
+;;                   `(format "%S" (incf ,(cadr x))))
+;;                  (t
+;;                   `(format "%s" ,x))))))
 
-(defmacro for (listspec exp)
-   (cond ((and (= (length listspec) 3)
-               (symbolp (car listspec))
-               (eq (cadr listspec) ':in))
-          `(mapcar (lambda (,(car listspec))
-                      ,exp)
-                   ,(caddr listspec)))
-         (t (error "Ill-formed: %s" `(for ,listspec ,exp)))))
+;; (defmacro for (listspec exp)
+;;    (cond ((and (= (length listspec) 3)
+;;                (symbolp (car listspec))
+;;                (eq (cadr listspec) ':in))
+;;           `(mapcar (lambda (,(car listspec))
+;;                       ,exp)
+;;                    ,(caddr listspec)))
+;;          (t (error "Ill-formed: %s" `(for ,listspec ,exp)))))
 
 (defmacro onzo-defservice (name command args)
   "Expand to be an interactive onzo service e.g. sse/backend/whitelabel
-Args are expected to be: `name` `command` `args` `dont-pop` 
+Args are expected to be: `name` `command` `args` `dont-pop`
 where name and command are strings, args a list, and dont-pop optional.
 "
   `(progn
-     (defun ,@(build-symbol onzo- (:< name) -start) ()
-       (interactive)
-       (onzo-comint-pop ,name ,command ,args))
-     (defun ,@(build-symbol onzo- (:< name) -stop)) ()
-       (interactive)
-       (onzo-subp-stop ,name))
-     (defun ,@(build-symbol onzo- (:< name) -restart) ()
-       (interactive)
-       (,(build-symbol onzo- (:< name) -stop))
-       (run-with-timer 1 nil ,(build-symbol onzo- (:< name) -stop) (list t))))
+     (defun onz)))
+     ;; (defun ,@(build-symbol onzo- (:< name) -start) ()
+     ;;   (interactive)
+     ;;   (onzo-comint-pop ,name ,command ,args))
+     ;; (defun ,@(build-symbol onzo- (:< name) -stop)) ()
+     ;;   (interactive)
+     ;;   (onzo-subp-stop ,name))
+     ;; (defun ,@(build-symbol onzo- (:< name) -restart) ()
+     ;;   (interactive)
+     ;;   (,(build-symbol onzo- (:< name) -stop))
+     ;;   (run-with-timer 1 nil ,(build-symbol onzo- (:< name) -stop) (list t))))
 
 ;(onzo-defservice backend2 "/backend_server" nil)
 
