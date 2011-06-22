@@ -26,7 +26,7 @@
       (font-lock-keyword-face ((t (:foreground "#508195"))))
       (font-lock-string-face ((t (:foreground "#6ea07f"))))
       (font-lock-type-face ((t (:foreground"#539355"))))
-      (flymake-errline ((t (:background"brown"))))
+      (flymake-errline ((t (:background"firebrick" :foreground "white"))))
       (font-lock-variable-name-face ((t (:foreground "#7f989f"))))
       (minibuffer-prompt ((t (:foreground "#a2c4d8" :bold t))))
       (font-lock-warning-face ((t (:foreground "Red" :bold t))))

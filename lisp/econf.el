@@ -190,6 +190,7 @@
 ;; Programming - IDE stuff
 
 (require 'smart-operator)
+(setq smart-operator-double-space-docs nil)
 ;; (load-file "~/emacs/cedet/common/cedet.el")
 ;; ;; Use CEDET projects
 ;; (global-ede-mode t)
