@@ -80,6 +80,9 @@ Onzo-mode are available to popped buffers (e.g.) sub-processes"
 ;; such as servers etc
 ;;
 
+(defvar onzo-service-hash (make-hash-table)
+  "A hash table of all services and their ports")
+
 ;;;###autoload
 (defun onzo-comint-pop (name command &optional args dont-pop)
   "Make a comint buffer and pop to it."
@@ -94,65 +97,47 @@ Onzo-mode are available to popped buffers (e.g.) sub-processes"
   (let ((proc (get-buffer-process (concat "*" name "*"))))
     (if proc (kill-process proc))))
 
-;; (defmacro build-symbol (&rest l)
-;;    (let ((p (find-if (lambda (x) (and (consp x) (eq (car x) ':package)))
-;;                      l)))
-;;       (cond (p
-;;              (setq l (remove p l))))
-;;       (let ((pkg (cond ((eq (cadr p) 'nil)
-;;                         nil)
-;;                        (t `(find-package ',(cadr p))))))
-;;          (cond (p
-;;                 (cond (pkg
-;;                        `(values (intern ,(symstuff l) ,pkg)))
-;;                       (t
-;;                        `(make-symbol ,(symstuff l)))))
-;;                (t
-;;                 `(values (intern ,(symstuff l))))))))
 
-
-;; (defun symstuff (l)
-;;    `(concatenate 'string
-;;       ,@(for (x :in l)
-;;            (cond ((stringp x)
-;;                   `',x)
-;;                  ((atom x)
-;;                   `',(format "%S" x))
-;;                  ((eq (car x) ':<)
-;;                   `(format "%S" ,(cadr x)))
-;;                  ((eq (car x) ':++)
-;;                   `(format "%S" (incf ,(cadr x))))
-;;                  (t
-;;                   `(format "%s" ,x))))))
-
-;; (defmacro for (listspec exp)
-;;    (cond ((and (= (length listspec) 3)
-;;                (symbolp (car listspec))
-;;                (eq (cadr listspec) ':in))
-;;           `(mapcar (lambda (,(car listspec))
-;;                       ,exp)
-;;                    ,(caddr listspec)))
-;;          (t (error "Ill-formed: %s" `(for ,listspec ,exp)))))
-
-(defmacro onzo-defservice (name command args)
+(defmacro onzo-defservice (name command args &optional port)
   "Expand to be an interactive onzo service e.g. sse/backend/whitelabel
 Args are expected to be: `name` `command` `args` `dont-pop`
 where name and command are strings, args a list, and dont-pop optional.
 "
-  `(progn
-     (defun onz)))
-     ;; (defun ,@(build-symbol onzo- (:< name) -start) ()
-     ;;   (interactive)
-     ;;   (onzo-comint-pop ,name ,command ,args))
-     ;; (defun ,@(build-symbol onzo- (:< name) -stop)) ()
-     ;;   (interactive)
-     ;;   (onzo-subp-stop ,name))
-     ;; (defun ,@(build-symbol onzo- (:< name) -restart) ()
-     ;;   (interactive)
-     ;;   (,(build-symbol onzo- (:< name) -stop))
-     ;;   (run-with-timer 1 nil ,(build-symbol onzo- (:< name) -stop) (list t))))
+  (let* ((namestr (symbol-name name))
+         (start (concat "onzo-" namestr "-start"))
+         (stop (concat "onzo-" namestr "-stop")))
+    (if port
+        (puthash namestr port onzo-service-hash))
+    `(progn
+       (defun ,(intern start) ()
+         "Start the service"
+         (interactive)
+         (message "starting...")
+         (onzo-comint-pop ,namestr ,command ,args))
 
-;(onzo-defservice backend2 "/backend_server" nil)
+       (defun ,(intern stop) ()
+         "Stop the service"
+         (interactive)
+         (message "stopping")
+         (onzo-subp-stop ,namestr))
+
+       (defun ,(intern (concat "onzo-" namestr "-restart")) ()
+         "Restart the service..."
+         (interactive)
+         (message "Restarting...")
+         (,(intern stop))
+         (run-with-timer 1 nil ',(intern start) ))
+
+       (defun ,(intern (concat "onzo-" namestr "-running-p")) ()
+         "Determine whether we're running or not"
+         (onzp-xp (get-buffer-process ,(concat "*" namestr "*")))))))
+
+;; (onzo-defservice backend (concat (onzo-backend-scripts) "/backend_server") nil 8080)
+q
+
+(defmacro onzo-defservice-group (name services)
+  "Create a group of services that function as a project together")
+
 
 ;;
 ;; Onzorifficity
@@ -212,25 +197,7 @@ the location of your local backend repo."
     (if (file-exists-p backend?)
         backend?)))
 
-;;;###autoload
-(defun onzo-backend-start (&optional dont-pop)
-  "Run the Onzo Backend service in a buffer *onzo-backend*"
-  (interactive)
-  (onzo-service "onzo-backend" (concat (onzo-backend-scripts) "/backend_server") nil dont-pop))
-
-;;;###autoload
-(defun onzo-backend-stop ()
-  "Stop the running instance of the Onzo Backend service if one is running in an Emacs
-Buffer."
-  (interactive)
-  (onzo-subp-stop "onzo-backend"))
-
-;;;###autoload
-(defun onzo-backend-restart ()
-  "Restart the backend service. Typically because we've made changes to the source"
-  (interactive)
-  (onzo-backend-stop)
-  (run-with-timer 1 nil 'onzo-backend-start (list t)))
+(onzo-defservice backend (concat (onzo-backend-scripts) "/backend_server") nil)
 
 ;;;###autoload
 (defun onzo-backend-reload ()
@@ -262,10 +229,6 @@ Used as an after-save hook."
   (interactive)
   (find-file (onzo-backend-onzo-dot-conf)))
 
-;;;###autoload
-(defun onzo-backend-running-p ()
-  "Predicate determining whether the backend is running"
-  (onzo-xp (get-buffer-process "*onzo-backend*")))
 
 ;; TODO
 ;;;###autoload
@@ -301,14 +264,30 @@ Used as an after-save hook."
 (defun onzo-sse-root ()
   "Get the root of our local sseweb instance")
 
-;;;###autoload
-(defun onzo-sse-start ()
-  "Start the server for the onzo sse service"
-  (interactive)
-  (onzo-service "onzo-sse" (concat (onzo-sse-root) "/onzo_pss/manage.py")
-                ("runserver"
-                 (concat"http://" onzo-sseweb-host ":" onzo-sseweb-port)
-                    dont-pop)))
+(onzo-defservice sse (concat (onzo-sse-root) "/onzo_pss/manage.py")
+                 ("runserver"
+                  (concat"http://" onzo-sseweb-host ":" onzo-sseweb-port)
+                  dont-pop)))
+
+;;
+;; Data warehouse
+;;
+;; Commentary:
+;;
+;; Run the data warehouseing script as a service
+;;
+(onzo-defservice data-thrift
+                 (expand-file-name (concat
+                                    (first onzo-src-root)
+                                    "/data_warehouse/scripts/runserver.py"))
+                 nil 30303)
+
+(onzo-defservice data-frontend
+                 (expand-file-name (concat
+                                    (first onzo-src-root)
+                                    "/data_warehouse/scripts/runfrontend.py"))
+                 nil 4567)
+
 
 ;;
 ;; Hollism

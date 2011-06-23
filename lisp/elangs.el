@@ -292,7 +292,8 @@ test-case-mode
 (add-hook 'js-mode-hook
           (lambda ()
             (lintnode-hook)
-            (set-mode-style ide-style)))
+            (set-mode-style ide-style)
+            (local-set-key (kbd "C-M-;") 'colonize)))
 
 ;; Integrating jasmine with test-case mode
 (defcustom test-case-jasmine-executable "jasmine-node"

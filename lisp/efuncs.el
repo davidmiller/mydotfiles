@@ -118,3 +118,10 @@ mode hook styles that are likely to be invoked across multiple major-modes."
 ;;   (interactive)
 ;;   (let ((page (doc-view-current-page)))))
 
+(defun colonize ()
+  "For languages that insist on putting a colon at the end of a line,
+do that. But stay where you're thinking is at."
+  (interactive)
+  (save-excursion
+    (move-end-of-line nil)
+    (insert ";")))

@@ -43,3 +43,6 @@
 (global-set-key (kbd "<S-up>") 'hs-hide-all)
 
 (global-set-key "\C-cR" 'rename-current-file-or-buffer)
+
+;; Lisp
+(global-set-key "\C-c\m" 'pp-macroexpand-last-sexp)
