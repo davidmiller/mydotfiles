@@ -46,3 +46,7 @@
 
 ;; Lisp
 (global-set-key "\C-c\m" 'pp-macroexpand-last-sexp)
+(global-set-key (kbd "C-M-;") 'colonize)
+
+(global-set-key (kbd "C-M-S-j") #'(lambda () (interactive) (previous-line) (move-end-of-line nil) (newline-and-indent)))
+(global-set-key (kbd "C-M-j") #'(lambda () (interactive) (move-end-of-line nil) (newline-and-indent)))

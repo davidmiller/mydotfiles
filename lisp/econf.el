@@ -72,6 +72,7 @@
 (ac-config-default)
 (add-to-list 'ac-modes 'erlang-mode)
 (add-to-list 'ac-modes 'erlang-shell-mode)
+(add-to-list 'ac-modes 'thrift-mode)
 (setq-default ac-sources (add-to-list 'ac-sources 'ac-dictionary 'ac-source-yasnippet))
 (add-hook 'emacs-lisp-mode-hook
           (lambda () (add-to-list 'ac-sources 'ac-source-symbols)))
@@ -184,7 +185,7 @@
 (erc-connect erc-freenode "irc.freenode.net" 6667 "davidmiller")
 (global-set-key "\C-cef" 'erc-freenode)
 (setq erc-autojoin-channels-alist
-      '(("freenode.net" "#emacs" "#django-mode" "#celery")))
+      '(("freenode.net" "#emacs" "#pony-mode" "#celery")))
  (erc-spelling-mode 1)
 
 ;; Programming - IDE stuff
@@ -294,7 +295,7 @@
     (setq header-line-format which-func-header-line-format)))
 (add-hook 'find-file-hooks 'which-func-ff-hook)
 
-(require 'onzo)
+;(require 'onzo)
 
 (autoload 'ack-same "full-ack" nil t)
 (autoload 'ack "full-ack" nil t)
@@ -302,3 +303,14 @@
 (autoload 'ack-find-file "full-ack" nil t)
 (setq ack-executable (executable-find "ack-grep"))
 
+
+;;; This was installed by package-install.el.
+;;; This provides support for the package system and
+;;; interfacing with ELPA, the package archive.
+;;; Move this code earlier if you want to reference
+;;; packages in your .emacs.
+(when
+    (load
+     (expand-file-name "~/.emacs.d/elpa/package.el"))
+  (package-initialize))
+(setq package-user-dir (expand-file-name "~/emacs/elpa"))

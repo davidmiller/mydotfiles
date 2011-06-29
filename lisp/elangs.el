@@ -155,10 +155,10 @@
 
 (defvar disable-python-trace nil)
 
-(defadvice message(around message-disable-python-trace activate)
-  (if disable-python-trace
-      t
-    ad-do-it))
+;; (defadvice message(around message-disable-python-trace activate)
+;;   (if disable-python-trace
+;;       t
+;;     ad-do-it))
 
 (defface flymake-message-face
   '((((class color) (background light)) (:foreground "#b2dfff"))
@@ -293,7 +293,7 @@ test-case-mode
           (lambda ()
             (lintnode-hook)
             (set-mode-style ide-style)
-            (local-set-key (kbd "C-M-;") 'colonize)))
+            (local-set-key (kbd "C-M-;"))))
 
 ;; Integrating jasmine with test-case mode
 (defcustom test-case-jasmine-executable "jasmine-node"
@@ -362,6 +362,7 @@ test-case-mode
 (require 'rails)
 (add-hook 'ruby-mode-hook '(lambda ()
                              (set-mode-style ide-style)))
+(require 'come-fly)
 
 ;;;;  PHP
 (load-library "php-mode")

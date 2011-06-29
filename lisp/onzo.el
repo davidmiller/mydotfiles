@@ -133,11 +133,15 @@ where name and command are strings, args a list, and dont-pop optional.
          (onzp-xp (get-buffer-process ,(concat "*" namestr "*")))))))
 
 ;; (onzo-defservice backend (concat (onzo-backend-scripts) "/backend_server") nil 8080)
-q
+
 
 (defmacro onzo-defservice-group (name services)
-  "Create a group of services that function as a project together")
+  "Create a group of services that function as a project together"
+  )
 
+(defun onzo-reload ()
+  "Executed as a file-save-hook, this function restarts any services that
+have been regisered as reloading.")
 
 ;;
 ;; Onzorifficity
@@ -267,7 +271,7 @@ Used as an after-save hook."
 (onzo-defservice sse (concat (onzo-sse-root) "/onzo_pss/manage.py")
                  ("runserver"
                   (concat"http://" onzo-sseweb-host ":" onzo-sseweb-port)
-                  dont-pop)))
+                  dont-pop))
 
 ;;
 ;; Data warehouse
