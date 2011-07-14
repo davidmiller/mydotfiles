@@ -50,3 +50,5 @@
 
 (global-set-key (kbd "C-M-S-j") #'(lambda () (interactive) (previous-line) (move-end-of-line nil) (newline-and-indent)))
 (global-set-key (kbd "C-M-j") #'(lambda () (interactive) (move-end-of-line nil) (newline-and-indent)))
+
+(provide 'ekeys)

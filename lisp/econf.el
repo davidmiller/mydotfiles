@@ -1,6 +1,8 @@
 ;; Initialization successful, welcome to GNU Emacs 23.3.2.
 ;; Loaded with .emacs enabled
 
+(require 'delsel)
+
 ;;; Initialization
 (setq inhibit-startup-message t) ;; No more welcome for me
 ;; Make stuff wander about
@@ -311,6 +313,8 @@
 ;;; packages in your .emacs.
 (when
     (load
-     (expand-file-name "~/.emacs.d/elpa/package.el"))
+     (expand-file-name "~/emacs/elpa/package.el"))
   (package-initialize))
 (setq package-user-dir (expand-file-name "~/emacs/elpa"))
+
+(provide 'econf)

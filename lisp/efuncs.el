@@ -125,3 +125,5 @@ do that. But stay where you're thinking is at."
   (save-excursion
     (move-end-of-line nil)
     (insert ";")))
+
+(provide 'efuncs)
