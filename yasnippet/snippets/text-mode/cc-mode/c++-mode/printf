@@ -1,0 +1,6 @@
+# -*- coding: utf-8; mode: snippet -*-
+# name: printf
+# key: pr
+# contributor: David Miller <david@deadpansincerity.com>
+# --
+printf("$1"$0);

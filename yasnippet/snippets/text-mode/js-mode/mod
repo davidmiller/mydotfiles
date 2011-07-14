@@ -1,0 +1,11 @@
+# -*- coding: utf-8; mode: snippet -*-
+# name: Backbone Model
+# key: mod
+# group: backbone
+# contributor: David Miller <david@deadpansincerity.com>
+# --
+${1:NAMESPACE}.models.${2:Model} = Backbone.Model.extend({
+    defaults: {
+        $3
+    }$0
+});
