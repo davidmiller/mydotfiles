@@ -1,0 +1,6 @@
+# -*- coding: utf-8; mode: snippet -*-
+# name: Elisp autoload
+# key: al
+# contributor: David Miller <david@deadpansincerity.com>
+# --
+;;;###autoload

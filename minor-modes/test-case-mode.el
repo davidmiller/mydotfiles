@@ -496,7 +496,6 @@ according to the result and a dot in the mode-line represents the global
 state.  This behavior is customizable through `test-case-color-buffer-id'
 and `test-case-mode-line-info-position'."
   nil test-case-lighter test-case-mode-map
-  (message "called")
   (if test-case-mode
       (condition-case err
           (if (not (test-case-detect-backend))

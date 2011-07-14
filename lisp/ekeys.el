@@ -25,6 +25,10 @@
 (global-set-key [M-right] 'windmove-right) ; move to right window
 (global-set-key [M-up] 'windmove-up) ; move to upper window
 (global-set-key [M-down] 'windmove-down) ; move to downer window
+(global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "S-C-<down>") 'shrink-window)
+(global-set-key (kbd "S-C-<up>") 'enlarge-window)l
 (global-set-key "\M-#" 'find-tag-other-window)
 (global-set-key "\C-cfp" 'flyspell-prog-mode)
 
@@ -46,8 +50,9 @@
 
 ;; Lisp
 (global-set-key "\C-c\m" 'pp-macroexpand-last-sexp)
-(global-set-key (kbd "C-M-;") 'colonize)
 
+(global-set-key (kbd "C-M-;") 'colonize)
+(global-set-key (kbd "C-M-,") 'commatize)
 (global-set-key (kbd "C-M-S-j") #'(lambda () (interactive) (previous-line) (move-end-of-line nil) (newline-and-indent)))
 (global-set-key (kbd "C-M-j") #'(lambda () (interactive) (move-end-of-line nil) (newline-and-indent)))
 

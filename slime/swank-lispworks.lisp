@@ -169,6 +169,9 @@
                                (declare (ignore args))
                                (mp:process-interrupt self handler)))))
 
+(defimplementation call-without-interrupts (fn)
+  (lw:without-interrupts (funcall fn)))
+  
 (defimplementation getpid ()
   #+win32 (win32:get-current-process-id)
   #-win32 (system::getpid))
@@ -324,6 +327,7 @@ Return NIL if the symbol is unbound."
         ((dbg::binding-frame-p frame) dbg:*print-binding-frames*)
         ((dbg::handler-frame-p frame) dbg:*print-handler-frames*)
         ((dbg::restart-frame-p frame) dbg:*print-restart-frames*)
+        ((dbg::open-frame-p frame) dbg:*print-open-frames*)
         (t nil)))
 
 (defun nth-next-frame (frame n)
@@ -336,7 +340,7 @@ Return NIL if the symbol is unbound."
 
 (defun nth-frame (index)
   (nth-next-frame *sldb-top-frame* index))
-
+           
 (defun find-top-frame ()
   "Return the most suitable top-frame for the debugger."
   (or (do ((frame (dbg::debugger-stack-current-frame dbg::*debugger-stack*)
@@ -365,39 +369,20 @@ Return NIL if the symbol is unbound."
 	(push frame backtrace)))))
 
 (defun frame-actual-args (frame)
-  (let ((*break-on-signals* nil)
-        (kind nil))
-    (loop for arg in (dbg::call-frame-arglist frame)
-          if (eq kind '&rest)
-          nconc (handler-case
-                    (dbg::dbg-eval arg frame)
-                  (error (e) (list (format nil "<~A>" arg))))
-          and do (loop-finish)
-          else
-          if (member arg '(&rest &optional &key))
-          do (setq kind arg)
-          else
-          nconc
-          (handler-case
-              (nconc (and (eq kind '&key)
-                          (list (cond ((symbolp arg)
-                                       (intern (symbol-name arg) :keyword))
-                                      ((and (consp arg) (symbolp (car arg)))
-                                       (intern (symbol-name (car arg)) :keyword))
-                                      (t (caar arg)))))
-                     (list (dbg::dbg-eval
-                            (cond ((symbolp arg) arg)
-                                  ((and (consp arg) (symbolp (car arg)))
-                                   (car arg))
-                                  (t (cadar arg)))
-                            frame)))
-            (error (e) (list (format nil "<~A>" arg)))))))
+  (let ((*break-on-signals* nil))
+    (mapcar (lambda (arg)
+              (case arg
+                ((&rest &optional &key) arg)
+                (t
+                 (handler-case (dbg::dbg-eval arg frame)
+                   (error (e) (format nil "<~A>" arg))))))
+            (dbg::call-frame-arglist frame))))
 
 (defimplementation print-frame (frame stream)
   (cond ((dbg::call-frame-p frame)
-         (prin1 (cons (dbg::call-frame-function-name frame)
-                      (frame-actual-args frame))
-                stream))
+         (format stream "~S ~S"
+                 (dbg::call-frame-function-name frame)
+                 (frame-actual-args frame)))
         (t (princ frame stream))))
 
 (defun frame-vars (frame)
@@ -425,11 +410,9 @@ Return NIL if the symbol is unbound."
     (if (dbg::call-frame-p frame)
 	(let ((dspec (dbg::call-frame-function-name frame))
               (cname (and (dbg::call-frame-p callee)
-                          (dbg::call-frame-function-name callee)))
-              (path (and (dbg::call-frame-p frame)
-                         (dbg::call-frame-edit-path frame))))
+                          (dbg::call-frame-function-name callee))))
 	  (if dspec
-              (frame-location dspec cname path))))))
+              (frame-location dspec cname))))))
 
 (defimplementation eval-in-frame (form frame-number)
   (let ((frame (nth-frame frame-number)))
@@ -453,33 +436,18 @@ Return NIL if the symbol is unbound."
 
 ;;; Definition finding
 
-(defun frame-location (dspec callee-name edit-path)
+(defun frame-location (dspec callee-name)
   (let ((infos (dspec:find-dspec-locations dspec)))
     (cond (infos 
            (destructuring-bind ((rdspec location) &rest _) infos
              (declare (ignore _))
              (let ((name (and callee-name (symbolp callee-name)
-                              (string callee-name)))
-                   (path (edit-path-to-cmucl-source-path edit-path)))
-               (make-dspec-location rdspec location
-                                    `(:call-site ,name :edit-path ,path)))))
+                              (string callee-name))))
+               (make-dspec-location rdspec location 
+                                    `(:call-site ,name)))))
           (t 
            (list :error (format nil "Source location not available for: ~S" 
                                 dspec))))))
-
-;; dbg::call-frame-edit-path is not documented but lets assume the
-;; binary representation of the integer EDIT-PATH should be
-;; interpreted as a sequence of CAR or CDR.  #b1111010 is roughly the
-;; same as cadadddr.  Something is odd with the highest bit.
-(defun edit-path-to-cmucl-source-path (edit-path)
-  (and edit-path
-       (cons 0
-             (let ((n -1))
-               (loop for i from (1- (integer-length edit-path)) downto 0
-                     if (logbitp i edit-path) do (incf n)
-                     else collect (prog1 n (setq n 0)))))))
-
-;; (edit-path-to-cmucl-source-path #b1111010) => (0 3 1)
 
 (defimplementation find-definitions (name)
   (let ((locations (dspec:find-name-locations dspec:*dspec-classes* name)))
@@ -500,9 +468,7 @@ Return NIL if the symbol is unbound."
                                        ,location))))))
 
 (defimplementation swank-compile-file (input-file output-file
-                                       load-p external-format
-                                       &key policy)
-  (declare (ignore policy))
+                                       load-p external-format)
   (with-swank-compilation-unit (input-file)
     (compile-file input-file 
                   :output-file output-file
@@ -539,10 +505,8 @@ Return NIL if the symbol is unbound."
 (defun map-error-database (database fn)
   (loop for (filename . defs) in database do
 	(loop for (dspec . conditions) in defs do
-	      (dolist (c conditions)
-                (multiple-value-bind (condition path)
-                    (if (consp c) (values (car c) (cdr c)) (values c nil))
-                  (funcall fn filename dspec condition path))))))
+	      (dolist (c conditions) 
+		(funcall fn filename dspec (if (consp c) (car c) c))))))
 
 (defun lispworks-severity (condition)
   (cond ((not condition) :warning)
@@ -670,25 +634,23 @@ Return NIL if the symbol is unbound."
                       (dspec-function-name-position dspec `(:offset ,offset 0))
                       hints)))))
 
-(defun make-dspec-progenitor-location (dspec location edit-path)
+(defun make-dspec-progenitor-location (dspec location)
   (let ((canon-dspec (dspec:canonicalize-dspec dspec)))
     (make-dspec-location
      (if canon-dspec
          (if (dspec:local-dspec-p canon-dspec)
              (dspec:dspec-progenitor canon-dspec)
-             canon-dspec)
-         nil)
-     location
-     (if edit-path
-         (list :edit-path (edit-path-to-cmucl-source-path edit-path))))))
+           canon-dspec)
+       nil)
+     location)))
 
 (defun signal-error-data-base (database &optional location)
   (map-error-database 
    database
-   (lambda (filename dspec condition edit-path)
+   (lambda (filename dspec condition)
      (signal-compiler-condition
       (format nil "~A" condition)
-      (make-dspec-progenitor-location dspec (or location filename) edit-path)
+      (make-dspec-progenitor-location dspec (or location filename))
       condition))))
 
 (defun unmangle-unfun (symbol)
@@ -703,11 +665,10 @@ function names like \(SETF GET)."
 	     (dolist (dspec dspecs)
 	       (signal-compiler-condition 
 		(format nil "Undefined function ~A" (unmangle-unfun unfun))
-		(make-dspec-progenitor-location 
-                 dspec
-                 (or filename
-                     (gethash (list unfun dspec) *undefined-functions-hash*))
-                 nil)
+		(make-dspec-progenitor-location dspec
+                                                (or filename
+                                                    (gethash (list unfun dspec)
+                                                             *undefined-functions-hash*)))
 		nil)))
 	   htab))
 
@@ -738,7 +699,7 @@ function names like \(SETF GET)."
 (defxref who-macroexpands hcl:who-calls) ; macros are in the calls table too
 (defxref calls-who      hcl:calls-who)
 (defxref list-callers   list-callers-internal)
-(defxref list-callees   list-callees-internal)
+;; (defxref list-callees   list-callees-internal)
 
 (defun list-callers-internal (name)
   (let ((callers (make-array 100
@@ -747,8 +708,7 @@ function names like \(SETF GET)."
     (hcl:sweep-all-objects
      #'(lambda (object)
          (when (and #+Harlequin-PC-Lisp (low:compiled-code-p object)
-                    #+Harlequin-Unix-Lisp (sys:callablep object)
-                    #-(or Harlequin-PC-Lisp Harlequin-Unix-Lisp) (sys:compiled-code-p object)
+                    #-Harlequin-PC-Lisp (sys::callablep object)
                     (system::find-constant$funcallable name object))
            (vector-push-extend object callers))))
     ;; Delay dspec:object-dspec until after sweep-all-objects
@@ -757,19 +717,6 @@ function names like \(SETF GET)."
           collect (if (symbolp object)
 		      (list 'function object)
                       (or (dspec:object-dspec object) object)))))
-
-(defun list-callees-internal (name)
-  (let ((callees '()))
-    (system::find-constant$funcallable
-     'junk name
-     :test #'(lambda (junk constant)
-               (declare (ignore junk))
-               (when (and (symbolp constant)
-                          (fboundp constant))
-                 (pushnew (list 'function constant) callees :test 'equal))
-               ;; Return nil so we iterate over all constants.
-               nil))
-    callees))
 
 ;; only for lispworks 4.2 and above
 #-lispworks4.1

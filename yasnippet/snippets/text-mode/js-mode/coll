@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: snippet -*-
+# name: Backbone Collection
+# key: coll
+# group: backbone
+# contributor: David Miller <david@deadpansincerity.com>
+# --
+${1:NAMESPACE}.collections.${2:Collection} = Backbone.Collection.extend({
+    /*
+     *  $2
+     *
+     *
+     */
+
+    model: $3,
+
+    initialize: function(){
+        _.bindAll(this, "fetch");
+    },
+
+    fetch: function(){
+        $0
+    }
+
+});

@@ -362,9 +362,8 @@
     (funcall fn)))
 
 (defimplementation swank-compile-file (input-file output-file 
-				       load-p external-format
-                                       &key policy)
-  (declare (ignore external-format policy))
+				       load-p external-format)
+  (declare (ignore external-format))
   (with-compilation-hooks ()
     (let ((*buffer-name* nil)
 	  (*compile-filename* input-file))

@@ -8,9 +8,14 @@ tramp
 *.JPG
 *.PNG
 *.GIF
+*.elc
 url/*
 twit/*_normal
 twit/*.bmp
 *~
 pony-mode
 lintnode
+come-fly
+dizzee
+thrift-mode
+emodes

@@ -118,12 +118,21 @@ mode hook styles that are likely to be invoked across multiple major-modes."
 ;;   (interactive)
 ;;   (let ((page (doc-view-current-page)))))
 
+(defun eol-insert (insertee)
+  "Insert `insertee' at the eol without losing moving point"
+  (save-excursion
+    (move-end-of-line nil)
+    (insert insertee)))
+
 (defun colonize ()
   "For languages that insist on putting a colon at the end of a line,
 do that. But stay where you're thinking is at."
   (interactive)
-  (save-excursion
-    (move-end-of-line nil)
-    (insert ";")))
+  (eol-insert ";"))
+
+(defun commatize ()
+  "Insert me a comma at EOL please. Leave point alone. Thanks."
+  (interactive)
+  (eol-insert ","))
 
 (provide 'efuncs)

@@ -1,14 +1,12 @@
+;;; slime-mrepl.el --- Multiple REPLs
+;;
 ;; An experimental implementation of multiple REPLs multiplexed over a
 ;; single Slime socket.  M-x slime-open-listener creates a new REPL
 ;; buffer.
 ;;
 ;; Some copy&pasting from slime-repl.el
 
-(define-slime-contrib slime-mrepl
-  "Multiple REPLs."
-  (:authors "Helmut Eller <heller@common-lisp.net>")
-  (:license "GPL")
-  (:slime-dependencies slime-repl))
+(require 'slime-repl)
 
 (slime-define-channel-type listener)
 
@@ -117,7 +115,7 @@ If NEWLINE is true then add a newline at the end of the input."
      (slime-rcurry 
       (lambda (result channel)
 	(destructuring-bind (remote thread-id package prompt) result
-	  (pop-to-buffer (generate-new-buffer (slime-buffer-name :listener)))
+	  (pop-to-buffer (generate-new-buffer "*slime-listener*"))
 	  (slime-mrepl-mode)
 	  (setq slime-current-thread thread-id)
 	  (setq slime-buffer-connection (slime-connection))
