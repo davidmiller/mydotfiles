@@ -1,12 +1,22 @@
-;;; slime-repl.el --- 
+;;; slime-repl.el --- Read-Eval-Print Loop written in Emacs Lisp
 ;;
 ;; Original Author: Helmut Eller
 ;; Contributors: to many to mention
 ;; License: GNU GPL (same license as Emacs)
+;; URL: http://common-lisp.net/project/slime/
+;; Version: 20091016
+;; Keywords: languages, lisp, slime
+;; Package-Requires: ((slime "20091016"))
+;; Adapted-by: Phil Hagelberg
 ;;
 ;;; Description:
 ;;
-
+;; This file implements a Lisp Listener along with some niceties like
+;; a persistent history and various "shortcut" commands.  Nothing here
+;; depends on comint.el; I/O is multiplexed over SLIME's socket.
+;;
+;; This used to be the default REPL for SLIME, but it was hard to
+;; maintain.
 ;;
 ;;; Installation:
 ;;
@@ -14,23 +24,6 @@
 ;;
 ;;  (slime-setup '(slime-repl [others conribs ...]))
 ;;
-
-(define-slime-contrib slime-repl
-  "Read-Eval-Print Loop written in Emacs Lisp.
-
-This contrib implements a Lisp Listener along with some niceties like
-a persistent history and various \"shortcut\" commands.  Nothing here
-depends on comint.el; I/O is multiplexed over SLIME's socket.
-
-This used to be the default REPL for SLIME, but it was hard to
-maintain."
-  (:authors "too many to mention")
-  (:license "GPL")
-  (:on-load
-   (add-hook 'slime-event-hooks 'slime-repl-event-hook-function)
-   (add-hook 'slime-connected-hook 'slime-repl-connected-hook-function)
-   (setq slime-find-buffer-package-function 'slime-repl-find-buffer-package))
-  (:on-unload (slime-repl-remove-hooks)))
 
 ;;;;; slime-repl
 
@@ -146,7 +139,7 @@ maintain."
 
 (defun slime-repl-update-banner ()
   (funcall slime-repl-banner-function)
-  (slime-move-point (point-max))
+  (goto-char (point-max))
   (slime-mark-output-start)
   (slime-mark-input-start)
   (slime-repl-insert-prompt))
@@ -171,6 +164,27 @@ maintain."
     (unless (get-buffer-window (current-buffer) t)
       (display-buffer (current-buffer) t))
     (slime-repl-show-maximum-output)))
+
+(defmacro slime-with-output-end-mark (&rest body)
+  "Execute BODY at `slime-output-end'.  
+
+If point is initially at `slime-output-end' and the buffer is visible
+update window-point afterwards.  If point is initially not at
+`slime-output-end, execute body inside a `save-excursion' block."
+  `(let ((body.. (lambda () ,@body))
+         (updatep.. (and (eobp) (pos-visible-in-window-p))))
+     (cond ((= (point) slime-output-end)
+            (let ((start.. (point)))
+              (funcall body..)
+              (set-marker slime-output-end (point))
+              (when (= start.. slime-repl-input-start-mark) 
+                (set-marker slime-repl-input-start-mark (point)))))
+           (t 
+            (save-excursion 
+              (goto-char slime-output-end)
+              (funcall body..))))
+     (when updatep..
+       (slime-repl-show-maximum-output))))
 
 (defun slime-output-filter (process string)
   (with-current-buffer (process-buffer process)
@@ -234,7 +248,7 @@ hashtable `slime-output-target-to-marker'; output is inserted at this marker."
   (case target
     ((nil) (slime-repl-emit string))
     (:repl-result (slime-repl-emit-result string))
-    (t (slime-emit-to-target string target))))
+    (t (slime-emit-string string target))))
 
 (defvar slime-repl-popup-on-output nil
   "Display the output buffer when some output is written.
@@ -299,7 +313,7 @@ The markers indicate where output should be inserted.")
     (t
      (gethash target slime-output-target-to-marker))))
 
-(defun slime-emit-to-target (string target)
+(defun slime-emit-string (string target)
   "Insert STRING at target TARGET.
 See `slime-output-target-to-marker'."
   (let* ((marker (slime-output-target-marker target))
@@ -402,10 +416,14 @@ joined together."))
 
 ;;;;; REPL mode setup
 
-(defvar slime-repl-mode-map
-  (let ((map (make-sparse-keymap)))
-    (set-keymap-parent map lisp-mode-map)
-    map))
+(defvar slime-repl-mode-map)
+
+(let ((map (copy-keymap slime-parent-map)))
+  (set-keymap-parent map lisp-mode-map)
+  (setq slime-repl-mode-map (make-sparse-keymap))
+  (set-keymap-parent slime-repl-mode-map map)
+  (loop for (key command) in slime-editing-keys
+        do (define-key slime-repl-mode-map key command)))
 
 (slime-define-keys slime-prefix-map
   ("\C-z" 'slime-switch-to-output-buffer)
@@ -448,19 +466,9 @@ joined together."))
 (slime-define-keys slime-inspector-mode-map
   ((kbd "M-RET") 'slime-inspector-copy-down-to-repl))
 
-(slime-define-keys sldb-mode-map
-  ("\C-y" 'sldb-insert-frame-call-to-repl))
-
 (def-slime-selector-method ?r
   "SLIME Read-Eval-Print-Loop."
   (slime-output-buffer))
-
-(define-minor-mode slime-repl-map-mode
-  "Minor mode which makes slime-repl-mode-map available.
-\\{slime-repl-mode-map}"
-  nil
-  nil
-  slime-repl-mode-map)
 
 (defun slime-repl-mode () 
   "Major mode for interacting with a superior Lisp.
@@ -468,8 +476,7 @@ joined together."))
   (interactive)
   (kill-all-local-variables)
   (setq major-mode 'slime-repl-mode)
-  (slime-editing-mode 1)
-  (slime-repl-map-mode 1)
+  (use-local-map slime-repl-mode-map)
   (lisp-mode-variables t)
   (set (make-local-variable 'lisp-indent-function)
        'common-lisp-indent-function)
@@ -502,17 +509,13 @@ joined together."))
   (interactive)
   (slime-switch-to-output-buffer))
 
-(defun slime-repl-mode-beginning-of-defun (&optional arg)
-  (if (and arg (< arg 0))
-      (slime-repl-mode-end-of-defun (- arg))
-      (dotimes (i (or arg 1))
-        (slime-repl-previous-prompt))))
+(defun slime-repl-mode-beginning-of-defun ()
+  (slime-repl-previous-prompt)
+  t)
 
-(defun slime-repl-mode-end-of-defun (&optional arg)
-  (if (and arg (< arg 0))
-      (slime-repl-mode-beginning-of-defun (- arg))
-      (dotimes (i (or arg 1))
-        (slime-repl-next-prompt))))
+(defun slime-repl-mode-end-of-defun ()
+  (slime-repl-next-prompt)
+  t)
 
 (defun slime-repl-send-string (string &optional command-string)
   (cond (slime-repl-read-mode
@@ -524,8 +527,8 @@ joined together."))
       ((list 'swank:listener-eval string) (slime-lisp-package))
     ((:ok result)
      (slime-repl-insert-result result))
-    ((:abort condition)
-     (slime-repl-show-abort condition))))
+    ((:abort)
+     (slime-repl-show-abort))))
 
 (defun slime-repl-insert-result (result)
   (with-current-buffer (slime-output-buffer)
@@ -541,13 +544,13 @@ joined together."))
       (slime-repl-insert-prompt))
     (slime-repl-show-maximum-output)))
 
-(defun slime-repl-show-abort (condition)
+(defun slime-repl-show-abort ()
   (with-current-buffer (slime-output-buffer)
     (save-excursion
       (slime-save-marker slime-output-start
         (slime-save-marker slime-output-end
           (goto-char slime-output-end)
-          (insert-before-markers (format "; Evaluation aborted on %s.\n" condition))
+          (insert-before-markers "; Evaluation aborted.\n")
           (slime-repl-insert-prompt))))
     (slime-repl-show-maximum-output)))
 
@@ -575,9 +578,7 @@ Return the position of the prompt beginning."
 (defun slime-repl-show-maximum-output ()
   "Put the end of the buffer at the bottom of the window."
   (when (eobp)
-    (let ((win (if (eq (window-buffer) (current-buffer))
-                   (selected-window)
-                   (get-buffer-window (current-buffer) t))))
+    (let ((win (get-buffer-window (current-buffer))))
       (when win
         (with-selected-window win
           (set-window-point win (point-max)) 
@@ -681,12 +682,10 @@ buffer."
       (goto-char origin))))
 
 (defun slime-search-property-change (prop &optional backward)
-  (cond (backward
-         (goto-char (or (previous-single-char-property-change (point) prop)
-			(point-min))))
-        (t
-         (goto-char (or (next-single-char-property-change (point) prop)
-			(point-max))))))
+  (cond (backward 
+         (goto-char (previous-single-char-property-change (point) prop)))
+        (t 
+         (goto-char (next-single-char-property-change (point) prop)))))
 
 (defun slime-end-of-proprange-p (property)
   (and (get-char-property (max 1 (1- (point))) property)
@@ -696,7 +695,7 @@ buffer."
 
 (defun slime-repl-return (&optional end-of-input)
   "Evaluate the current input string, or insert a newline.  
-Send the current input only if a whole expression has been entered,
+Send the current input ony if a whole expression has been entered,
 i.e. the parenthesis are matched. 
 
 With prefix argument send the input even if the parenthesis are not
@@ -871,41 +870,16 @@ earlier in the buffer."
   :type 'boolean
   :group 'slime-repl)
 
-(defcustom slime-repl-history-remove-duplicates nil
-  "*When T all duplicates are removed except the last one."
-  :type 'boolean
-  :group 'slime-repl)
-
-(defcustom slime-repl-history-trim-whitespaces nil
-  "*When T strip all whitespaces from the beginning and end."
-  :type 'boolean
-  :group 'slime-repl)
-
 (make-variable-buffer-local
  (defvar slime-repl-input-history '()
    "History list of strings read from the REPL buffer."))
 
-(defun slime-string-trim (character-bag string)
-  (flet ((find-bound (&optional from-end)
-           (position-if-not (lambda (char) (memq char character-bag))
-                            string :from-end from-end)))
-    (let ((start (find-bound))
-          (end (find-bound t)))
-      (if start
-          (subseq string start (1+ end))
-          ""))))
-
 (defun slime-repl-add-to-input-history (string)
   "Add STRING to the input history.
 Empty strings and duplicates are ignored."
-  (when slime-repl-history-trim-whitespaces
-    (setq string (slime-string-trim '(?\n ?\ ?\t) string)))
-  (unless (equal string "")
-    (when slime-repl-history-remove-duplicates
-      (setq slime-repl-input-history
-            (remove string slime-repl-input-history)))
-    (unless (equal string (car slime-repl-input-history))
-      (push string slime-repl-input-history))))
+  (unless (or (equal string "")
+              (equal string (car slime-repl-input-history)))
+    (push string slime-repl-input-history)))
 
 ;; These two vars contain the state of the last history search.  We
 ;; only use them if `last-command' was 'slime-repl-history-replace,
@@ -927,8 +901,7 @@ If REGEXP is non-nil, only lines matching REGEXP are considered."
          (pos0 (cond ((slime-repl-history-search-in-progress-p)
                       slime-repl-input-history-position)
                      (t min-pos)))
-         (pos (slime-repl-position-in-history pos0 direction (or regexp "")
-                                              (slime-repl-current-input)))
+         (pos (slime-repl-position-in-history pos0 direction (or regexp "")))
          (msg nil))
     (cond ((and (< min-pos pos) (< pos max-pos))
            (slime-repl-replace-input (nth pos slime-repl-input-history))
@@ -954,11 +927,9 @@ If REGEXP is non-nil, only lines matching REGEXP are considered."
 (defun slime-repl-terminate-history-search ()
   (setq last-command this-command))
 
-(defun slime-repl-position-in-history (start-pos direction regexp
-                                       &optional exclude-string)
-  "Return the position of the history item matching REGEXP.
-Return -1 resp. the length of the history if no item matches.
-If EXCLUDE-STRING is specified then it's excluded from the search."
+(defun slime-repl-position-in-history (start-pos direction regexp)
+  "Return the position of the history item matching regexp.
+Return -1 resp. the length of the history if no item matches"
   ;; Loop through the history list looking for a matching line
   (let* ((step (ecase direction
                  (forward -1)
@@ -968,10 +939,7 @@ If EXCLUDE-STRING is specified then it's excluded from the search."
     (loop for pos = (+ start-pos step) then (+ pos step)
           if (< pos 0) return -1
           if (<= len pos) return len
-          for history-item = (nth pos history)
-          if (and (string-match regexp history-item)
-                  (not (equal history-item exclude-string)))
-          return pos)))
+          if (string-match regexp (nth pos history)) return pos)))
 
 (defun slime-repl-previous-input ()
   "Cycle backwards through input history.
@@ -998,14 +966,12 @@ See `slime-repl-previous-input'."
   (slime-repl-history-replace 'backward (slime-repl-history-pattern)))
 
 (defun slime-repl-previous-matching-input (regexp)
-  (interactive (list (slime-read-from-minibuffer
-		      "Previous element matching (regexp): ")))
+  (interactive "sPrevious element matching (regexp): ")
   (slime-repl-terminate-history-search)
   (slime-repl-history-replace 'backward regexp))
 
 (defun slime-repl-next-matching-input (regexp)
-  (interactive (list (slime-read-from-minibuffer
-		      "Next element matching (regexp): ")))
+  (interactive "sNext element matching (regexp): ")
   (slime-repl-terminate-history-search)
   (slime-repl-history-replace 'forward regexp))
 
@@ -1016,7 +982,7 @@ See `slime-repl-previous-input'."
         (use-current-input
          (assert (<= slime-repl-input-start-mark (point)))
          (let ((str (slime-repl-current-input t)))
-           (cond ((string-match "^[ \t\n]*$" str) nil)
+           (cond ((string-match "^[ \n]*$" str) nil)
                  (t (concat "^" (regexp-quote str))))))
         (t nil)))
 
@@ -1260,25 +1226,24 @@ expansion will be added to the REPL's history.)"
     (slime-repl-add-to-input-history (prin1-to-string sexp)))
   (slime-eval-async sexp cont package))
 
+
 (defun slime-list-repl-short-cuts ()
   (interactive)
-  (slime-with-popup-buffer ((slime-buffer-name :repl-help))
+  (slime-with-popup-buffer ("*slime-repl-help*")
     (let ((table (sort* (copy-list slime-repl-shortcut-table) #'string<
                         :key (lambda (x) 
                                (car (slime-repl-shortcut.names x))))))
-      (save-excursion
-        (dolist (shortcut table)
-          (let ((names (slime-repl-shortcut.names shortcut)))
-            (insert (pop names)) ;; first print the "full" name
-            (when names
-              ;; we also have aliases
-              (insert " (aka ")
-              (while (cdr names)
-                (insert (pop names) ", "))
-              (insert (car names) ")"))
-            (when (slime-repl-shortcut.one-liner shortcut)
-              (insert "\n     " (slime-repl-shortcut.one-liner shortcut)))
-            (insert "\n")))))))
+      (dolist (shortcut table)
+        (let ((names (slime-repl-shortcut.names shortcut)))
+          (insert (pop names)) ;; first print the "full" name
+          (when names
+            ;; we also have aliases
+            (insert " (aka ")
+            (while (cdr names)
+              (insert (pop names) ", "))
+            (insert (car names) ")"))
+        (insert "\n     " (slime-repl-shortcut.one-liner shortcut)
+                "\n"))))))
 
 (defun slime-save-some-lisp-buffers ()
   (if slime-repl-only-save-lisp-buffers
@@ -1287,7 +1252,8 @@ expansion will be added to the REPL's history.)"
                                     (not (null buffer-file-name)))))
       (save-some-buffers)))
   
-(defslime-repl-shortcut slime-repl-shortcut-help ("help")
+
+(defslime-repl-shortcut slime-repl-shortcut-help ("help" "?")
   (:handler 'slime-list-repl-short-cuts)
   (:one-liner "Display the help."))
 
@@ -1425,7 +1391,7 @@ expansion will be added to the REPL's history.)"
 (defun slime-redirect-trace-output ()
   "Redirect the trace output to a separate Emacs buffer."
   (interactive)
-  (let ((buffer (get-buffer-create (slime-buffer-name :trace))))
+  (let ((buffer (get-buffer-create "*SLIME Trace Output*")))
     (with-current-buffer buffer
       (let ((marker (copy-marker (buffer-size)))
             (target (incf slime-last-output-target-id)))
@@ -1443,39 +1409,18 @@ expansion will be added to the REPL's history.)"
 (defun slime-call-defun ()
   "Insert a call to the toplevel form defined around point into the REPL."
   (interactive)
-  (flet ((insert-call (name &key (function t)
-                            defclass)
-           (let* ((setf (and function
-                               (consp name)
-                               (= (length name) 2)
-                               (eql (car name) 'setf)))
-                  (symbol (if setf
-                              (cadr name)
-                              name))
-                  (qualified-symbol-name (slime-qualify-cl-symbol-name symbol))
+  (flet ((insert-call (symbol)
+           (let* ((qualified-symbol-name (slime-qualify-cl-symbol-name symbol))
                   (symbol-name (slime-cl-symbol-name qualified-symbol-name))
                   (symbol-package (slime-cl-symbol-package qualified-symbol-name))
-                  (call (if (equalp (slime-lisp-package) symbol-package)
-                            symbol-name
-                            qualified-symbol-name)))
+                  (function-call 
+                   (format "(%s " (if (equalp (slime-lisp-package) symbol-package)
+                                      symbol-name
+                                      qualified-symbol-name))))
              (slime-switch-to-output-buffer)
              (goto-char slime-repl-input-start-mark)
-             (insert (if function
-                         "("
-                         " "))
-             (when setf
-               (insert "setf ("))
-             (if defclass
-                 (insert "make-instance '"))
-             (insert call)
-             (cond (setf
-                    (insert " ")
-                    (save-excursion (insert ") )")))
-                   (function
-                    (insert " ")
-                    (save-excursion (insert ")"))))
-             (unless function
-               (goto-char slime-repl-input-start-mark)))))           
+             (insert function-call)
+             (save-excursion (insert ")")))))           
     (let ((toplevel (slime-parse-toplevel-form)))
       (if (symbolp toplevel)
           (error "Not in a function definition")
@@ -1485,10 +1430,6 @@ expansion will be added to the REPL's history.)"
             ((:defmethod symbol &rest args)
              (declare (ignore args))
              (insert-call symbol))
-            (((:defparameter :defvar :defconstant) symbol)
-             (insert-call symbol :function nil))
-            (((:defclass) symbol)
-             (insert-call symbol :defclass t))
             (t
              (error "Not in a function definition")))))))
 
@@ -1499,18 +1440,6 @@ expansion will be added to the REPL's history.)"
    (slime-repl-send-string (format "%s" `(swank:inspector-nth-part ,number)))
    (slime-repl))
 
-(defun sldb-insert-frame-call-to-repl ()
-  "Insert a call to a frame at point."
-  (interactive)
-  (let ((call (slime-eval `(swank-backend::frame-call
-                            ,(sldb-frame-number-at-point)))))
-    (slime-switch-to-output-buffer)
-    (if (>= (point) slime-repl-prompt-start-mark)
-        (insert call)
-	(save-excursion
-	  (goto-char (point-max))
-	  (insert call))))
-  (slime-repl))
 
 (defun slime-set-default-directory (directory)
   "Make DIRECTORY become Lisp's current directory."
@@ -1550,14 +1479,6 @@ expansion will be added to the REPL's history.)"
   (interactive)
   (let ((slime-dispatching-connection (slime-connection-at-point)))
     (switch-to-buffer (slime-output-buffer))))
-
-(defun slime-repl-inside-string-or-comment-p ()
-  (save-restriction
-    (when (and (boundp 'slime-repl-input-start-mark)
-               slime-repl-input-start-mark
-               (>= (point) slime-repl-input-start-mark))
-      (narrow-to-region slime-repl-input-start-mark (point)))
-    (slime-inside-string-or-comment-p)))
 
 (defvar slime-repl-easy-menu
   (let ((C '(slime-connected-p)))
@@ -1639,20 +1560,15 @@ expansion will be added to the REPL's history.)"
   (or (slime-search-buffer-package)
       (slime-lisp-package)))
 
+;;;###autoload
+(defun slime-repl-init ()
+  (add-hook 'slime-event-hooks 'slime-repl-event-hook-function)
+  (add-hook 'slime-connected-hook 'slime-repl-connected-hook-function)
+  (setq slime-find-buffer-package-function 'slime-repl-find-buffer-package))
+
 (defun slime-repl-remove-hooks ()
   (remove-hook 'slime-event-hooks 'slime-repl-event-hook-function)
   (remove-hook 'slime-connected-hook 'slime-repl-connected-hook-function))
-
-(let ((byte-compile-warnings '()))
-  (mapc #'byte-compile
-	'(slime-repl-event-hook-function
-	  slime-write-string
-	  slime-repl-write-string
-	  slime-repl-emit
-	  slime-repl-show-maximum-output)))
-
-
-;;; Tests
 
 (def-slime-test package-updating
     (package-name nicknames)
@@ -1923,4 +1839,16 @@ X
 #\\X
 SWANK> " (buffer-string)))))
 
+(let ((byte-compile-warnings '()))
+  (mapc #'byte-compile
+	'(slime-repl-event-hook-function
+	  slime-write-string
+	  slime-repl-write-string
+	  slime-repl-emit
+	  slime-repl-show-maximum-output)))
+
+;;;###autoload
+(add-hook 'slime-load-hook 'slime-repl-init)
+
 (provide 'slime-repl)
+;;; slime-repl.el ends here

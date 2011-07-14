@@ -35,7 +35,7 @@
 ;; Tabs are right out.
 (setq tab-width 4)
 
-(set-face-attribute 'default nil :height 105)
+;(set-face-attribute 'default nil :height 105)
 (show-paren-mode 1) ;; Highlight parenthesis pairs
 (setq transient-mark-mode t) ;; Highlight region whenever the mark is active
 (delete-selection-mode t) ;; Delete contents of region when we start typing
@@ -192,7 +192,8 @@
 
 (require 'smart-operator)
 (setq smart-operator-double-space-docs nil)
-;; (load-file "~/emacs/cedet/common/cedet.el")
+(load-file "~/emacs/cedet/common/cedet.el")
+
 ;; ;; Use CEDET projects
 ;; (global-ede-mode t)
 ;; (semantic-load-enable-excessive-code-helpers)
@@ -251,7 +252,7 @@
 (require 'w3m-load)
 (require 'w3m-e21)
 (provide 'w3m-e23)
-(setq w3m-default-display-inline-images t)
+(setq w3m-default-display-inline-images nil)
 (setq w3m-use-cookies t)
 
 ;; Unittests
@@ -309,8 +310,10 @@
 ;;; interfacing with ELPA, the package archive.
 ;;; Move this code earlier if you want to reference
 ;;; packages in your .emacs.
-(when
-    (load
-     (expand-file-name "~/.emacs.d/elpa/package.el"))
-  (package-initialize))
 (setq package-user-dir (expand-file-name "~/emacs/elpa"))
+(load "~/emacs/package")
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
+(add-load-dir "~/emacs/elpa")
+(require 'clojure-mode)

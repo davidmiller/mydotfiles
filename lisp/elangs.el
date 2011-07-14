@@ -356,6 +356,11 @@ test-case-mode
                                    (eldoc-mode t)))
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . lisp-mode))
 
+  (autoload 'enable-paredit-mode "paredit"
+    "Turn on pseudo-structural editing of Lisp code."
+    t)
+
+
 ;;;; Ruby
 (require 'feature-mode)
 (add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
@@ -407,3 +412,35 @@ test-case-mode
 (add-to-list 'auto-mode-alist '("\\.thrift\\'" . thrift-mode))
 (add-hook 'thrift-mode-hook '(lambda ()
                                (set-mode-style ide-style)))
+
+
+;; Java
+
+;; Jde
+(require 'jde)
+(setq defer-loading-jde t)
+
+(if defer-loading-jde
+    (progn
+      (autoload 'jde-mode "jde" "JDE mode." t)
+      (setq auto-mode-alist
+        (append
+         '(("\\.java\\'" . jde-mode))
+         auto-mode-alist)))
+  (require 'jde))
+
+
+;; Sets the basic indentation for Java source files
+;; to two spaces.
+(defun my-jde-mode-hook ()
+  (setq c-basic-offset 2))
+
+(add-hook 'jde-mode-hook 'my-jde-mode-hook)
+
+;; Include the following only if you want to run
+;; bash as your shell.
+
+(require 'clojure-mode)
+
+;; C#
+(require 'csharp-mode)

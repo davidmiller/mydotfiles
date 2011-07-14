@@ -12,8 +12,7 @@
 
 (defpackage :swank-backend
   (:use :common-lisp)
-  (:export #:*debug-swank-backend*
-           #:sldb-condition
+  (:export #:sldb-condition
            #:compiler-condition
            #:original-condition
            #:message
@@ -33,8 +32,6 @@
            #:unbound-slot-filler
            #:declaration-arglist
            #:type-specifier-arglist
-           #:with-struct
-           #:when-let
            ;; interrupt macro for the backend
            #:*pending-slime-interrupts*
            #:check-slime-interrupts
@@ -43,7 +40,9 @@
            #:emacs-inspect
            #:label-value-line
            #:label-value-line*
-           #:with-symbol))
+           
+           #:with-struct
+           ))
 
 (defpackage :swank-mop
   (:use)
@@ -102,11 +101,6 @@
 
 
 ;;;; Metacode
-
-(defparameter *debug-swank-backend* nil
-  "If this is true, backends should not catch errors but enter the
-debugger where appropriate. Also, they should not perform backtrace
-magic but really show every frame including SWANK related ones.")
 
 (defparameter *interface-functions* '()
   "The names of all interface functions.")
@@ -169,9 +163,7 @@ Backends implement these functions using DEFIMPLEMENTATION."
   (assert (every #'symbolp args) ()
           "Complex lambda-list not supported: ~S ~S" name args)
   `(progn
-     (setf (get ',name 'implementation)
-           ;; For implicit BLOCK. FLET because of interplay w/ decls.
-           (flet ((,name ,args ,@body)) #',name))
+     (setf (get ',name 'implementation) (lambda ,args ,@body))
      (if (member ',name *interface-functions*)
          (setq *unimplemented-interfaces*
                (remove ',name *unimplemented-interfaces*))
@@ -254,14 +246,9 @@ EXCEPT is a list of symbol names which should be ignored."
                      (t (error "Malformed syntax in WITH-STRUCT: ~A" name))))
           ,@body)))))
 
-(defmacro when-let ((var value) &body body)
-  `(let ((,var ,value))
-     (when ,var ,@body)))
-
 (defun with-symbol (name package)
   "Generate a form suitable for testing with #+."
-  (if (and (find-package package)
-           (find-symbol (string name) package))
+  (if (find-symbol (string name) (string package))
       '(:and)
       '(:or)))
 
@@ -321,6 +308,10 @@ that the calling thread is the one that interacts with Emacs."
 
 (defconstant +sigint+ 2)
 
+(definterface call-without-interrupts (fn)
+  "Call FN in a context where interrupts are disabled."
+  (funcall fn))
+
 (definterface getpid ()
   "Return the (Unix) process ID of this superior Lisp.")
 
@@ -342,35 +333,6 @@ Return old signal handler."
 (definterface lisp-implementation-type-name ()
   "Return a short name for the Lisp implementation."
   (lisp-implementation-type))
-
-(definterface lisp-implementation-program ()
-  "Return the argv[0] of the running Lisp process, or NIL."
-  (let ((file (car (command-line-args))))
-    (when (and file (probe-file file))
-      (namestring (truename file)))))
-
-(definterface socket-fd (socket-stream)
-  "Return the file descriptor for SOCKET-STREAM.")
-
-(definterface make-fd-stream (fd external-format)
-  "Create a character stream for the file descriptor FD.")
-
-(definterface dup (fd)
-  "Duplicate a file descriptor.
-If the syscall fails, signal a condition.
-See dup(2).")
-
-(definterface exec-image (image-file args)
-  "Replace the current process with a new process image.
-The new image is created by loading the previously dumped
-core file IMAGE-FILE.
-ARGS is a list of strings passed as arguments to
-the new image.
-This is thin wrapper around exec(3).")
-
-(definterface command-line-args ()
-  "Return a list of strings as passed by the OS."
-  nil)
 
 
 ;; pathnames are sooo useless
@@ -431,23 +393,18 @@ rebind *DEFAULT-PATHNAME-DEFAULTS* which may improve the recording of
 source information.
 
 If POLICY is supplied, and non-NIL, it may be used by certain
-implementations to compile with optimization qualities of its
+implementations to compile with a debug optimization quality of its
 value.
 
-Should return T on successful compilation, NIL otherwise.
+Should return T on successfull compilation, NIL otherwise.
 ")
 
 (definterface swank-compile-file (input-file output-file load-p 
-                                             external-format
-                                             &key policy)
+                                             external-format)
    "Compile INPUT-FILE signalling COMPILE-CONDITIONs.
 If LOAD-P is true, load the file after compilation.
 EXTERNAL-FORMAT is a value returned by find-external-format or
 :default.
-
-If POLICY is supplied, and non-NIL, it may be used by certain
-implementations to compile with optimization qualities of its
-value.
 
 Should return OUTPUT-TRUENAME, WARNINGS-P and FAILURE-p
 like `compile-file'")
@@ -562,10 +519,10 @@ include implementation-dependend declaration specifiers, or to provide
 additional information on the specifiers defined in ANSI Common Lisp.")
   (:method (decl-identifier)
     (case decl-identifier
-      (dynamic-extent '(&rest variables))
-      (ignore         '(&rest variables))
-      (ignorable      '(&rest variables))
-      (special        '(&rest variables))
+      (dynamic-extent '(&rest vars))
+      (ignore         '(&rest vars))
+      (ignorable      '(&rest vars))
+      (special        '(&rest vars))
       (inline         '(&rest function-names))
       (notinline      '(&rest function-names))
       (declaration    '(&rest names))
@@ -575,9 +532,9 @@ additional information on the specifiers defined in ANSI Common Lisp.")
       (otherwise
        (flet ((typespec-p (symbol) (member :type (describe-symbol-for-emacs symbol))))
          (cond ((and (symbolp decl-identifier) (typespec-p decl-identifier))
-                '(&rest variables))
+                '(&rest vars))
                ((and (listp decl-identifier) (typespec-p (first decl-identifier)))
-                '(&rest variables))
+                '(&rest vars))
                (t :not-available)))))))
 
 (defgeneric type-specifier-arglist (typespec-operator)
@@ -603,15 +560,6 @@ The result is either a symbol, a list, or NIL if no function name is available."
   (declare (ignore function))
   nil)
 
-(definterface valid-function-name-p (form)
-  "Is FORM syntactically valid to name a function?
-   If true, FBOUNDP should not signal a type-error for FORM."
-  (flet ((length=2 (list)
-           (and (not (null (cdr list))) (null (cddr list)))))
-    (or (symbolp form)
-        (and (consp form) (length=2 form)
-             (eq (first form) 'setf) (symbolp (second form))))))
-
 (definterface macroexpand-all (form)
    "Recursively expand all macros in FORM.
 Return the resulting form.")
@@ -622,9 +570,7 @@ If FORM is a function call for which a compiler-macro has been
 defined, invoke the expander function using *macroexpand-hook* and
 return the results and T.  Otherwise, return the original form and
 NIL."
-  (let ((fun (and (consp form) 
-                  (valid-function-name-p (car form))
-                  (compiler-macro-function (car form)))))
+  (let ((fun (and (consp form) (compiler-macro-function (car form)))))
     (if fun
 	(let ((result (funcall *macroexpand-hook* fun form env)))
           (values result (not (eq result form))))
@@ -778,9 +724,6 @@ frame which invoked the debugger.
 The return value is the result of evaulating FORM in the
 appropriate context.")
 
-(definterface frame-call (frame-number)
-  "Return a string representing a call to the entry point of a frame.")
-
 (definterface return-from-frame (frame-number form)
   "Unwind the stack to the frame FRAME-NUMBER and return the value(s)
 produced by evaluating FORM in the frame context to its caller.
@@ -807,11 +750,6 @@ The allowed elements are of the form:
 "
   (declare (ignore condition))
   '())
-
-(definterface gdb-initial-commands ()
-  "List of gdb commands supposed to be executed first for the
-   ATTACH-GDB restart."
-  nil)
 
 (definterface activate-stepping (frame-number)
   "Prepare the frame FRAME-NUMBER for stepping.")
@@ -852,36 +790,9 @@ returns.")
   hints)
 
 (defstruct (:error (:type list) :named (:constructor)) message)
-
-;;; Valid content for BUFFER slot
-(defstruct (:file       (:type list) :named (:constructor)) name)
-(defstruct (:buffer     (:type list) :named (:constructor)) name)
-(defstruct (:etags-file (:type list) :named (:constructor)) filename)
-
-;;; Valid content for POSITION slot
+(defstruct (:file (:type list) :named (:constructor)) name)
+(defstruct (:buffer (:type list) :named (:constructor)) name)
 (defstruct (:position (:type list) :named (:constructor)) pos)
-(defstruct (:tag      (:type list) :named (:constructor)) tag1 tag2)
-
-(defmacro converting-errors-to-error-location (&body body)
-  "Catches errors during BODY and converts them to an error location."
-  (let ((gblock (gensym "CONVERTING-ERRORS+")))
-    `(block ,gblock
-       (handler-bind ((error
-                       #'(lambda (e)
-                            (if *debug-swank-backend*
-                                nil     ;decline
-                                (return-from ,gblock
-                                  (make-error-location e))))))
-         ,@body))))
-
-(defun make-error-location (datum &rest args)
-  (cond ((typep datum 'condition)
-         `(:error ,(format nil "Error: ~A" datum)))
-        ((symbolp datum)
-         `(:error ,(format nil "Error: ~A" (apply #'make-condition datum args))))
-        (t
-         (assert (stringp datum))
-         `(:error ,(apply #'format nil datum args)))))
 
 (definterface find-definitions (name)
    "Return a list ((DSPEC LOCATION) ...) for NAME's definitions.
@@ -904,9 +815,7 @@ respective DEFSTRUCT definition, and so on."
   ;; This returns one source location and not a list of locations. It's
   ;; supposed to return the location of the DEFGENERIC definition on
   ;; #'SOME-GENERIC-FUNCTION.
-  (declare (ignore object))
-  (make-error-location "FIND-DEFINITIONS is not yet implemented on ~
-                        this implementation."))
+  )
 
 
 (definterface buffer-first-change (filename)
@@ -1046,14 +955,8 @@ output of CL:DESCRIBE."
      (:newline) (:newline)
      ,(with-output-to-string (desc) (describe object desc))))
 
-(definterface eval-context (object)
-  "Return a list of bindings corresponding to OBJECT's slots."
-  (declare (ignore object))
-  '())
-
 ;;; Utilities for inspector methods.
 ;;; 
-
 (defun label-value-line (label value &key (newline t))
   "Create a control list which prints \"LABEL: VALUE\" in the inspector.
 If NEWLINE is non-NIL a `(:newline)' is added to the result."
@@ -1100,8 +1003,9 @@ Can return nil if the thread no longer exists."
 
 (definterface thread-name (thread)
    "Return the name of THREAD.
-Thread names are short strings meaningful to the user. They do not
-have to be unique."
+
+Thread names are be single-line strings and are meaningful to the
+user. They do not have to be unique."
    (declare (ignore thread))
    "The One True Thread")
 
@@ -1109,6 +1013,16 @@ have to be unique."
    "Return a string describing THREAD's state."
    (declare (ignore thread))
    "")
+
+(definterface thread-description (thread)
+  "Return a string describing THREAD."
+  (declare (ignore thread))
+  "")
+
+(definterface set-thread-description (thread description)
+  "Set THREAD's description to DESCRIPTION."
+  (declare (ignore thread description))
+  "")
 
 (definterface thread-attributes (thread)
   "Return a plist of implementation-dependent attributes for THREAD"
@@ -1133,8 +1047,7 @@ but that thread may hold it more than once."
   0)
 
 (definterface all-threads ()
-  "Return a fresh list of all threads."
-  '())
+  "Return a fresh list of all threads.")
 
 (definterface thread-alive-p (thread)
   "Test if THREAD is termintated."
@@ -1144,9 +1057,7 @@ but that thread may hold it more than once."
   "Cause THREAD to execute FN.")
 
 (definterface kill-thread (thread)
-  "Terminate THREAD immediately.
-Don't execute unwind-protected sections, don't raise conditions.
-(Do not pass go, do not collect $200.)"
+  "Kill THREAD."
   (declare (ignore thread))
   nil)
 
@@ -1311,17 +1222,5 @@ SPEC can be:
   "Save a heap image to the file FILENAME.
 RESTART-FUNCTION, if non-nil, should be called when the image is loaded.")
 
-(definterface background-save-image (filename &key restart-function
-                                              completion-function)
-  "Request saving a heap image to the file FILENAME.
-RESTART-FUNCTION, if non-nil, should be called when the image is loaded.
-COMPLETION-FUNCTION, if non-nil, should be called after saving the image.")
 
-;;; Codepoint length
-
-(definterface codepoint-length (string)
-  "Return the number of codepoints in STRING.
-With some Lisps, like cmucl, LENGTH returns the number of UTF-16 code
-units, but other Lisps return the number of codepoints. The slime
-protocol wants string lengths in terms of codepoints."
-  (length string))
+  
