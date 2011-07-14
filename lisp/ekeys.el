@@ -28,7 +28,7 @@
 (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "S-C-<down>") 'shrink-window)
-(global-set-key (kbd "S-C-<up>") 'enlarge-window)l
+(global-set-key (kbd "S-C-<up>") 'enlarge-window)
 (global-set-key "\M-#" 'find-tag-other-window)
 (global-set-key "\C-cfp" 'flyspell-prog-mode)
 
