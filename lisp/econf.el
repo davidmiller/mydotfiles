@@ -75,6 +75,7 @@
 (add-to-list 'ac-modes 'erlang-mode)
 (add-to-list 'ac-modes 'erlang-shell-mode)
 (add-to-list 'ac-modes 'thrift-mode)
+(add-to-list 'ac-modes 'csharp-mode)
 (setq-default ac-sources (add-to-list 'ac-sources 'ac-dictionary 'ac-source-yasnippet))
 (add-hook 'emacs-lisp-mode-hook
           (lambda () (add-to-list 'ac-sources 'ac-source-symbols)))
@@ -312,7 +313,7 @@
      (expand-file-name "~/emacs/elpa/package.el"))
   (setq package-user-dir (expand-file-name "~/emacs/elpa"))
   (add-to-list 'package-archives
-	       '("marmalade" . "http://marmalade-repo.org/packages/"))
+               '("marmalade" . "http://marmalade-repo.org/packages/"))
   (package-initialize))
 (setq package-user-dir (expand-file-name "~/emacs/elpa"))
 
