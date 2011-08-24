@@ -1,3 +1,11 @@
+;;
+;; .emacs
+;;
+;; If you're reading this on Github, the packages that contain
+;; the configurations can be found at http://github.com/davidmiller/emacs/config
+;;
+
+;;
 ;;  Citations
 ;;
 ;;     "Show me your ~/.emacs and I will tell you who you are."
@@ -7,7 +15,18 @@
 (require 'cl)
 
 ;; All my emacs customisations and packages are under ~/emacs
-(defvar emacs-root (expand-file-name "~/emacs")
+
+(defvar win-p (eq 'windows-nt system-type) "Are we on a windows system?")
+
+(defmacro *nix nil "Is this machine a *nix box?" `(not win-p))
+
+(defvar ~ (cond
+           (win-p (expand-file-name "/cygwin/home/david/"))
+           (t (expand-file-name "~/")))
+  "Where do I call home?")
+
+(defvar emacs-root
+  (concat ~ "emacs")
   "Single point of representation for where our elisp packages
 are coming from.")
 
@@ -55,14 +74,60 @@ module level requires."
 
 ;; Add directories for major & minor modes, config directories
 (add-load-dir emacs-root)
-;; Third party libraries are under ~/emacs/site-packages
+
+;;
+;; El-get
+;;
+;; Commentary:
+;;
+;; El-get is by far the most civilized way to enjoy third party
+;; packages for Emacs.
+;;
+(require 'el-get)
+(setq el-get-dir (emacsdir "site-packages"))
+(setq el-get-status-file (path.join emacs-root "site-packages" ".status.el"))
+
+(defmacro el-get-hub (&key user &rest sources)
+  "Create el-get sources from the symbols passed as `sources'"
+  `,@(loop for package in sources
+            collect `(:name ,package
+                            :type git
+                            :url ,(concat
+                                    "git@github.com:"
+                                    user "/"
+                                    (symbol-name package)
+                                    ".git"))))
+
+(defmacro defsources (&key github &rest body)
+  "Splice the expanded github repos into our form for
+creating an `el-get-sources' variable"
+  `(setq el-get-sources
+         '(,@(apply #'append (loop for repo in github
+                          collect (macroexpand
+                                   (cons 'el-get-hub repo)))))))
+
+(defsources
+  :github
+  ;; Firstly let's get my packages
+  ((:user "davidmiller"
+          emodes pony-mode lintnode come-fly thrift-mode)
+   (:user "technomancy"
+          ;; Get slime from this github mirror until Clojure
+          ;; sort out numerous infrastructure issues
+          slime
+          clojure-mode)))
+
+(setq my-packages
+      (append
+       '()
+       (mapcar 'el-get-source-name el-get-sources)))
+
+(el-get 'sync my-packages)
+
+;; third party libraries are under ~/emacs/site-packages
 (add-load-dir (emacsdir "site-packages"))
-;; My Emacs libraries live in ~/emacs/src
-(add-load-dir (emacsdir "src"))
 
 ;; Load the actual configuration libraries
 (require-many 'efuncs 'ecolours 'ekeys 'econf 'elangs)
 
-;; If you're reading this on github, the packages that contain
-;; the configurations can be found at http://github.com/davidmiller/emacs/config
-
+;; Code ends
