@@ -110,7 +110,7 @@ creating an `el-get-sources' variable"
   :github
   ;; Firstly let's get my packages
   ((:user "davidmiller"
-          emodes pony-mode lintnode come-fly thrift-mode)
+          emodes pony-mode lintnode come-fly thrift-mode dizzee fabmacs)
    (:user "technomancy"
           ;; Get slime from this github mirror until Clojure
           ;; sort out numerous infrastructure issues
