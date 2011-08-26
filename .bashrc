@@ -7,12 +7,11 @@ UNAME=uname
 alias reload='source ~/.bashrc'
 
 #### PATH ####
-export PATH=$PATH:~/bin:~/opt/android/tools:~/builds/chrome-linux:~/local/node/bin
+export PATH=$PATH:~/bin:~/opt/android/tools:~/builds/chrome-linux:~/local/node/bin:
 export PATH=$PATH:~/builds/chrome-linux
 export RUBYOPT=rubygems
 export PYTHONPATH=/home/david/programming/python/google_appengine/:/home/david/programming/python/google_appengine/lib/:/home/david/programming/python/genlog:../:../../:
 export PYTHONSTARTUP=~/.pythonstartup
-export INFOPATH=/home/david/emacs/info
 export ONZOHOME=~/src/onzo/backend/
 export LD_LIBRARY_PATH=`pwd`
 
@@ -135,6 +134,10 @@ function catorls () {
 }
 alias cat="catorls"
 
+function hgkill () {
+    hg status | perl -lane 'print $F[1]' | xargs rm
+}
+
 # don't put duplicate lines in the history. See bash(1) for more options
 # don't overwrite GNU Midnight Commander's setting of `ignorespace'.
 export HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
@@ -226,3 +229,5 @@ fi
 bind '"\C-f\C-g": "find . | grep "';
 bind '"\C-f\C-x": "find . | xargs grep "'
 bind '"\C-p\C-a": "ps aux | grep "'
+alias b14="source ~/virtualenvs/backend-1.14/bin/activate"
+

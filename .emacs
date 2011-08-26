@@ -21,7 +21,7 @@
 (defmacro *nix nil "Is this machine a *nix box?" `(not win-p))
 
 (defvar ~ (cond
-           (win-p (expand-file-name "/cygwin/home/david/"))
+           (win-p (expand-file-name "c:/Users/David/"))
            (t (expand-file-name "~/")))
   "Where do I call home?")
 
@@ -104,18 +104,32 @@ creating an `el-get-sources' variable"
   `(setq el-get-sources
          '(,@(apply #'append (loop for repo in github
                           collect (macroexpand
-                                   (cons 'el-get-hub repo)))))))
+                                   (cons 'el-get-hub repo))))
+           ,@body)))
 
 (defsources
   :github
   ;; Firstly let's get my packages
   ((:user "davidmiller"
           emodes pony-mode lintnode come-fly thrift-mode dizzee fabmacs)
+   ;;
+   ;; Now we move on to 3rd party packlages from Github
+   ;;
    (:user "technomancy"
+          clojure-mode
           ;; Get slime from this github mirror until Clojure
           ;; sort out numerous infrastructure issues
-          slime
-          clojure-mode)))
+          slime))
+   ;;
+   ;; Having dealt with source-specific packages,
+   ;; let's return to the el-get 'classic' method of
+   ;; specifying packages
+   ;;
+  (:name python-mode
+         :type bzr
+         :url "lp:python-mode")
+  (:name pastebin
+         :type emacswiki))
 
 (setq my-packages
       (append
