@@ -1,8 +1,8 @@
 ;;
 ;; .emacs
 ;;
-;; If you're reading this on Github, the packages that contain
-;; the configurations can be found at http://github.com/davidmiller/emacs/config
+;; If you're reading this on Github, there is much deeper configuration to be 
+;; found at http://github.com/davidmiller/emacs/ - particularly config/ 
 ;;
 
 ;;
@@ -12,36 +12,12 @@
 ;;                                                         [Bogdan Maryniuk]
 ;;
 
+;; We'll be using cl idioms quite a lot so let's get that out of the way early.
 (require 'cl)
 
-;; All my emacs customisations and packages are under ~/emacs
-
-(defvar win-p (eq 'windows-nt system-type) "Are we on a windows system?")
-
-(defmacro *nix nil "Is this machine a *nix box?" `(not win-p))
-
-(defvar ~ (cond
-           (win-p (expand-file-name "c:/Users/David/"))
-           (t (expand-file-name "~/")))
-  "Where do I call home?")
-
-(defvar emacs-root
-  (concat ~ "emacs")
-  "Single point of representation for where our elisp packages
-are coming from.")
-
-;;
-;; Establish various path / load / require helpers here
-;; so we can use them throughout more specific config packages
-;;
-(defun add-load-dir (root)
-  "Add the directories under `root' to load-path"
-  (add-to-list 'load-path root)
-  (dolist (emacsdir?
-           (directory-files root t "^[^\\.]"))
-    (when (file-directory-p emacsdir?)
-      (add-to-list 'load-path emacsdir?))))
-
+;; 
+;; Lispicised idioms from other places.
+;; 
 (defun path.join (base &rest paths)
   "Translation of Python's os.path.join. Take path elements and
 join them intelligently.
@@ -57,6 +33,64 @@ elements joined by \."
             (setq path (concat path item))
           (setq path (concat path "/" item)))))
     path))
+
+(defun chomp (str)
+  "Equivalent to Perl's Chomp.
+Remove leading and tailing whitespace
+
+Gleefully stolen from: www.emacswiki.org/emacs/ElispCookbook"
+  (let ((s (if (symbolp str) (symbol-name str) str)))
+    (replace-regexp-in-string "\\(^[[:space:]\n]*\\|[[:space:]\n]*$\\)" "" s)))
+
+
+;; 
+;; Top level platform determinism: Establish what kind of world we're in.
+;; 
+(defvar win-p (eq 'windows-nt system-type) "Are we on a windows system?")
+
+(defvar *nix (not win-p) "Is this machine a *nix box?")
+
+(defmacro notnix (alternative nixicised)
+  "Check to see if we're on some kind of *nix platform. If we are, do
+NIXICISED if not, do ALTERNATIVE."
+  `(cond
+    (win-p ,alternative)
+    (*nix ,nixicised)
+    (t (error "Unknown platform type - have you set *nix/win-p ?"))))
+
+(defvar hostname (notnix
+		  "TODO"
+		  (chomp (shell-command-to-string "hostname")))
+  "Holds this machine's hostname.")
+
+(defmacro* ifhost (host then &optional (else nil else-p))
+  "If the value of `hostname' and HOST are equal, perform THEN otherwise ELSE."
+  `(if (string-equal hostname ,(symbol-name host))
+       ,then
+     ,(if else-p else)))
+
+(defvar ~ (notnix
+           (expand-file-name "c:/Users/David/")
+           (expand-file-name "~/"))
+  "Where do I call home?")
+
+;;
+;; Establish various path / load / require helpers here
+;; so we can use them throughout more specific config packages
+;;
+
+(defvar emacs-root
+  (concat ~ "emacs")
+  "Single point of representation for where our elisp packages
+are coming from.")
+
+(defun add-load-dir (root)
+  "Add the directories under `root' to load-path"
+  (add-to-list 'load-path root)
+  (dolist (emacsdir?
+           (directory-files root t "^[^\\.]"))
+    (when (file-directory-p emacsdir?)
+      (add-to-list 'load-path emacsdir?))))
 
 (defun emacsdir (path)
   "Concatenate `emacs-root' with `path'."
@@ -84,8 +118,15 @@ module level requires."
 ;; packages for Emacs.
 ;;
 (require 'el-get)
+
 (setq el-get-dir (emacsdir "site-packages"))
 (setq el-get-status-file (path.join emacs-root "site-packages" ".status.el"))
+
+(macroexpand (ifhost rasputin
+	;; For utterly inane reasons the system git on this box is
+	;; too low a version to be compatible with el-get's git submodule args
+	(setq el-get-git "/home/david/bin/git"))
+)
 
 (defmacro el-get-hub (&key user &rest sources)
   "Create el-get sources from the symbols passed as `sources'"
