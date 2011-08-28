@@ -114,6 +114,6 @@ module level requires."
 (add-load-dir (emacsdir "site-packages"))
 
 ;; Load the actual configuration libraries
-(require-many 'efuncs 'ecolours 'ekeys 'eget 'econf 'elangs)
+(require-many 'efuncs 'ekeys 'eget 'ecolours 'econf 'elangs)
 
 ;; Code ends
