@@ -1,8 +1,8 @@
 ;;
 ;; .emacs
 ;;
-;; If you're reading this on Github, there is much deeper configuration to be 
-;; found at http://github.com/davidmiller/emacs/ - particularly config/ 
+;; If you're reading this on Github, there is much deeper configuration to be
+;; found at http://github.com/davidmiller/emacs/ - particularly config/
 ;;
 
 ;;
@@ -15,9 +15,10 @@
 ;; We'll be using cl idioms quite a lot so let's get that out of the way early.
 (require 'cl)
 
-;; 
-;; Lispicised idioms from other places.
-;; 
+;;
+;; Lispicised idioms from other places. These should naturally be in
+;; emacs/config/efuncs.el but get used too early in the init process
+;;
 (defun path.join (base &rest paths)
   "Translation of Python's os.path.join. Take path elements and
 join them intelligently.
@@ -43,24 +44,24 @@ Gleefully stolen from: www.emacswiki.org/emacs/ElispCookbook"
     (replace-regexp-in-string "\\(^[[:space:]\n]*\\|[[:space:]\n]*$\\)" "" s)))
 
 
-;; 
+;;
 ;; Top level platform determinism: Establish what kind of world we're in.
-;; 
+;;
 (defvar win-p (eq 'windows-nt system-type) "Are we on a windows system?")
 
 (defvar *nix (not win-p) "Is this machine a *nix box?")
 
-(defmacro notnix (alternative nixicised)
+(defmacro ifnix (nixicised alternative)
   "Check to see if we're on some kind of *nix platform. If we are, do
 NIXICISED if not, do ALTERNATIVE."
   `(cond
-    (win-p ,alternative)
     (*nix ,nixicised)
+    (win-p ,alternative)
     (t (error "Unknown platform type - have you set *nix/win-p ?"))))
 
-(defvar hostname (notnix
-		  "TODO"
-		  (chomp (shell-command-to-string "hostname")))
+(defvar hostname (ifnix                  
+                  (chomp (shell-command-to-string "hostname"))
+		  "TODO")
   "Holds this machine's hostname.")
 
 (defmacro* ifhost (host then &optional (else nil else-p))
@@ -69,9 +70,9 @@ NIXICISED if not, do ALTERNATIVE."
        ,then
      ,(if else-p else)))
 
-(defvar ~ (notnix
-           (expand-file-name "c:/Users/David/")
-           (expand-file-name "~/"))
+(defvar ~ (ifnix
+           (expand-file-name "~/")
+           (expand-file-name "c:/Users/David/"))
   "Where do I call home?")
 
 ;;
@@ -109,80 +110,10 @@ module level requires."
 ;; Add directories for major & minor modes, config directories
 (add-load-dir emacs-root)
 
-;;
-;; El-get
-;;
-;; Commentary:
-;;
-;; El-get is by far the most civilized way to enjoy third party
-;; packages for Emacs.
-;;
-(require 'el-get)
-
-(setq el-get-dir (emacsdir "site-packages"))
-(setq el-get-status-file (path.join emacs-root "site-packages" ".status.el"))
-
-(macroexpand (ifhost rasputin
-	;; For utterly inane reasons the system git on this box is
-	;; too low a version to be compatible with el-get's git submodule args
-	(setq el-get-git "/home/david/bin/git"))
-)
-
-(defmacro el-get-hub (&key user &rest sources)
-  "Create el-get sources from the symbols passed as `sources'"
-  `,@(loop for package in sources
-            collect `(:name ,package
-                            :type git
-                            :url ,(concat
-                                    "git@github.com:"
-                                    user "/"
-                                    (symbol-name package)
-                                    ".git"))))
-
-(defmacro defsources (&key github &rest body)
-  "Splice the expanded github repos into our form for
-creating an `el-get-sources' variable"
-  `(setq el-get-sources
-         '(,@(apply #'append (loop for repo in github
-                          collect (macroexpand
-                                   (cons 'el-get-hub repo))))
-           ,@body)))
-
-(defsources
-  :github
-  ;; Firstly let's get my packages
-  ((:user "davidmiller"
-          emodes pony-mode lintnode come-fly thrift-mode dizzee fabmacs)
-   ;;
-   ;; Now we move on to 3rd party packlages from Github
-   ;;
-   (:user "technomancy"
-          clojure-mode
-          ;; Get slime from this github mirror until Clojure
-          ;; sort out numerous infrastructure issues
-          slime))
-   ;;
-   ;; Having dealt with source-specific packages,
-   ;; let's return to the el-get 'classic' method of
-   ;; specifying packages
-   ;;
-  (:name python-mode
-         :type bzr
-         :url "lp:python-mode")
-  (:name pastebin
-         :type emacswiki))
-
-(setq my-packages
-      (append
-       '()
-       (mapcar 'el-get-source-name el-get-sources)))
-
-(el-get 'sync my-packages)
-
 ;; third party libraries are under ~/emacs/site-packages
 (add-load-dir (emacsdir "site-packages"))
 
 ;; Load the actual configuration libraries
-(require-many 'efuncs 'ecolours 'ekeys 'econf 'elangs)
+(require-many 'efuncs 'ecolours 'ekeys 'eget 'econf 'elangs)
 
 ;; Code ends
