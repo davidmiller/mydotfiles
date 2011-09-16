@@ -1,5 +1,13 @@
+# -*- mode: conf -*-
+
+# Display config info at the bottom of the screen
 hardstatus alwayslastline
 hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{=kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B}%Y-%m-%d %{W}%c %{g}]'
+
+# Allow multiple attatchments
+multuser on
+acladd davidmiller
+acladd david
 
 # Default to opening this file and a new window
 screen -t shell1   0
