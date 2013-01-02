@@ -4,6 +4,8 @@ pager = LESS='FSRX' less
 [extensions]
 graphlog=
 pager=
+hgext.bookmarks =
+hggit =
 
 [ui]
 username = David Miller <david.miller@onzo.com>

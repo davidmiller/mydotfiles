@@ -7,18 +7,27 @@ UNAME=uname
 alias reload='source ~/.bashrc'
 
 #### PATH ####
-export PATH=$PATH:~/bin:~/opt/android/tools:~/builds/chrome-linux:~/local/node/bin:
-export PATH=$PATH:~/builds/chrome-linux
+export PATH=$PATH:~/bin
+export PATH=$PATH:~/opt/andy/adt-bundle-linux/sdk/tools:~/opt/andy/adt-bundle-linux/sdk/platform-tools
+export PATH=$PATH:~/builds/chrome-linux:~/local/node/bin:/var/lib/gems/1.8/bin:
+export PATH=$PATH:~/src/dist/clojurescript/bin:~/src/dist/pypy-1.8/bin
 export RUBYOPT=rubygems
-export PYTHONPATH=/home/david/programming/python/google_appengine/:/home/david/programming/python/google_appengine/lib/:/home/david/programming/python/genlog:../:../../:
+
 export PYTHONSTARTUP=~/.pythonstartup
 export ONZOHOME=~/src/onzo/backend/
-export LD_LIBRARY_PATH=`pwd`
+export LD_LIBRARY_PATH=/usr/local/boost_1_46_1/
+export WORKON_HOME=~/v
+export CLOJURESCRIPT_HOME=~/src/dist/clojurescript/
+
+export C_INCLUDE_PATH=/usr/local/include/thrift:/usr/local/include/boost:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=/usr/local/include/thrift:/usr/local/include/boost:$CPLUS_INCLUDE_PATH
 
 #### Defaults ####
 # Default editor
-export EDITOR="emacs -nw -q"
+export EDITOR="emacs-snapshot -nw -q"
 
+# Includes
+. /usr/local/bin/virtualenvwrapper.sh
 
 #### Aiases ####
 # listing aliases
@@ -213,21 +222,22 @@ _fab_completion() {
 
 complete -F _fab_completion fab
 
+[[ -s "/home/david/.rvm/scripts/rvm" ]] && source "/home/david/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
-# Goodbye Grep
-which ack > /dev/null
-if [ $? -ne 0 ] ; then
-    which ack-grep > /dev/null
-    if [ $? -ne 0 ] ; then
-        echo "Where the ack has ack gone?"
-    else
-        alias ack="ack-grep"
-    fi
-fi
+# # Goodbye Grep
+# which ack > /dev/null
+# if [ $? -ne 0 ] ; then
+#     which ack-grep > /dev/null
+#     if [ $? -ne 0 ] ; then
+#         echo "Where the ack has ack gone?"
+#     else
+#         alias ack="ack-grep"
+#     fi
+# fi
 
 # keybindings
-bind '"\C-f\C-g": "find . | grep "';
-bind '"\C-f\C-x": "find . | xargs grep "'
-bind '"\C-p\C-a": "ps aux | grep "'
+# bind '"\C-f\C-g": "find . | grep "';
+# bind '"\C-f\C-x": "find . | xargs grep "'
+# bind '"\C-p\C-a": "ps aux | grep "'
 alias b14="source ~/virtualenvs/backend-1.14/bin/activate"
 
