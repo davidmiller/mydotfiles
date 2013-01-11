@@ -1,0 +1,136 @@
+# conky configuration
+#
+# The list of variables has been removed from this file in favour
+# of keeping the documentation more maintainable.
+# Check http://conky.sf.net for an up-to-date-list.
+#
+# For ideas about how to modify conky, please see:
+# http://crunchbanglinux.org/forums/topic/59/my-conky-config/
+#
+# For help with conky, please see:
+# http://crunchbanglinux.org/forums/topic/2047/conky-help/
+#
+# Enjoy! :)
+##############################################
+# Settings
+##############################################
+background yes
+use_xft yes
+xftfont Liberation Sans:size=9
+xftalpha 1
+update_interval 1.0
+total_run_times 0
+own_window yes
+own_window_transparent yes
+##############################################
+# Compositing tips:
+# Conky can play strangely when used with
+# different compositors. I have found the
+# following to work well, but your mileage
+# may vary. Comment/uncomment to suit.
+##############################################
+## no compositor
+own_window_type override
+own_window_argb_visual no
+
+## xcompmgr
+#own_window_type override
+#own_window_argb_visual yes
+
+## cairo-compmgr
+#own_window_type desktop
+#own_window_argb_visual yes
+##############################################
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+double_buffer yes
+minimum_size 200 200
+maximum_width 280
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders no
+default_color 656667
+default_shade_color 000000
+default_outline_color 828282
+alignment top_left
+gap_x 12
+gap_y 56
+no_buffers yes
+uppercase no
+cpu_avg_samples 2
+override_utf8_locale no
+##############################################
+#  Output
+##############################################
+TEXT
+${font Sketch Block:size=40}${color #ddd}${time %A}
+${offset 12}${voffset -30}${font FFF Tusj:size=30}${color #999}${time %b %d %Y}
+${voffset -40}${font FFF Tusj:size=78}${color #ddd}${time %H:}
+${offset 40}${voffset -30}${font Sketch Block:size=130}${color #999}${time %M:}:
+${voffset -170}${font Sketch Block:size=20}${color #fff}${time %S:}${font }${color }
+
+S Y S T E M    I N F O ${uid_name ${exec id -u}}@$nodename
+${hr}
+Host:$alignr$nodename
+Kernel Version: $alignr$kernel
+Uptime:$alignr$uptime
+System Load: $alignr$loadavg
+
+B A T T E R Y: $alignr${battery} (${battery_time})
+${hr}
+C P U:${font }
+${hr}
+Temp: ${acpitemp}C ${color #C8C8C8}Usage: $cpu% ${color #A0A0A0}$processes processes ${color #909090}@ ${freq_g cpu1}GHz${color }
+CPU1: ${cpu cpu1}% $alignr CPU2: ${cpu cpu2}%
+${cpugraph cpu1 25,80 -l} $alignr ${cpugraph cpu2 25 80 -l}
+CPU3: ${cpu cpu3}% $alignr CPU4: ${cpu cpu4}%
+${cpugraph cpu3 25,80 -l} $alignr ${cpugraph cpu4 25 80 -l}
+
+H D D:
+${hr}}
+ROOT: ${fs_free /}/${fs_size /} ${fs_bar 5,200 /}
+HOME: ${fs_free /home}/${fs_size /home} ${fs_bar 5,200 /home}
+
+M E M:
+${hr}
+RAM: $memperc% $mem/$memmax  ${membar 5,180}
+SWAP: $swapperc% $swap/$swapmax ${swapbar 5,185}
+
+${if_mpd_playing}
+M I N G U S
+${hr}
+$mpd_artist :: $mpd_album
+${mpd_title 15}
+$mpd_elapsed/$mpd_length :: $mpd_status
+${mpd_bar 5,180}
+#${execi 2 ~/.config/conky/mpd-albumart.py}
+#${image /tmp/mpd.jpg -s 80x80 -p 100,349 }
+$endif
+
+// G U A Y A D E Q U E
+// ${hr}
+// ${exec conkyGuayadeque --datatype=AR}
+// ${exec conkyGuayadeque --datatype=AL} :: ${exec conkyGuayadeque --datatype=TI}
+// ${exec conkyGuayadeque --datatype=PT}/${exec conkyGuayadeque --datatype=LE}
+
+N E T:
+${hr}
+Download: ${downspeed wlan0}k/s ${downspeedgraph wlan0 15,210 000000 ffffff}
+Upload: ${upspeed wlan0}k/s   ${upspeedgraph wlan0 15,210 000000 ffffff}
+
+
+# S H O R T C U T    K E Y S
+# ${hr}
+# Alt+F2$alignr Run Dialog
+# Alt+F3$alignr Alt Menu
+# Super+Space$alignr Main Menu
+# Super+Tab$alignr Client Menu
+# Super+t$alignr Terminal
+# Super+f$alignr File Manager
+# Super+e$alignr Editor
+# Super+m$alignr Media Player
+# Super+w$alignr Web Browser
+# Super+l$alignr Lock Screen
+# Super+v$alignr Volume Control
+# Super+x$alignr Logout
+# PrtSc$alignr Screenshot
