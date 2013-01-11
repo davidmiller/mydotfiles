@@ -11,7 +11,7 @@ export PATH=$PATH:~/bin
 export PATH=$PATH:~/opt/andy/adt-bundle-linux/sdk/tools:~/opt/andy/adt-bundle-linux/sdk/platform-tools
 export PATH=$PATH:~/builds/chrome-linux:~/local/node/bin:/var/lib/gems/1.8/bin:
 export PATH=$PATH:~/src/dist/clojurescript/bin:~/src/dist/pypy-1.8/bin
-export RUBYOPT=rubygems
+#export RUBYOPT=rubygems
 
 export PYTHONSTARTUP=~/.pythonstartup
 export ONZOHOME=~/src/onzo/backend/
@@ -241,3 +241,5 @@ complete -F _fab_completion fab
 # bind '"\C-p\C-a": "ps aux | grep "'
 alias b14="source ~/virtualenvs/backend-1.14/bin/activate"
 
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

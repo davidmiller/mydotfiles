@@ -59,7 +59,7 @@ NIXICISED if not, do ALTERNATIVE."
     (win-p ,alternative)
     (t (error "Unknown platform type - have you set *nix/win-p ?"))))
 
-(defvar hostname (ifnix                  
+(defvar hostname (ifnix
                   (chomp (shell-command-to-string "hostname"))
 		  "TODO")
   "Holds this machine's hostname.")
@@ -117,3 +117,16 @@ module level requires."
 (require-many 'efuncs 'ekeys 'eget 'ecolours 'econf 'elangs)
 
 ;; Code ends
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values (quote ((test-case-name . twisted\.test\.test_memcache) (test-case-name . twisted) (pony-settings make-pony-project :python "~/v/sse/bin/python") (pony-settings make-pony-project :python "/home/david/v/wl/bin/python" :settings "settings")))))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(rst-level-1-face ((t (:background "black" :foreground "brown3" :weight bold))) t)
+ '(rst-level-2-face ((t (:background "black" :foreground "white" :weight bold)))))
