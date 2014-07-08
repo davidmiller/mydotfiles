@@ -48,7 +48,7 @@ Gleefully stolen from: www.emacswiki.org/emacs/ElispCookbook"
 ;; Top level platform determinism: Establish what kind of world we're in.
 ;;
 (defvar win-p (eq 'windows-nt system-type) "Are we on a windows system?")
-
+(defvar osx-p (eq 'darwin system-type) "Are we on osx?")
 (defvar *nix (not win-p) "Is this machine a *nix box?")
 
 (defmacro ifnix (nixicised alternative)
@@ -61,7 +61,7 @@ NIXICISED if not, do ALTERNATIVE."
 
 (defvar hostname (ifnix
                   (chomp (shell-command-to-string "hostname"))
-		  "TODO")
+                  "TODO")
   "Holds this machine's hostname.")
 
 (defmacro* ifhost (host then &optional (else nil else-p))
@@ -114,7 +114,16 @@ module level requires."
 (add-load-dir (emacsdir "site-packages"))
 
 ;; Load the actual configuration libraries
-(require-many 'efuncs 'ekeys 'eget 'ecolours 'econf 'elangs)
+(require-many
+ 'efuncs
+ 'ekeys
+ 'eget
+ 'econf
+ 'elangs
+ 'ecolours
+ )
+
+(color-theme-bluebulator)
 
 ;; Code ends
 (custom-set-variables
