@@ -178,7 +178,7 @@ _django_completion()
                    COMP_CWORD=$COMP_CWORD \
                        DJANGO_AUTO_COMPLETE=1 $1 ) )
 }
-complete -F _django_completion -o default django-admin.py manage.py django-admin django
+#complete -F _django_completion -o default django-admin.py manage.py django-admin django
 
 _python_django_completion()
 {
@@ -209,7 +209,7 @@ else
     pythons=python
 fi
 
-complete -F _python_django_completion -o default $pythons
+#complete -F _python_django_completion -o default $pythons
 
 _fab_completion() {
     COMPREPLY=()
@@ -220,7 +220,7 @@ _fab_completion() {
     COMPREPLY=( $(compgen -W "${tasks}" -- ${cur}) )
 }
 
-complete -F _fab_completion fab
+#complete -F _fab_completion fab
 
 [[ -s "/home/david/.rvm/scripts/rvm" ]] && source "/home/david/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
@@ -243,3 +243,6 @@ alias b14="source ~/virtualenvs/backend-1.14/bin/activate"
 
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
